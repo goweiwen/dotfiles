@@ -5,6 +5,7 @@ call plug#begin('~/.config/nvim/plugged')
 " Plug 'neomake/neomake'
 " Plug 'szw/vim-tags'
 " Plug 'valloric/youcompleteme'
+Plug 'justinmk/vim-sneak'
 Plug 'Chiel92/vim-autoformat'
 Plug 'Shougo/deoplete.nvim'
 Plug 'SirVer/ultisnips'
