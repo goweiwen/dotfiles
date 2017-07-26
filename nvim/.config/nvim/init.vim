@@ -2,33 +2,13 @@ set nocompatible
 
 call plug#begin('~/.config/nvim/plugged')
 
-" Plug 'neomake/neomake'
-" Plug 'szw/vim-tags'
-" Plug 'valloric/youcompleteme'
-Plug 'justinmk/vim-sneak'
-Plug 'Chiel92/vim-autoformat'
-Plug 'Shougo/deoplete.nvim'
-Plug 'SirVer/ultisnips'
-Plug 'arcticicestudio/nord-vim'
-Plug 'artur-shaik/vim-javacomplete2'
-Plug 'bronson/vim-trailing-whitespace'
-Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 Plug 'chriskempson/base16-vim'
-Plug 'craigemery/vim-autotag'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'davidhalter/jedi-vim'
-Plug 'digitaltoad/vim-pug'
+
+Plug 'justinmk/vim-sneak'
+Plug 'unblevable/quick-scope'
 Plug 'easymotion/vim-easymotion'
-Plug 'honza/vim-snippets'
-Plug 'itchyny/vim-haskell-indent'
-Plug 'leafo/moonscript-vim'
-Plug 'mattn/emmet-vim'
-Plug 'mxw/vim-jsx'
-Plug 'neovimhaskell/haskell-vim'
-Plug 'pangloss/vim-javascript'
-Plug 'pangloss/vim-javascript'
-Plug 'rking/ag.vim'
 Plug 'terryma/vim-multiple-cursors'
+
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
@@ -38,8 +18,28 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
-Plug 'unblevable/quick-scope'
+
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+
 Plug 'w0rp/ale'
+Plug 'bronson/vim-trailing-whitespace'
+
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'rking/ag.vim'
+
+Plug 'Shougo/deoplete.nvim'
+Plug 'artur-shaik/vim-javacomplete2'
+Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+Plug 'zchee/deoplete-jedi'
+
+Plug 'digitaltoad/vim-pug'
+Plug 'itchyny/vim-haskell-indent'
+Plug 'leafo/moonscript-vim'
+Plug 'mattn/emmet-vim'
+Plug 'mxw/vim-jsx'
+Plug 'neovimhaskell/haskell-vim'
+Plug 'pangloss/vim-javascript'
 
 call plug#end()
 
@@ -76,7 +76,7 @@ set hidden
 syntax enable
 set background=dark
 let base16colorspace=256
-colorscheme nord
+colorscheme base16-ashes
 
 " set textwidth=80
 " set colorcolumn=+1
@@ -87,6 +87,7 @@ set expandtab
 set shiftwidth=4
 set shiftround
 set smarttab
+set list
 
 set foldmethod=syntax
 

@@ -15,6 +15,10 @@ alias z='fasd_cd -d'     # cd, same functionality as j in autojump
 # Change iTerm2 Titlebar colour
 printf -- $'\033]6;1;bg;red;brightness;43\a\033]6;1;bg;green;brightness;48\a\033]6;1;bg;blue;brightness;59\a'
 
+# base16-shell
+BASE16_SHELL=$HOME/.config/base16-shell/
+[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+
 # Others
 HISTFILE=~/.histfile
 HISTSIZE=1000000
@@ -28,6 +32,11 @@ alias please='sudo `fc -ln -1`'
 
 alias v='vim '
 alias o='open '
+
+alias bi='brew install '
+alias br='brew remove '
+alias bci='brew cask install '
+alias bcr='brew cask remove '
 
 alias vrc='vim ~/.config/nvim/init.vim'
 alias zrc='vim ~/.zshrc'
