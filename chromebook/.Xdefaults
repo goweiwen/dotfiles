@@ -1,0 +1,84 @@
+Xft.dpi: 96
+Xft.antialias: true
+Xft.hinting: full
+Xft.hintstyle: hintslight
+Xft.rgba: rgb
+
+rofi.key-run: superl+r
+rofi.fuzzy: true
+rofi.lines: 25
+rofi.width: 1366
+rofi.location: 1
+rofi.terminal: urxvt
+rofi.i: true
+rofi.font: Droid Sans 9
+rofi.bg: #2d2d2d
+rofi.fg: #888888
+rofi.bg-active: #cc99cc
+rofi.fg-active: #ffffff
+
+URxvt.perl-ext-common:  default,clipboard,matcher
+URxvt.iso14755: false
+
+URxvt*skipBuiltinGlyphs: true
+URxvt*buffered: false
+URxvt*urgentOnBell: true
+URxvt*visualBell:   false
+URxvt.secondaryScreen: 1
+URxvt.secondaryScroll: 0
+URxvt.secondaryWheel: 1
+
+URxvt.url-launcher: /usr/bin/firefox
+URxvt.matcher.button: 1
+
+URxvt.scrollstyle: plain
+URxvt.scrollBar: false
+URxvt.internalBorder: 20
+
+URxvt*cursorBlink: true
+URxvt*cursorUnderline: true
+
+URxvt.font: xft:Droid Sans Mono-9
+URxvt.boldFont: xft:Droid Sans Mono-9
+URxvt.letterSpace: -2
+
+URxvt*termName: rxvt-unicode
+URxvt.keysym.Control-BackSpace:  \033[33~
+URxvt.keysym.Shift-Control-C: perl:clipboard:copy
+URxvt.keysym.Shift-Control-V: perl:clipboard:paste
+URxvt.clipboard.copycmd:  xsel -ib
+URxvt.clipboard.pastecmd: xsel -ob
+
+! Base16 Eighties
+! Scheme: Chris Kempson (http://chriskempson.com)
+
+*.foreground:   #d3d0c8
+*.background:   #2d2d2d
+*.cursorColor:  #d3d0c8
+
+*.color0:       #2d2d2d
+*.color1:       #f2777a
+*.color2:       #99cc99
+*.color3:       #ffcc66
+*.color4:       #6699cc
+*.color5:       #cc99cc
+*.color6:       #66cccc
+*.color7:       d3d0c8
+
+*.color8:       #747369
+*.color9:       #f2777a
+*.color10:      #99cc99
+*.color11:      #ffcc66
+*.color12:      #6699cc
+*.color13:      #cc99cc
+*.color14:      #66cccc
+*.color15:      #f2f0ec
+
+! Note: colors beyond 15 might not be loaded (e.g., xterm, urxvt),
+! use 'shell' template to set these if necessary
+*.color16:      #f99157
+*.color17:      #d27b53
+*.color18:      #393939
+*.color19:      #515151
+*.color20:      #a09f93
+*.color21:      #e8e6df

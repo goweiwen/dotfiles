@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+xrdb -merge "${HOME}/.Xresources"
+xrdb -merge "${HOME}/.Xdefaults"
+xmodmap "${HOME}/.Xmodmap"

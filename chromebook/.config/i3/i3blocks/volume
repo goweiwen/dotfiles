@@ -1,0 +1,24 @@
+#!/bin/bash
+
+case $BLOCK_BUTTON in
+  1) pactl set-sink-mute 1 toggle > dev/null ;;  # left click, mute/unmute
+  2) pavucontrol & ;;  # middle click, pavucontrol
+  3) volume_switch > /dev/null ;; # right click, switch pulseaudio port
+  4) pactl set-sink-volume 1 +5% > /dev/null && pactl set-sink-mute 1 0 > /dev/null ;; # scroll up, increase
+  5) pactl set-sink-volume 1 -5% > /dev/null && pactl set-sink-mute 1 0 > /dev/null ;; # scroll down, decrease
+esac
+
+if pactl list sinks | grep "Mute: yes" > /dev/null; then
+  echo -e ' MUTE'
+  exit 0
+fi
+
+VOLUME=$(pactl list sinks | perl -000ne 'if(/#1/){/Volume:.*?(\d+)%/; print "$1"}')
+
+if [ $VOLUME -lt 20 ]; then
+  echo -e '' $VOLUME'%'
+elif [ $VOLUME -lt 60 ]; then
+  echo -e '' $VOLUME'%'
+else
+  echo -e '' $VOLUME'%'
+fi

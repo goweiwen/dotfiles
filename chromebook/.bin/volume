@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+case $1 in
+  get)
+    if [ $(amixer sget Master | grep -Eom 1 '\[o(n|ff)\]') == "[off]" ]; then
+      echo "Off"
+    else
+      echo $(amixer sget Master | grep -Eom 1 '[0-9]*%')
+    fi
+    ;;
+  full)
+    local mixer="Master"
+    if [ $(amixer sget Headphone | grep -Eom 1 '\[o(n|ff)\]') == "[on]" ]; then
+      mixer="Headphone"
+    else
+      mixer="Front"
+    fi
+    echo $mixer: $(amixer sget Master | grep -Eom 1 '[0-9]*%')
+    ;;
+  set)
+    amixer set Master unmute > /dev/null
+    amixer set Master $2 > /dev/null
+    ;;
+  toggle)
+    amixer set Master toggle > /dev/null
+    ;;
+  switch)
+    if [ $(amixer sget Headphone | grep -Eom 1 '\[o(n|ff)\]') == "[on]" ]; then
+      amixer set Headphone mute > /dev/null
+      amixer set Front unmute > /dev/null
+      echo "Front"
+    else
+      amixer set Headphone unmute > /dev/null
+      amixer set Front mute > /dev/null
+      echo "Headphone"
+    fi
+    ;;
+esac

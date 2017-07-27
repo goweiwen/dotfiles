@@ -1,0 +1,80 @@
+#!/bin/zsh
+# Copyright (C) 2014 Julien Bonjean <julien@bonjean.info>
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+INSTANCE="${1:-BAT0}"
+ALERT_LOW="${2:-10}" # color will turn red under this value (default: 10%)
+UPOWER="/usr/bin/upower"
+
+if [ ! -x "$UPOWER" ]; then
+	echo "upower not found"
+	exit 1
+fi
+
+case $BLOCK_BUTTON in
+	3) backlight toggle ;;
+	4) backlight add 10 ;;
+	5) backlight add -10 ;;
+esac
+
+echo -e $($UPOWER -i /org/freedesktop/UPower/devices/battery_$INSTANCE |
+	awk -v alert_low=$ALERT_LOW '
+/state:/ {
+	state = $2
+}
+/time to full:/ {
+	remaining_time = $4 "" substr ($5, 0, 1)
+}
+/time to empty:/ {
+	remaining_time = $4 "" substr ($5, 0, 1)
+}
+/percentage:/ {
+	percentage = $2;
+}
+END {
+	gsub(/%$/,"",percentage)
+	if (state == "charging")
+		label = "\\uf0e7"
+	else if (state == "fully-charged")
+		label = "\\uf0e7"
+	else if (+percentage < 20)
+		label = "\\uf244"
+	else if (+percentage < 40)
+		label = "\\uf243"
+	else if (+percentage < 60)
+		label = "\\uf242"
+	else if (+percentage < 80)
+		label = "\\uf241"
+	else
+		label = "\\uf240"
+
+	if (percentage == "")
+		exit 1
+	else {
+		# full text
+		print label " " percentage "%" \
+			(state == "fully-charged" ? "" : " " remaining_time) "\\n"
+
+		# short text
+			label " " percentage "%\\n"
+
+		# color
+		if (state == "charging")
+			print "00FF00"
+		else if (+ percentage < + alert_low)
+			print "FF0000"
+	}
+}
+')

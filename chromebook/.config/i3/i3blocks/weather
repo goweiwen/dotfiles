@@ -1,0 +1,54 @@
+#!/bin/bash
+# Based on http://openweathermap.org/current
+
+API_KEY="2de143494c0b295cca9337e1e96b00e0"
+
+# Check on http://openweathermap.org/find
+CITY_ID="${BLOCK_INSTANCE}"
+
+URGENT_LOWER=20
+URGENT_HIGHER=40
+
+ICON_SUNNY="\uf185"
+ICON_CLOUDY="\uf0c2"
+ICON_RAINY="Rainy"
+ICON_STORM="Storms"
+ICON_SNOW="Snow"
+
+SYMBOL_CELSIUS="°C"
+
+WEATHER_URL="http://api.openweathermap.org/data/2.5/weather?id=${CITY_ID}&appid=${API_KEY}&units=metric"
+
+WEATHER_INFO=$(wget -qO- "${WEATHER_URL}")
+WEATHER_MAIN=$(echo "${WEATHER_INFO}" | grep -o -e '\"main\":\"[a-Z]*\"' | awk -F ':' '{print $2}' | tr -d '"')
+WEATHER_TEMP=$(echo "${WEATHER_INFO}" | grep -o -e '\"temp\":\-\?[0-9]*' | awk -F ':' '{print $2}' | tr -d '"')
+
+if [[ "${WEATHER_MAIN}" = *Snow* ]]; then
+  echo -e "${ICON_SNOW} ${WEATHER_TEMP}${SYMBOL_CELSIUS}"
+  echo ""
+elif [[ "${WEATHER_MAIN}" = *Rain* ]] || [[ "${WEATHER_MAIN}" = *Drizzle* ]]; then
+  echo -e "${ICON_RAINY} ${WEATHER_TEMP}${SYMBOL_CELSIUS}"
+  echo ""
+elif [[ "${WEATHER_MAIN}" = *Cloud* ]]; then
+  echo -e "${ICON_CLOUDY} ${WEATHER_TEMP}${SYMBOL_CELSIUS}"
+  echo ""
+elif [[ "${WEATHER_MAIN}" = *Clear* ]]; then
+  echo -e "${ICON_SUNNY} ${WEATHER_TEMP}${SYMBOL_CELSIUS}"
+  echo ""
+else
+  echo -e "${WEATHER_MAIN} ${WEATHER_TEMP}${SYMBOL_CELSIUS}"
+  echo ""
+fi
+
+if [[ $BLOCK_BUTTON -eq 3 ]]; then
+    if [[ $IS_ID -eq 1 ]]; then
+        xdg-open "http://openweathermap.org/city/${CITY_ID}"
+    else
+        SEARCH_QUERY=$(echo ${CITY_ID} | sed "s|,| |g")
+        xdg-open "http://openweathermap.org/find?q=${SEARCH_QUERY}"
+    fi
+fi
+
+if [[ "${WEATHER_TEMP}" -lt "${URGENT_LOWER}" ]] || [[ "${WEATHER_TEMP}" -gt "${URGENT_HIGHER}" ]]; then
+  exit 33
+fi

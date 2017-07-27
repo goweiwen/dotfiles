@@ -1,0 +1,18 @@
+#!/bin/bash
+
+case $BLOCK_BUTTON in
+  1) mpc toggle > /dev/null ;;
+  2) urxvt -name floating -e ncmpcpp & ;;
+  3) mpc next > /dev/null ;;
+  4) mpc volume +5 > /dev/null ;;
+  5) mpc volume -5 > /dev/null ;;
+esac
+
+STATUS=$(mpc status)
+if [[ $(echo $STATUS | grep -oE "Connection refused") == "Connection refused" ]]; then
+    echo ''
+elif [[ $(echo $STATUS | grep -oE "playing|paused") == "playing" ]]; then
+    echo -e "\uf04b $(mpc current)"
+else
+    echo -e "\uf04c $(mpc current)"
+fi

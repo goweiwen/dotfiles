@@ -1,0 +1,24 @@
+#!/usr/bin/zsh
+
+light_add() {
+    if [[ $(echo "$(light -G) <= (-1*$1)" | bc -l) -eq 1 ]]; then
+        light -Sr 1
+    else
+        light -S $(($(light -G) + $1)) > /dev/null
+    fi
+}
+
+light_toggle() {
+    if [[ $(light -G) == "100.00" ]]; then
+        light -S 20 > /dev/null
+    elif [ $(light -Gr) -eq "1" ]; then
+        light -S 100 > /dev/null
+    else
+        light -Sr 1 > /dev/null
+    fi
+}
+
+case $1 in
+    add) light_add $2 ;;
+    toggle) light_toggle ;;
+esac

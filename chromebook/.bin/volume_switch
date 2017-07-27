@@ -1,0 +1,26 @@
+#!/usr/bin/sh
+
+# Alsa
+
+# if [ $(amixer sget Headphone | grep -Eom 1 '\[o(n|ff)\]') == "[on]" ]; then
+#   amixer set Headphone mute > /dev/null
+#   amixer set Front unmute > /dev/null
+#   amixer set Front 100% > /dev/null
+#   amixer set Master unmute > /dev/null
+#   echo "Front"
+# else
+#   amixer set Front mute > /dev/null
+#   amixer set Headphone unmute > /dev/null
+#   amixer set Headphone 100% > /dev/null
+#   amixer set Master unmute > /dev/null
+#   echo "Headphone"
+# fi
+
+# Pulseaudio
+
+if [ "$(pacmd list-sinks | grep -oP 'active port: <analog-output-(.*)>')" == "active port: <analog-output-lineout>" ]; then
+  pactl set-sink-port 1 analog-output-headphones > /dev/null
+  amixer -c 0 set Front 0% > /dev/null
+else
+  pactl set-sink-port 1 analog-output-lineout > /dev/null
+fi
