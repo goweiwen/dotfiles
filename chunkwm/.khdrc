@@ -1,0 +1,98 @@
+# reload config
+cmd + alt + ctrl - r : khd -e "reload"; launchctl stop com.koekeishiya.chunkwm && launchctl start com.koekeishiya.chunkwm
+
+# open terminal, blazingly fast compared to iTerm/Hyper
+cmd + ctrl - return : osascript -e "tell application \"iTerm\" to create window with default profile"
+
+# focus window
+cmd + ctrl - h : chunkc tiling::window --focus west
+cmd + ctrl - j : chunkc tiling::window --focus south
+cmd + ctrl - k : chunkc tiling::window --focus north
+cmd + ctrl - l : chunkc tiling::window --focus east
+
+# equalize size of windows
+shift + alt - 0 : chunkc tiling::desktop --equalize
+
+# move window
+shift + cmd + ctrl - h : chunkc tiling::window --warp west
+shift + cmd + ctrl - j : chunkc tiling::window --warp south
+shift + cmd + ctrl - k : chunkc tiling::window --warp north
+shift + cmd + ctrl - l : chunkc tiling::window --warp east
+
+# move floating windows / windows on a floating space
+cmd + ctrl - up     : chunkc tiling::window --warp-floating fullscreen
+cmd + ctrl - left   : chunkc tiling::window --warp-floating left
+cmd + ctrl - right  : chunkc tiling::window --warp-floating right
+
+# send window to desktop
+ctrl + shift - left  : chunkc tiling::window --send-to-desktop prev; khd -p "ctrl - left"
+ctrl + shift - right : chunkc tiling::window --send-to-desktop next; khd -p "ctrl - right"
+ctrl + shift - 1 : chunkc tiling::window --send-to-desktop 1
+ctrl + shift - 2 : chunkc tiling::window --send-to-desktop 2
+ctrl + shift - 3 : chunkc tiling::window --send-to-desktop 3
+ctrl + shift - 4 : chunkc tiling::window --send-to-desktop 4
+ctrl + shift - 5 : chunkc tiling::window --send-to-desktop 5
+ctrl + shift - 6 : chunkc tiling::window --send-to-desktop 6
+
+# focus monitor
+cmd + ctrl - e  : chunkc tiling::monitor -f prev
+cmd + ctrl - r  : chunkc tiling::monitor -f next
+cmd + ctrl - 1  : chunkc tiling::monitor -f 1
+cmd + ctrl - 2  : chunkc tiling::monitor -f 2
+cmd + ctrl - 3  : chunkc tiling::monitor -f 3
+
+# send window to monitor and follow focus
+cmd + ctrl + shift - e  : chunkc tiling::window --send-to-monitor prev; chunkc tiling::monitor -f prev
+cmd + ctrl + shift - r  : chunkc tiling::window --send-to-monitor next; chunkc tiling::monitor -f next
+cmd + ctrl + shift - 1  : chunkc tiling::window --send-to-monitor 1; chunkc tiling::monitor -f 1
+cmd + ctrl + shift - 2  : chunkc tiling::window --send-to-monitor 2; chunkc tiling::monitor -f 2
+cmd + ctrl + shift - 3  : chunkc tiling::window --send-to-monitor 3; chunkc tiling::monitor -f 3
+
+# increase region size
+cmd + ctrl + alt - h : chunkc tiling::window --use-temporary-ratio -0.1 --adjust-window-edge east
+cmd + ctrl + alt - j : chunkc tiling::window --use-temporary-ratio -0.1 --adjust-window-edge north
+cmd + ctrl + alt - k : chunkc tiling::window --use-temporary-ratio  0.1 --adjust-window-edge north
+cmd + ctrl + alt - l : chunkc tiling::window --use-temporary-ratio  0.1 --adjust-window-edge east
+
+# set insertion point for focused container
+cmd + ctrl + shift + alt - f : chunkc tiling::window --use-insertion-point cancel
+cmd + ctrl + shift + alt - h : chunkc tiling::window --use-insertion-point west
+cmd + ctrl + shift + alt - j : chunkc tiling::window --use-insertion-point south
+cmd + ctrl + shift + alt - k : chunkc tiling::window --use-insertion-point north
+cmd + ctrl + shift + alt - l : chunkc tiling::window --use-insertion-point east
+
+# rotate tree
+cmd + ctrl - v : chunkc tiling::desktop --rotate 90
+
+# mirror tree y-axis
+cmd + ctrl - b : chunkc tiling::desktop --mirror vertical
+
+# mirror tree x-axis
+cmd + ctrl - n : chunkc tiling::desktop --mirror horizontal
+
+# toggle desktop offset
+cmd + ctrl - a : chunkc tiling::desktop --toggle offset
+
+# toggle window fullscreen
+cmd + ctrl - m : chunkc tiling::window --toggle fullscreen
+
+# toggle window native fullscreen
+cmd + ctrl - f : chunkc tiling::window --toggle native-fullscreen
+
+# toggle window parent zoom
+cmd + ctrl - d : chunkc tiling::window --toggle parent
+
+# toggle window split type
+cmd + ctrl - g : chunkc tiling::window --toggle split
+
+# float / unfloat window
+cmd + ctrl - t : chunkc tiling::window --toggle float
+
+# toggle sticky, float and resize to picture-in-picture size
+cmd + ctrl - s : chunkc tiling::window --toggle sticky;\
+                 chunkc tiling::window --warp-floating pip-right
+
+# change layout of desktop
+cmd + ctrl - z : chunkc tiling::desktop --layout bsp
+cmd + ctrl - x : chunkc tiling::desktop --layout monocle
+cmd + ctrl - c : chunkc tiling::desktop --layout float
