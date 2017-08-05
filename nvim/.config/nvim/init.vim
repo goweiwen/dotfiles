@@ -77,6 +77,7 @@ syntax enable
 set background=dark
 let base16colorspace=256
 colorscheme base16-ashes
+set termguicolors
 
 " set textwidth=80
 " set colorcolumn=+1
