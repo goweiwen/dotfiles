@@ -1,6 +1,6 @@
 #!/bin/sh
 
-emacs_app=/usr/local/opt/emacs-mac/Emacs.app
+emacs_app=/usr/local/opt/emacs-plus/Emacs.app
 
 if [ ! -x $emacs_app ]; then
   echo "Emacs.app not found" >&2

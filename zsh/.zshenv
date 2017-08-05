@@ -1,2 +1,3 @@
 export PATH=/Users/weiwen/.bin:/usr/local/bin:$PATH
-export EDITOR=nvim
+export EDITOR=emacsclient
+export ALTERNATIVE_EDITOR=''

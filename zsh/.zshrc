@@ -29,7 +29,10 @@ bindkey -e
 # Aliases
 alias vim='nocorrect nvim '
 alias please='sudo `fc -ln -1`'
+alias emacs='/usr/local/Cellar/emacs-plus/25.2_1/bin/emacs'
+alias emacsclient='/usr/local/Cellar/emacs-plus/25.2_1/bin/emacsclient'
 
+alias e='nocorrect /usr/local/Cellar/emacs-plus/25.2_1/bin/emacsclient '
 alias v='nocorrect nvim '
 alias vf='f -e nvim '
 alias o='open '
