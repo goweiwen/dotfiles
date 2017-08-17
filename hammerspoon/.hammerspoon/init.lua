@@ -1,112 +1,165 @@
-spaces = require 'hs._asm.undocumented.spaces'
+local one = 'ctrl-cmd'
+local two = 'ctrl-shift-cmd'
+local three = 'ctrl-alt'
+local four = 'ctrl-alt-shift'
 
-local zeroth = 'ctrl'
-local first = 'ctrl-cmd'
-local second = 'ctrl-shift-cmd'
-
-hs.grid.MARGINX   = 10
-hs.grid.MARGINY   = 10
-hs.grid.GRIDWIDTH   = 3
-hs.grid.GRIDHEIGHT   = 2
-
--- global operations
-hs.hotkey.bind(first, ';', function() hs.grid.snap(hs.window.focusedWindow()) end)
-hs.hotkey.bind(first, "'", function() hs.fnutils.map(hs.window.visibleWindows(), hs.grid.snap) end)
-
--- adjust grid size
-hs.hotkey.bind(first, '=', function() hs.grid.adjustWidth( 1) end)
-hs.hotkey.bind(first, '-', function() hs.grid.adjustWidth(-1) end)
-hs.hotkey.bind(first, ']', function() hs.grid.adjustHeight( 1) end)
-hs.hotkey.bind(first, '[', function() hs.grid.adjustHeight(-1) end)
-
--- Window Hints
-hs.hotkey.bind(first, '.', function() hs.hints.windowHints(hs.window.allWindows()) end)
-hs.hotkey.bind(first, '/', hs.grid.toggleShow)
-
--- change focus
-hs.hotkey.bind(first, 'H', function() hs.window.focusedWindow():focusWindowWest() end)
-hs.hotkey.bind(first, 'J', function() hs.window.focusedWindow():focusWindowSouth() end)
-hs.hotkey.bind(first, 'K', function() hs.window.focusedWindow():focusWindowNorth() end)
-hs.hotkey.bind(first, 'L', function() hs.window.focusedWindow():focusWindowEast() end)
-hs.hotkey.bind(first, 'left', function() hs.window.focusedWindow():focusWindowWest() end)
-hs.hotkey.bind(first, 'down', function() hs.window.focusedWindow():focusWindowSouth() end)
-hs.hotkey.bind(first, 'up', function() hs.window.focusedWindow():focusWindowNorth() end)
-hs.hotkey.bind(first, 'right', function() hs.window.focusedWindow():focusWindowEast() end)
-
--- multi monitor
-hs.hotkey.bind(first, 'E', hs.grid.pushWindowNextScreen)
-hs.hotkey.bind(first, 'R', hs.grid.pushWindowPrevScreen)
-
--- move windows
-hs.hotkey.bind(second, 'H', hs.grid.pushWindowLeft)
-hs.hotkey.bind(second, 'J', hs.grid.pushWindowDown)
-hs.hotkey.bind(second, 'K', hs.grid.pushWindowUp)
-hs.hotkey.bind(second, 'L', hs.grid.pushWindowRight)
-hs.hotkey.bind(second, 'left', hs.grid.pushWindowLeft)
-hs.hotkey.bind(second, 'down', hs.grid.pushWindowDown)
-hs.hotkey.bind(second, 'up', hs.grid.pushWindowUp)
-hs.hotkey.bind(second, 'right', hs.grid.pushWindowRight)
-hs.hotkey.bind(first, 'M', hs.grid.maximizeWindow)
-hs.hotkey.bind(first, 'M', hs.grid.maximizeWindow)
-
--- resize windows
-local resizeMode = hs.hotkey.modal.new(first, 'R', 'Resize')
-resizeMode:bind('', 'H', hs.grid.resizeWindowThinner)
-resizeMode:bind('', 'J', hs.grid.resizeWindowShorter)
-resizeMode:bind('', 'K', hs.grid.resizeWindowTaller)
-resizeMode:bind('', 'L', hs.grid.resizeWindowWider)
-resizeMode:bind('', 'left', hs.grid.resizeWindowThinner)
-resizeMode:bind('', 'down', hs.grid.resizeWindowShorter)
-resizeMode:bind('', 'up', hs.grid.resizeWindowTaller)
-resizeMode:bind('', 'right', hs.grid.resizeWindowWider)
-resizeMode:bind('', 'Escape', function() resizeMode:exit() end)
-resizeMode:bind('', 'Return', function() resizeMode:exit() end)
-
-function nextSpace()
-  allSpaces = spaces.query()
-  activeSpace = spaces.activeSpace()
-  for i, v in ipairs(allSpaces) do
-    if v ==  activeSpace then
-      return allSpaces[(i-2) % #allSpaces + 1]
-    end
-  end
+-- Util
+local bind = hs.hotkey.bind
+local new = hs.hotkey.new
+function execute(cmd)
+  return function() hs.execute(cmd, true) end
 end
-
-function prevSpace()
-  allSpaces = spaces.query()
-  activeSpace = spaces.activeSpace()
-  for i, v in ipairs(allSpaces) do
-    if v ==  activeSpace then
-      return allSpaces[(i) % #allSpaces + 1]
-    end
-  end
+local delay = hs.eventtap.keyRepeatInterval()
+function keyStroke(mod, key)
+  return function() hs.timer.doAfter(0.01, function() hs.eventtap.keyStroke(mod, key, delay) end) end
 end
-
-function activeSpace()
-  local allSpaces = spaces.query()
-  local activeSpace = spaces.activeSpace()
-  for i, v in ipairs(allSpaces) do
-    if v ==  activeSpace then
-      return i
-    end
-  end
-  return 1
+function compose2(a, b)
+  return function() a() b() end
 end
-
--- move spaces
-hs.hotkey.bind('ctrl-cmd', 'right', nil, function() hs.timer.doAfter(0.01, function() hs.eventtap.keyStroke('ctrl', 'left') end) end)
-hs.hotkey.bind('ctrl-cmd', 'left', nil, function() hs.timer.doAfter(0.01, function() hs.eventtap.keyStroke('ctrl', 'right') end) end)
-hs.hotkey.bind('ctrl-shift', 'left', nil, function() hs.timer.doAfter(0.01, function() hs.window.focusedWindow():spacesMoveTo(prevSpace()); hs.eventtap.keyStroke('ctrl', 'left') end) end)
-hs.hotkey.bind('ctrl-shift', 'right', nil, function() hs.timer.doAfter(0.01, function() hs.window.focusedWindow():spacesMoveTo(nextSpace()); hs.eventtap.keyStroke('ctrl', 'right') end) end)
--- hs.hotkey.bind('ctrl-shift', 'left', function() hs.window.focusedWindow():spacesMoveTo(prevSpace()) end, function() spaces.changeToSpace(prevSpace()) end)
--- hs.hotkey.bind('ctrl-shift', 'right', function() hs.window.focusedWindow():spacesMoveTo(nextSpace()) end, function() spaces.changeToSpace(nextSpace()) end)
-
--- mission control/expose
-hs.hotkey.bind('ctrl-cmd', 'up', nil, function() hs.timer.doAfter(0.01, function() hs.eventtap.keyStroke('ctrl', 'up') end) end)
-hs.hotkey.bind('ctrl-cmd', 'down', nil, function() hs.timer.doAfter(0.01, function() hs.eventtap.keyStroke('ctrl', 'down') end) end)
 
 -- Reload
-hs.hotkey.bind('ctrl-shift-cmd', 'R', function() hs.reload() end)
+bind('ctrl-cmd-alt', 'r', function() hs.reload() end)
 
-hs.alert('Config loaded.')
--- hs.notify.new({ title = "Hammerspoon", informativeText = "Config loaded." }):send()
+--
+-- Launchers
+--
+
+-- Terminal
+bind('cmd', 'return',
+     function() hs.applescript('tell application "iTerm" to create window with default profile') end)
+
+-- Finder
+bind('cmd', 'e', execute('open ~'))
+
+-- Do not disturb
+bind(one, 'n', compose2(
+       function() hs.alert(hs.caffeinate.toggle('displayIdle') and 'Caffeine' or 'Decaff') end,
+       keyStroke('ctrl-cmd', 'n')))
+
+-- Trackpad Gestures
+bind(one, 'up', nil, keyStroke('ctrl', 'up'))
+bind(one, 'down', nil, keyStroke('ctrl', 'down'))
+bind(one, 'left', nil, keyStroke('ctrl', 'left'))
+bind(one, 'right', nil, keyStroke('ctrl', 'right'))
+
+--
+-- chunkwm
+--
+
+-- Focus window
+bind(one, 'h', execute('chunkc tiling:window --focus west'))
+bind(one, 'j', execute('chunkc tiling:window --focus south'))
+bind(one, 'k', execute('chunkc tiling:window --focus north'))
+bind(one, 'l', execute('chunkc tiling:window --focus east'))
+
+-- Move window
+bind(two, 'h', execute('chunkc tiling:window --warp west'))
+bind(two, 'j', execute('chunkc tiling:window --warp south'))
+bind(two, 'k', execute('chunkc tiling:window --warp north'))
+bind(two, 'l', execute('chunkc tiling:window --warp east'))
+
+-- Focus Space/Monitor
+bind(three, 'h', nil, keyStroke('ctrl', 'left'))
+bind(three, 'j', execute('chunkc tiling:monitor --focus prev'))
+bind(three, 'k', execute('chunkc tiling:monitor --focus next'))
+bind(three, 'l', nil, keyStroke('ctrl', 'right'))
+
+-- Move Space/Monitor
+bind(four, 'h', compose2(
+       execute('chunkc tiling:window --send-to-desktop prev'),
+       keyStroke('ctrl', 'left')))
+bind(four, 'j', execute('chunkc tiling:window --send-to-monitor prev'))
+bind(four, 'k', execute('chunkc tiling:window --send-to-monitor next'))
+bind(four, 'l', compose2(
+       execute('chunkc tiling:window --send-to-desktop next'),
+       keyStroke('ctrl', 'right')))
+
+bind('ctrl-shift', 'left', compose2(
+       execute('chunkc tiling:window --send-to-desktop prev'),
+       keyStroke('ctrl', 'left')))
+bind('ctrl-shift', 'right', compose2(
+       execute('chunkc tiling:window --send-to-desktop next'),
+       keyStroke('ctrl', 'right')))
+
+for i = 1, 4 do
+  bind(four, tostring(i), compose2(
+         execute('chunkc tiling:window --send-to-desktop ' .. tostring(i)),
+         keyStroke('ctrl', tostring(i))))
+end
+
+-- Resize mode
+local main = hs.hotkey.modal.new(one, ',', 'Window')
+main:bind('', 'x', execute('chunkc tiling:desktop --mirror vertical'))
+main:bind('', 'y', execute('chunkc tiling:desktop --mirror horizontal'))
+main:bind('', 'r', execute('chunkc tiling:desktop --rotate 90'))
+main:bind('', 'h', execute('chunkc tiling:window --use-temporary-ratio 0.1 --adjust-window-edge west'))
+main:bind('', 'j', execute('chunkc tiling:window --use-temporary-ratio 0.1 --adjust-window-edge south'))
+main:bind('', 'k', execute('chunkc tiling:window --use-temporary-ratio 0.1 --adjust-window-edge north'))
+main:bind('', 'l', execute('chunkc tiling:window --use-temporary-ratio 0.1 --adjust-window-edge east'))
+main:bind('shift', 'h', execute('chunkc tiling:window --use-temporary-ratio -0.1 --adjust-window-edge east'))
+main:bind('shift', 'j', execute('chunkc tiling:window --use-temporary-ratio -0.1 --adjust-window-edge north'))
+main:bind('shift', 'k', execute('chunkc tiling:window --use-temporary-ratio -0.1 --adjust-window-edge south'))
+main:bind('shift', 'l', execute('chunkc tiling:window --use-temporary-ratio -0.1 --adjust-window-edge west'))
+main:bind('', 'escape', function()
+            hs.alert('Esc')
+            main:exit()
+end)
+
+-- Window
+bind(one, 'b', execute('chunkc tiling:desktop --toggle offset'))
+bind(one, 'm', execute('chunkc tiling:window --toggle fullscreen'))
+bind(one, 'f', execute('chunkc tiling:window --toggle native-fullscreen'))
+bind(one, 'z', execute('chunkc tiling:window --toggle parent'))
+bind(one, 't', execute('chunkc tiling:window --toggle float'))
+
+-- Next layout
+local layouts = {'bsp', 'monocle', 'float'}
+local layout = 1
+bind(one, 'space', function()
+       layout = layout % #layouts + 1
+       hs.execute('chunkc tiling:desktop --layout ' .. layouts[layout], true)
+       hs.alert(layouts[layout]:gsub('^%l', string.upper))
+                   end, exit)
+
+-- Vim bindings
+vim = {}
+function vim.bind() for i, v in ipairs(vim.binds) do v:enable() end end
+  function vim.unbind() for i, v in ipairs(vim.binds) do v:disable() end end
+
+    vim.binds = {
+      new('', 'd', keyStroke('', 'space'), nil, keyStroke('', 'space')),
+      new('', 'e', keyStroke('shift', 'space'), nil, keyStroke('shift', 'space')),
+      new('', 'h', keyStroke('', 'left'), nil, keyStroke('', 'left')),
+      new('', 'j', keyStroke('', 'down'), nil, keyStroke('', 'down')),
+      new('', 'k', keyStroke('', 'up'), nil, keyStroke('', 'up')),
+      new('', 'l', keyStroke('', 'right'), nil, keyStroke('', 'right')),
+      new(one, 'escape', vim.unbind)
+    }
+
+    bind(one, 'escape', vim.bind)
+
+    -- Preview.app
+    local wf = hs.window.filter
+    wf.new {'Preview', 'Finder'}
+      :subscribe(wf.windowFocused, vim.bind)
+      :subscribe(wf.windowUnfocused, vim.unbind)
+
+    -- Window Chooser
+    function choices()
+      local choices = {}
+      for k, v in ipairs(hs.window.orderedWindows()) do
+        local text = v:title() == '' and v:application():name() or v:title() .. ' - ' .. v:application():name(),
+        table.insert(choices, {text = text, id = v:id()})
+      end
+      table.insert(choices, 1, table.remove(choices))
+      return choices
+    end
+
+    local chooser = hs.chooser.new(function(c) hs.window.get(c.id):focus() end)
+      :choices(choices)
+
+    bind('cmd', '`', function() chooser:refreshChoicesCallback():query(''):show() end)
+
+    -- End
+
+    hs.alert('Config loaded.')
