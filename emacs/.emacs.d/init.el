@@ -28,12 +28,12 @@
       user-mail-address "goweiwen@gmail.com")
 
 ;; Persistent Server
-(use-package mac-pseudo-daemon
-  :init
-  (mac-pseudo-daemon-mode))
-;; (require 'server)
-;; (unless (server-running-p)
-;;   (server-start))
+;; (use-package mac-pseudo-daemon
+;;   :init
+;;   (mac-pseudo-daemon-mode))
+(require 'server)
+(unless (server-running-p)
+  (server-start))
 
 ;; Reload init.el
 (defun reload-init ()
@@ -45,6 +45,17 @@
   (interactive)
   (switch-to-buffer (find-file-noselect "~/.emacs.d/init.el")))
 
+;; Hot reloading init.el
+
+(defun hot-reload-init ()
+  (when (string= (buffer-file-name) "/Users/weiwen/.dotfiles/emacs/.emacs.d/init.el")
+    (load-file (buffer-file-name))))
+
+(add-hook 'after-save-hook 'hot-reload-init)
+
+;; Use case-insensitive file search
+(setq read-file-name-completion-ignore-case t)
+
 ;; Auto Revert
 (diminish 'auto-revert-mode)
 (global-auto-revert-mode 1)
@@ -53,7 +64,7 @@
 (savehist-mode 1)
 
 ;; Save Session
-(desktop-save-mode 1)
+; (desktop-save-mode 1)
 
 ;; Recentf
 (require 'recentf)
@@ -76,9 +87,11 @@
  '(variable-pitch ((t (:family "SFNS" :height 140)))))
 
 ;; Theme
-(use-package base16-theme
-  :config
-  (load-theme 'base16-ashes t))
+(if window-system
+    (use-package base16-theme
+      :config
+      (setq base16-theme-256-color-source 'base16-shell)
+      (load-theme 'base16-ashes t)))
 
 ;; Tweak window chrome
 (tool-bar-mode 0)
@@ -86,13 +99,17 @@
 (when window-system
   (scroll-bar-mode -1))
 
+;; Dashboard
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-startup-banner 'official
+        dashboard-items '((recents . 5)
+                          (bookmarks . 5)
+                          (projects . 5))))
+
 ;; Frame title
 (setq frame-title-format '((:eval (projectile-project-name))))
-
-;; Fancy lambdas
-(global-prettify-symbols-mode t)
-(setq inhibit-splash-screen t)
-(setq inhibit-startup-message t)
 
 ;; Hide a few minor modes
 (diminish 'undo-tree-mode)
@@ -122,38 +139,17 @@
       mouse-wheel-progressive-speed nil
       mouse-wheel-scroll-amount '(2 ((shift) . 4) ((control) . 6)))
 
+;; ;; Focus on current paragraph
+;; (use-package focus
+;;   :config
+;;   (focus-mode))
+
 ;; evil-mode
 ;; ===
 
 (use-package evil
   :init
   (evil-mode 1))
-  ;; :config
-  ;; (define-key evil-normal-state-map [? ] 'counsel-M-x))
-
-;; Leader key
-(use-package evil-leader
-  ;; :after ivy
-  ;; :after magit
-  :init
-  (global-evil-leader-mode)
-  :config
-  (defun hrs/search-project-for-symbol-at-point ()
-    "Use `projectile-ag' to search the current project for `symbol-at-point'."
-    (interactive)
-    (projectile-ag (projectile-symbol-at-point)))
-
-  (evil-leader/set-leader "<SPC>")
-  (evil-leader/set-key "<SPC>" 'counsel-M-x)
-  (evil-leader/set-key "b" 'switch-to-buffer)
-  (evil-leader/set-key "f" 'counsel-find-file)
-  (evil-leader/set-key "g" 'magit-status)
-  (evil-leader/set-key "h" 'counsel-describe-variable)
-  (evil-leader/set-key "p" 'projectile-find-file)
-  (evil-leader/set-key "C-p" 'projectile-switch-project)
-  (evil-leader/set-key "v" 'projectile-ag)
-  (evil-leader/set-key "C-v" 'hrs/search-project-for-symbol-at-point)
-  (evil-leader/set-key "s" 'swiper))
 
 ;; evil-surround
 (use-package evil-surround
@@ -222,6 +218,30 @@
 ;; Keybindings
 ;; ===
 
+;; Leader key is <SPC>
+(defun hrs/search-project-for-symbol-at-point ()
+  "Use `projectile-ag' to search the current project for `symbol-at-point'."
+  (interactive)
+  (projectile-ag (projectile-symbol-at-point)))
+
+(defvar leader-map (make-sparse-keymap))
+(evil-define-key 'normal global-map [? ] leader-map)
+(define-key leader-map "!" 'flycheck-list-errors)
+(define-key leader-map "b" 'switch-to-buffer)
+(define-key leader-map "e" 'edit-init)
+(define-key leader-map "f" 'counsel-find-file)
+(define-key leader-map "g" 'magit-status)
+(define-key leader-map "h" 'counsel-describe-variable)
+(define-key leader-map "k" 'kill-buffer)
+(define-key leader-map "p" 'projectile-find-file)
+(define-key leader-map "r" 'counsel-recentf)
+(define-key leader-map "s" 'swiper)
+(define-key leader-map "v" 'projectile-ag)
+(define-key leader-map [? ] 'counsel-M-x)
+(define-key leader-map [C-p] 'projectile-switch-project)
+(define-key leader-map [C-v] 'hrs/search-project-for-symbol-at-point)
+(define-key leader-map [tab] 'mode-line-other-buffer)
+
 ;; Zoom
 (use-package default-text-scale
   :config
@@ -261,26 +281,62 @@
   :config
   (setq nlinum-relative-redisplay-delay 0
         nlinum-relative-current-symbol ""
-        nlinum-relative-offset 0)
+        nlinum-relative-offset 0
+        nlinum-format "%d ")
   (nlinum-relative-setup-evil)
   (add-hook 'prog-mode-hook 'nlinum-relative-mode))
 
+;; Git Gutter
+(use-package git-gutter
+  :config
+  (global-git-gutter-mode +1)
+  (git-gutter:linum-setup))
 
 ;; Line wrapping
 (setq-default truncate-lines t)
 (add-hook 'text-mode-hook (lambda () (setq truncate-lines nil)))
 
+;; ;; Minimap
+;; (use-package minimap
+;;   :init
+;;   (minimap-mode)
+;;   :config
+;;   (setq minimap-window-location 'right
+;;         minimap-width-fraction 0.1
+;;         minimap-highlight-line nil))
+
+;; Fancy lambdas
+(global-prettify-symbols-mode t)
+(setq inhibit-splash-screen t)
+(setq inhibit-startup-message t)
+
 ;; Whitespace-mode
-(require 'whitespace)
-(diminish 'whitespace-mode)
-(setq whitespace-line-column 105)
-(setq whitespace-style '(face lines-tail))
-(add-hook 'prog-mode-hook 'whitespace-mode)
+(use-package whitespace
+  :diminish whitespace-mode
+  :config
+  (setq whitespace-line-column 80
+        whitespace-style '(face
+                           traiiling
+                           space-before-tab
+                           space-after-tab
+                           lines-tail
+                           empty))
+  (add-hook 'prog-mode-hook 'whitespace-mode))
+
+;; Path information in mode-line
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'post-forward
+      uniquify-min-dir-content 7)
 
 ;; Smooth scrolling
 (use-package smooth-scrolling
   :init
   (smooth-scrolling-mode 1))
+
+;; Autocompletion
+(use-package company
+  :init
+  (add-hook 'after-init-hook 'global-company-mode))
 
 ;; Code highlighting
 (use-package highlight-numbers
@@ -351,7 +407,9 @@
   (ivy-mode 1)
   :config
   (setq ivy-use-virtual-buffers t
-        enable-recursive-minibuffers t))
+        enable-recursive-minibuffers t)
+  (add-to-list 'ivy-ignore-buffers "\\*Messages\\*")
+  (add-to-list 'ivy-ignore-buffers "\\*magit"))
 
 ;; which-key
 ;; ===
@@ -400,6 +458,18 @@
 ;; Python
 ;; ===
 
+;; Anaconda mode
+(use-package anaconda-mode
+  :init
+  (add-hook 'python-mode-hook 'anaconda-mode)
+  (add-hook 'python-mpde-hook 'anaconda-eldoc-mode))
+
+;; Autocompletion
+(use-package company-anaconda
+  :config
+  (eval-after-load "company"
+    '(add-to-list 'company-backends '(company-anaconda))))
+
 ;; Disable Aggressive Indentation
 (add-hook 'python-mode-hook (lambda () (aggressive-indent-mode -1)))
 
@@ -409,6 +479,11 @@
   (add-hook 'python-mode-hook 'highlight-indent-guides-mode)
   :config
   (setq highlight-indent-guides-method 'character))
+
+;; Use yapf to format
+(use-package yapfify
+  :init
+  (add-hook 'python-mode-hook 'yapf-mode))
 
 ;; HTML
 ;; ===
@@ -429,11 +504,15 @@
 ;; CSS
 ;; ===
 (setq-default css-indent-offset 2)
+(use-package less-css-mode)
+(use-package sass-mode)
 (use-package rainbow-mode
   :diminish rainbow-mode
   :config
   (add-hook 'css-mode-hook 'rainbow-mode)
-  (add-hook 'css-mode-hook 'rainbow-mode))
+  (add-hook 'sass-mode-hook 'rainbow-mode)
+  (add-hook 'html-mode-hook 'rainbow-mode)
+  (add-hook 'less-mode-hook 'rainbow-mode))
 
 ;; JavaScript
 ;; ===
@@ -516,11 +595,24 @@
         org-html-postamble nil
         org-latex-pdf-process '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
                                 "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                                "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f")))
+                                "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f")
+        org-startup-with-latex-preview t
+        org-startup-with-inline-images t))
 
 ;; Export
-(use-package ox-md)
-(use-package ox-beamer)
+(require 'ox-md)
+(require 'ox-beamer)
+
+;; Other Languages
+;; ===
+
+(use-package coffee-mode)
+(use-package lua-mode)
+(use-package elm-mode)
+(use-package json-mode)
+(use-package markdown-mode)
+(use-package haskell-mode)
+(use-package swift-mode)
 
 ;; Writing
 ;; ===
@@ -529,7 +621,7 @@
 (use-package darkroom)
 
 ;; Use variable pitch for text modes
-(use-package mixed-pitch-mode
+(use-package mixed-pitch
   :init
   (add-hook 'text-mode-hook 'mixed-pitch-mode))
 
@@ -556,8 +648,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (mixed-pitch-mode ox-beamer ox-md yasnippet which-key web-mode vue-mode vimish-fold telephone-line spaceline-all-the-icons solaire-mode smooth-scrolling rjsx-mode rainbow-mode quelpa-use-package prettier-js org-plus-contrib nlinum-relative neotree mac-pseudo-daemon highlight-quoted highlight-operators highlight-numbers highlight-indent-guides highlight-escape-sequences highlight-defined helm-projectile flycheck-pos-tip flycheck-color-mode-line evil-visual-mark-mode evil-surround evil-snipe evil-rsi evil-magit evil-leader evil-commentary evil-args doom-themes diff-hl default-text-scale darkroom counsel-projectile beacon base16-theme anaconda-mode aggressive-indent ag))))
+ '(package-selected-packages (quote (company-anaconda py-yapf ag))))
 
 ;;; init.el ends here
