@@ -115,7 +115,6 @@
 (diminish 'undo-tree-mode)
 (diminish 'flycheck-mode)
 (diminish 'projectile-mode)
-(diminish 'which-key-mode)
 
 ;; Mode line
 (use-package telephone-line
@@ -162,11 +161,21 @@
   :init
   (evil-commentary-mode))
 
-;; ;; evil-snipe (vim-sneak)
-;; (use-package evil-snipe
-;;   :diminish evil-snipe-local-mode
-;;   :init
-;;   (evil-snipe-mode 1))
+;; evil-snipe (vim-sneak)
+(use-package evil-snipe
+  :diminish evil-snipe-local-mode
+  :init
+  (evil-snipe-mode 1)
+  (add-hook 'magit-mode-hook 'turn-off-evil-snipe-override-mode)
+  :config
+  (setq evil-snipe-scope 'visible
+        evil-snipe-repeat-scope 'whole-visible
+        evil-snipe-spillover-scope 'buffer))
+
+;; Multiple cursors
+(use-package evil-mc
+  :init
+  (global-evil-mc-mode 1))
 
 ;; evil-arg
 ;; Motion for ,; delimited arguments
@@ -218,6 +227,15 @@
 ;; Keybindings
 ;; ===
 
+;; which-key
+(use-package which-key
+  :diminish which-key-mode
+  :init
+  (which-key-mode)
+  :config
+  (which-key-setup-side-window-bottom)
+  (setq which-key-idle-delay 0.2))
+
 ;; Leader key is <SPC>
 (defun hrs/search-project-for-symbol-at-point ()
   "Use `projectile-ag' to search the current project for `symbol-at-point'."
@@ -225,18 +243,30 @@
   (projectile-ag (projectile-symbol-at-point)))
 
 (defvar leader-map (make-sparse-keymap))
-(evil-define-key 'normal global-map [? ] leader-map)
-(define-key leader-map "!" 'flycheck-list-errors)
-(define-key leader-map "b" 'switch-to-buffer)
-(define-key leader-map "e" 'edit-init)
-(define-key leader-map "f" 'counsel-find-file)
+(define-key evil-normal-state-map [? ] leader-map)
+(define-key evil-motion-state-map [? ] leader-map)
+(define-key leader-map "!!" 'flycheck-list-errors)
+(define-key leader-map "!n" 'flycheck-next-error)
+(define-key leader-map "!p" 'flycheck-previous-error)
+(define-key leader-map "bb" 'switch-to-buffer)
+(define-key leader-map "bd" 'kill-this-buffer)
+(define-key leader-map "fe" 'edit-init)
+(define-key leader-map "ff" 'counsel-find-file)
+(define-key leader-map "fr" 'counsel-recentf)
+(define-key leader-map "fv" 'counsel-ag)
+(define-key leader-map "fs" 'swiper)
 (define-key leader-map "g" 'magit-status)
 (define-key leader-map "h" 'counsel-describe-variable)
-(define-key leader-map "k" 'kill-buffer)
-(define-key leader-map "p" 'projectile-find-file)
-(define-key leader-map "r" 'counsel-recentf)
-(define-key leader-map "s" 'swiper)
-(define-key leader-map "v" 'projectile-ag)
+(define-key leader-map "pc" 'projectile-compile-project)
+(define-key leader-map "pd" 'projectile-dired)
+(define-key leader-map "pf" 'projectile-find-file)
+(define-key leader-map "pp" 'projectile-switch-project)
+(define-key leader-map "pr" 'projectile-recentf)
+(define-key leader-map "pt" 'projectile-test)
+(define-key leader-map "pv" 'projectile-ag)
+(define-key leader-map "wd" 'delete-window)
+(define-key leader-map "wh" 'split-window-verticaly)
+(define-key leader-map "wv" 'split-window-horizontally)
 (define-key leader-map [? ] 'counsel-M-x)
 (define-key leader-map [C-p] 'projectile-switch-project)
 (define-key leader-map [C-v] 'hrs/search-project-for-symbol-at-point)
@@ -287,10 +317,10 @@
   (add-hook 'prog-mode-hook 'nlinum-relative-mode))
 
 ;; Git Gutter
-(use-package git-gutter
-  :config
-  (global-git-gutter-mode +1)
-  (git-gutter:linum-setup))
+;; (use-package git-gutter
+;;   :config
+;;   (global-git-gutter-mode +1)
+;;   (git-gutter:linum-setup))
 
 ;; Line wrapping
 (setq-default truncate-lines t)
@@ -411,16 +441,6 @@
   (add-to-list 'ivy-ignore-buffers "\\*Messages\\*")
   (add-to-list 'ivy-ignore-buffers "\\*magit"))
 
-;; which-key
-;; ===
-(use-package which-key
-  :diminish which-key-mode
-  :init
-  (which-key-mode)
-  :config
-  (which-key-setup-side-window-bottom)
-  (setq which-key-idle-delay 0.2))
-
 ;; Dired
 ;; ===
 
@@ -457,6 +477,9 @@
 
 ;; Python
 ;; ===
+
+(setq-default python-indent 2)
+(add-hook 'python-mode-hook (lambda () (aggressive-indent-mode -1)))
 
 ;; Anaconda mode
 (use-package anaconda-mode
@@ -568,27 +591,18 @@
               (prettier-js-mode)
               (add-hook 'before-save-hook 'prettier-vue nil 'local))))
 
-;; Python
-;; ===
-
-(setq-default python-indent 2)
-(add-hook 'python-mode-hook (lambda () (aggressive-indent-mode -1)))
-
-(use-package anaconda-mode
-  :init
-  (add-hook 'python-mode-hook 'anaconda-mode))
-
 ;; Org
 ;; ===
 
-(use-package org-plus-contrib
+(use-package org
+  :ensure org-plus-contrib
   :init
   (add-hook 'org-mode-hook
             (lambda ()
+              (flyspell-mode)
               (org-bullets-mode t)))
-  (add-hook 'org-mode-hook 'flyspell-mode)
   :config
-  (setq org-ellipsis "▾"
+  (setq org-ellipsis " ▼"
         org-src-fontify-natively t
         org-src-tab-acts-natively t
         org-src-window-setup 'current-window
@@ -598,7 +612,6 @@
                                 "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f")
         org-startup-with-latex-preview t
         org-startup-with-inline-images t))
-
 ;; Export
 (require 'ox-md)
 (require 'ox-beamer)
