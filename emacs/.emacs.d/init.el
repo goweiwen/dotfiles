@@ -99,6 +99,9 @@
 (when window-system
   (scroll-bar-mode -1))
 
+;; Blend fringe background
+(set-face-attribute 'fringe nil :background nil)
+
 ;; Dashboard
 (use-package dashboard
   :config
@@ -133,10 +136,10 @@
   (telephone-line-mode))
 
 ;; Mouse scrolling
-(setq mac-mouse-wheel-smooth-scroll nil
-      mouse-wheel-follow-mouse t
-      mouse-wheel-progressive-speed nil
-      mouse-wheel-scroll-amount '(2 ((shift) . 4) ((control) . 6)))
+;; (setq mac-mouse-wheel-smooth-scroll nil
+;;       mouse-wheel-follow-mouse t
+;;       mouse-wheel-progressive-speed nil
+;;       mouse-wheel-scroll-amount '(2 ((shift) . 4) ((control) . 6)))
 
 ;; ;; Focus on current paragraph
 ;; (use-package focus
@@ -245,6 +248,8 @@
 (defvar leader-map (make-sparse-keymap))
 (define-key evil-normal-state-map [? ] leader-map)
 (define-key evil-motion-state-map [? ] leader-map)
+(require 'dired)
+(define-key dired-mode-map [? ] leader-map)
 (define-key leader-map "!!" 'flycheck-list-errors)
 (define-key leader-map "!n" 'flycheck-next-error)
 (define-key leader-map "!p" 'flycheck-previous-error)
@@ -304,7 +309,7 @@
 (global-subword-mode 1)
 
 ;; Highlight current line
-(global-hl-line-mode 1)
+(add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
 
 ;; Line numbers
 (use-package nlinum-relative
@@ -326,15 +331,6 @@
 (setq-default truncate-lines t)
 (add-hook 'text-mode-hook (lambda () (setq truncate-lines nil)))
 
-;; ;; Minimap
-;; (use-package minimap
-;;   :init
-;;   (minimap-mode)
-;;   :config
-;;   (setq minimap-window-location 'right
-;;         minimap-width-fraction 0.1
-;;         minimap-highlight-line nil))
-
 ;; Fancy lambdas
 (global-prettify-symbols-mode t)
 (setq inhibit-splash-screen t)
@@ -355,7 +351,7 @@
 
 ;; Path information in mode-line
 (require 'uniquify)
-(setq uniquify-buffer-name-style 'post-forward
+(setq uniquify-buffer-name-style 'forward
       uniquify-min-dir-content 7)
 
 ;; Smooth scrolling
@@ -563,13 +559,15 @@
 ;; React
 (use-package rjsx-mode
   :mode ("\\.js\\'" . rjsx-mode)
-  :init)
-                                        ; (setq js2-mode-show-strict-warnings nil
-                                        ;       js2-mode-show-parse-errors nil
-                                        ;       js2-indent-level 2
-                                        ;       js2-basic-offset 2
-                                        ;       js2-strict-trailing-comma-warning nil
-                                        ;       js2-strict-missing-semi-warning nil)
+  :init
+  (add-hook 'rjsx-mode-hook 'prettier-js-mode)
+  :config
+  (setq js2-mode-show-strict-warnings nil
+        js2-mode-show-parse-errors nil
+        js2-indent-level 2
+        js2-basic-offset 2
+        js2-strict-trailing-comma-warning nil
+        js2-strict-missing-semi-warning nil))
 
 ;; Vue
 (use-package vue-mode
@@ -577,19 +575,32 @@
   :init
   (defun prettier-vue ()
     (interactive)
-    (let ((original (point)))
-      (goto-char 0)
-      (let* ((script-start (re-search-forward "<script>" nil t))
-             (start (+ script-start 1))
-             (script-end (re-search-forward "</script>" nil t))
-             (end (- script-end 9)))
-        (prettier-js--prettify start end)
-        (goto-char original)
-        (vue-mode-reparse))))
+    (progn
+      (let ((original (point)))
+        (goto-char 0)
+        (let* ((script-start (re-search-forward "<script>" nil t))
+               (start (+ script-start 1))
+               (script-end (re-search-forward "</script>" nil t))
+               (end (- script-end 9)))
+          (prettier-js--prettify start end)
+          (goto-char original)))
+      (let ((original (point)))
+        (goto-char 0)
+        (let* ((script-start (re-search-forward "<template>" nil t))
+               (start (+ script-start 1))
+               (script-end (re-search-forward "</template>" nil t))
+               (end (- script-end 11)))
+          (sgml-pretty-print start end)
+          (indent-region start end)
+          (goto-char original)))
+      (vue-mode-reparse)))
   (add-hook 'vue-mode-hook
             (lambda ()
               (prettier-js-mode)
-              (add-hook 'before-save-hook 'prettier-vue nil 'local))))
+              (nlinum-relative-mode nil)
+              (add-hook 'before-save-hook 'prettier-vue nil 'local)))
+  :config
+  (setq mmm-submode-decoration-level 0))
 
 ;; Org
 ;; ===
@@ -611,7 +622,17 @@
                                 "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
                                 "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f")
         org-startup-with-latex-preview t
-        org-startup-with-inline-images t))
+        org-format-latex-options (plist-put org-format-latex-options :scale 0.8)
+        org-startup-with-inline-images t)
+  (define-key org-mode-map (kbd "$") (lambda ()
+                                       (interactive)
+                                       (insert "$")
+                                       (save-excursion
+                                         (left-char 1)
+                                         (if (org-inside-LaTeX-fragment-p)
+                                             (progn
+                                               (right-char 2)
+                                               (org-preview-latex-fragment)))))))
 ;; Export
 (require 'ox-md)
 (require 'ox-beamer)
@@ -631,12 +652,15 @@
 ;; ===
 
 ;; Darkroom
-(use-package darkroom)
+(use-package darkroom
+  :config
+  (setq darkroom-text-scale-increase 0)
+  (add-hook 'org-mode-hook 'darkroom-tentative-mode))
 
 ;; Use variable pitch for text modes
 (use-package mixed-pitch
   :init
-  (add-hook 'text-mode-hook 'mixed-pitch-mode))
+  (add-hook 'org-mode-hook 'mixed-pitch-mode))
 
 ;; Proselint
 (require 'flycheck)
@@ -661,6 +685,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (company-anaconda py-yapf ag))))
+ '(package-selected-packages
+   (quote
+    (olivetti olivetti-mode writeroom-mode minimap evil-snipe evil-mc company-anaconda py-yapf ag))))
 
 ;;; init.el ends here
