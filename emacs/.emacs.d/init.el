@@ -46,12 +46,19 @@
   (switch-to-buffer (find-file-noselect "~/.emacs.d/init.el")))
 
 ;; Hot reloading init.el
-
 (defun hot-reload-init ()
   (when (string= (buffer-file-name) "/Users/weiwen/.dotfiles/emacs/.emacs.d/init.el")
     (load-file (buffer-file-name))))
 
 (add-hook 'after-save-hook 'hot-reload-init)
+
+;; Backup directory
+(setq backup-by-copying t
+      backup-directory-alist '(("." . "~/.emacs.d/backups"))
+      delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)
 
 ;; Use case-insensitive file search
 (setq read-file-name-completion-ignore-case t)
@@ -258,10 +265,11 @@
 (define-key leader-map "fe" 'edit-init)
 (define-key leader-map "ff" 'counsel-find-file)
 (define-key leader-map "fr" 'counsel-recentf)
-(define-key leader-map "fv" 'counsel-ag)
 (define-key leader-map "fs" 'swiper)
+(define-key leader-map "fv" 'counsel-ag)
 (define-key leader-map "g" 'magit-status)
 (define-key leader-map "h" 'counsel-describe-variable)
+(define-key leader-map "pb" 'counsel-projectile-switch-to-buffer)
 (define-key leader-map "pc" 'projectile-compile-project)
 (define-key leader-map "pd" 'projectile-dired)
 (define-key leader-map "pf" 'projectile-find-file)
@@ -272,6 +280,7 @@
 (define-key leader-map "wd" 'delete-window)
 (define-key leader-map "wh" 'split-window-verticaly)
 (define-key leader-map "wv" 'split-window-horizontally)
+(define-key leader-map "ww" 'other-window)
 (define-key leader-map [? ] 'counsel-M-x)
 (define-key leader-map [C-p] 'projectile-switch-project)
 (define-key leader-map [C-v] 'hrs/search-project-for-symbol-at-point)
@@ -284,8 +293,8 @@
   (global-set-key "\M--" #'default-text-scale-decrease))
 
 ;; Copy/Paste
-(define-key global-map "\M-c" 'evil-yank)
-(define-key global-map "\M-v" 'yank)
+;; (define-key global-map "\M-c" 'evil-yank)
+;; (define-key global-map "\M-v" 'yank)
 
 ;; Switch buffers
 (define-key global-map [C-tab] 'next-buffer)
@@ -305,21 +314,20 @@
   :diminish aggressive-indent-mode
   :config (add-hook 'prog-mode-hook 'aggressive-indent-mode))
 
-;; Treat CamelCase as separate words
-(global-subword-mode 1)
+;; Treat _ as part of a word-object
+(with-eval-after-load 'evil
+  (defalias #'forward-evil-word #'forward-evil-symbol))
 
 ;; Highlight current line
 (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
 
 ;; Line numbers
-(use-package nlinum-relative
+(use-package linum-relative
+  :init
+  (add-hook 'prog-mode-hook 'linum-mode)
   :config
-  (setq nlinum-relative-redisplay-delay 0
-        nlinum-relative-current-symbol ""
-        nlinum-relative-offset 0
-        nlinum-format "%d ")
-  (nlinum-relative-setup-evil)
-  (add-hook 'prog-mode-hook 'nlinum-relative-mode))
+  (linum-relative-global-mode)
+  (setq linum-relative-current-symbol ""))
 
 ;; Git Gutter
 ;; (use-package git-gutter
@@ -414,7 +422,7 @@
   :init
   (projectile-mode)
   :config
-  (setq projectile-switch-project-action 'projectile-dired
+  (setq projectile-switch-project-action 'projectile-find-file
         projectile-use-git-grep t)
   (define-key evil-normal-state-map "\C-p" 'projectile-find-file))
 
@@ -441,6 +449,9 @@
 ;; ===
 
 (require 'dired)
+(use-package ranger
+  :config
+  (ranger-override-dired-mode t))
 
 ;; macOS GNU ls
 (let ((gls "/usr/local/bin/gls"))
@@ -590,14 +601,13 @@
                (start (+ script-start 1))
                (script-end (re-search-forward "</template>" nil t))
                (end (- script-end 11)))
-          (sgml-pretty-print start end)
+          ;; (sgml-pretty-print start end)
           (indent-region start end)
           (goto-char original)))
       (vue-mode-reparse)))
   (add-hook 'vue-mode-hook
             (lambda ()
               (prettier-js-mode)
-              (nlinum-relative-mode nil)
               (add-hook 'before-save-hook 'prettier-vue nil 'local)))
   :config
   (setq mmm-submode-decoration-level 0))
@@ -633,6 +643,7 @@
                                              (progn
                                                (right-char 2)
                                                (org-preview-latex-fragment)))))))
+
 ;; Export
 (require 'ox-md)
 (require 'ox-beamer)
@@ -651,16 +662,16 @@
 ;; Writing
 ;; ===
 
-;; Darkroom
-(use-package darkroom
-  :config
-  (setq darkroom-text-scale-increase 0)
-  (add-hook 'org-mode-hook 'darkroom-tentative-mode))
+;; ;; Darkroom
+;; (use-package darkroom
+;;   :config
+;;   (setq darkroom-text-scale-increase 0)
+;;   (add-hook 'org-mode-hook 'darkroom-tentative-mode))
 
-;; Use variable pitch for text modes
-(use-package mixed-pitch
-  :init
-  (add-hook 'org-mode-hook 'mixed-pitch-mode))
+;; ;; Use variable pitch for text modes
+;; (use-package mixed-pitch
+;;   :init
+;;   (add-hook 'org-mode-hook 'mixed-pitch-mode))
 
 ;; Proselint
 (require 'flycheck)
@@ -687,6 +698,6 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (olivetti olivetti-mode writeroom-mode minimap evil-snipe evil-mc company-anaconda py-yapf ag))))
+    (markdown-mode elm-mode vue-mode wc-mode ranger olivetti olivetti-mode writeroom-mode minimap evil-snipe evil-mc company-anaconda py-yapf ag))))
 
 ;;; init.el ends here
