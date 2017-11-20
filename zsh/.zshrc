@@ -6,14 +6,21 @@ if [[ -s ${ZDOTDIR:-${HOME}}/.zim/init.zsh ]]; then
   source ${ZDOTDIR:-${HOME}}/.zim/init.zsh
 fi
 
+# Source autoenv
+source "$HOME/.zsh-autoenv/autoenv.zsh"
+
 # Source fasd
-fasd_cache="$HOME/.fasd-init-bash"
+fasd_cache="$HOME/.fasd-init"
 if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
-  fasd --init posix-alias bash-hook bash-ccomp bash-ccomp-install >| "$fasd_cache"
+  fasd --init auto >| "$fasd_cache"
 fi
 source "$fasd_cache"
 unset fasd_cache
 alias z='fasd_cd -d'     # cd, same functionality as j in autojump
+alias zz='fasd_cd -d -i'     # cd with interactive selection
+
+# Setup virtualenv
+source /usr/local/anaconda3/bin/virtualenvwrapper.sh
 
 # base16-shell
 # BASE16_SHELL=$HOME/.config/base16-shell/
@@ -29,27 +36,32 @@ bindkey -e
 # Aliases
 alias vim='nocorrect nvim '
 alias please='sudo `fc -ln -1`'
-alias emacs='/usr/local/Cellar/emacs-plus/25.2_1/bin/emacs'
-alias emacsclient='/usr/local/Cellar/emacs-plus/25.2_1/bin/emacsclient'
+alias emacs='/usr/local/Cellar/emacs-mac/emacs-25.2-z-mac-6.5/bin/emacs'
+alias emacsclient='/usr/local/Cellar/emacs-mac/emacs-25.2-z-mac-6.5/bin/emacsclient'
 
-alias e='nocorrect /usr/local/Cellar/emacs-plus/25.2_1/bin/emacsclient '
-alias v='nocorrect nvim '
-alias vf='f -e nvim '
-alias o='open '
+alias jn='jupyter notebook'
+alias v='nocorrect nvim'
+alias vf='f -e nvim'
+alias o='open'
 
 alias ll='ls -l'
 alias la='ls -la'
 
-alias bi='brew install '
-alias br='brew remove '
-alias bs='brew search '
-alias bci='brew cask install '
-alias bcr='brew cask remove '
-alias bcs='brew cask search '
+alias bi='brew install'
+alias br='brew remove'
+alias bs='brew search'
+alias bl='brew list'
+alias bci='brew cask install'
+alias bcr='brew cask remove'
+alias bcs='brew cask search'
+alias bcl='brew cask list'
 
 alias vrc='vim ~/.config/nvim/init.vim'
 alias zrc='vim ~/.zshrc'
-# alias hrc='vim ~/.hammerspoon/init.lua'
-alias krc='vim ~/.khdrc'
+alias hrc='vim ~/.hammerspoon/init.lua'
 alias crc='vim ~/.chunkwmrc'
-alias hrc='vim ~/.hyper.js'
+
+# added by travis gem
+[ -f /Users/weiwen/.travis/travis.sh ] && source /Users/weiwen/.travis/travis.sh
+
+export PATH="$HOME/.yarn/bin:$PATH"
