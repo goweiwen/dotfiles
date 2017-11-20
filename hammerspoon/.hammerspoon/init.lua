@@ -1,3 +1,5 @@
+local spaces = require 'hs._asm.undocumented.spaces'
+
 local one = 'ctrl-cmd'
 local two = 'ctrl-shift-cmd'
 local three = 'ctrl-alt'
@@ -6,25 +8,26 @@ local four = 'ctrl-alt-shift'
 -- Util
 local bind = hs.hotkey.bind
 local new = hs.hotkey.new
+
 function execute(cmd)
   return function() hs.execute(cmd, true) end
 end
+
 local delay = hs.eventtap.keyRepeatInterval()
 function keyStroke(mod, key)
   return function() hs.timer.doAfter(0.01, function() hs.eventtap.keyStroke(mod, key, delay) end) end
 end
+
 function compose2(a, b)
   return function() a() b() end
 end
+
 function exitAfter(mode, fn)
   return function() fn() mode:exit() end
 end
 
 -- Reload
-bind('ctrl-cmd-alt', 'r', function()
-  hs.execute('~/.chunkwmrc')
-  hs.reload()
-end)
+bind('ctrl-cmd-alt', 'r', function() hs.reload() end)
 
 --
 -- Style
@@ -52,20 +55,83 @@ bind(one, 'n', compose2(
        keyStroke('ctrl-cmd', 'n')))
 
 --
--- chunkwm
+-- Tiling
 --
 
+hs.grid.MARGINX = 0
+hs.grid.MARGINY = 0
+hs.grid.GRIDWIDTH = 6
+hs.grid.GRIDHEIGHT = 2
+
+-- Snap windows
+bind(one, ';', function() hs.grid.snap(hs.window.focusedWindow()) end)
+bind(one, "'", function() hs.fnutil.map(hs.window.visibleWindows(), hs.grid.snap) end)
+
+-- Window Hints
+bind(one, '.', function() hs.hints.windowHints(hs.window.allWindows()) end)
+bind(one, '/', hs.grid.toggleShow)
+
+-- Hotkeys
+bind(one, 'm', hs.grid.maximizeWindow)
+
 -- Focus window
-bind(one, 'h', execute('chunkc tiling:window --focus west'))
-bind(one, 'j', execute('chunkc tiling:window --focus south'))
-bind(one, 'k', execute('chunkc tiling:window --focus north'))
-bind(one, 'l', execute('chunkc tiling:window --focus east'))
+bind(one, 'h', function() hs.window.focusedWindow():focusWindowWest() end)
+bind(one, 'l', function() hs.window.focusedWindow():focusWindowEast() end)
+bind(one, 'k', function() hs.window.focusedWindow():focusWindowNorth() end)
+bind(one, 'j', function() hs.window.focusedWindow():focusWindowSouth() end)
 
 -- Move window
-bind(two, 'h', execute('chunkc tiling:window --warp west'))
-bind(two, 'j', execute('chunkc tiling:window --warp south'))
-bind(two, 'k', execute('chunkc tiling:window --warp north'))
-bind(two, 'l', execute('chunkc tiling:window --warp east'))
+bind(two, 'h', hs.grid.pushWindowLeft)
+bind(two, 'l', hs.grid.pushWindowRight)
+bind(two, 'k', hs.grid.pushWindowUp)
+bind(two, 'j', hs.grid.pushWindowDown)
+bind(two, 'E', hs.grid.pushWindowNextScreen)
+bind(two, 'R', hs.grid.pushWindowPrevScreen)
+
+-- Move window to spaces (hacky)
+function pushWindowNextSpace()
+  local allSpaces = spaces.query()
+  local activeSpace = spaces.activeSpace()
+  for i, v in ipairs(allSpaces) do
+    if v == activeSpace then
+      return hs.window.focusedWindow():spacesMoveTo(allSpaces[(i - 2) % #allSpaces + 1])
+    end
+  end
+end
+
+function pushWindowPrevSpace()
+  local allSpaces = spaces.query()
+  local activeSpace = spaces.activeSpace()
+  for i, v in ipairs(allSpaces) do
+    if v == activeSpace then
+      return hs.window.focusedWindow():spacesMoveTo(allSpaces[i % #allSpaces + 1])
+    end
+  end
+end
+
+function pushWindowToSpace(n)
+  local allSpaces = spaces.query()
+  local activeSpace = spaces.activeSpace()
+  return hs.window.focusedWindow():spacesMoveTo(allSpaces[#allSpaces - n + 1])
+end
+
+bind('ctrl-shift', 'left', nil, compose2(pushWindowPrevSpace, keyStroke('ctrl', 'left')))
+bind('ctrl-shift', 'right', nil, compose2(pushWindowNextSpace, keyStroke('ctrl', 'right')))
+for i = 1, 9 do
+  bind('ctrl-shift', tostring(i), nil, compose2(
+    function() pushWindowToSpace(i) end,
+    keyStroke('ctrl', tostring(i))
+  ))
+end
+
+-- Resize window
+local resizeMode = hs.hotkey.modal.new(one, 'r', 'Resize')
+resizeMode:bind('', 'h', hs.grid.resizeWindowThinner)
+resizeMode:bind('', 'j', hs.grid.resizeWindowTaller)
+resizeMode:bind('', 'k', hs.grid.resizeWindowShorter)
+resizeMode:bind('', 'l', hs.grid.resizeWindowWider)
+resizeMode:bind('', 'Escape', function() resizeMode:exit() end)
+resizeMode:bind('', 'Return', function() resizeMode:exit() end)
 
 -- Trackpad Gestures
 -- bind(one, 'up', execute('chunkc tiling:monitor -f prev'))
@@ -74,86 +140,6 @@ bind(one, 'up', nil, keyStroke('ctrl', 'up'))
 bind(one, 'down', nil, keyStroke('ctrl', 'down'))
 bind(one, 'left', nil, keyStroke('ctrl', 'right'))
 bind(one, 'right', nil, keyStroke('ctrl', 'left'))
-
--- Move Space/Monitor
-bind('ctrl-shift', 'up', execute('chunkc tiling:window --send-to-monitor next'))
-bind('ctrl-shift', 'down', execute('chunkc tiling:window --send-to-monitor prev'))
-bind('ctrl-shift', 'left', compose2(
-       execute('chunkc tiling:window --send-to-desktop prev'),
-       keyStroke('ctrl', 'left')))
-bind('ctrl-shift', 'right', compose2(
-       execute('chunkc tiling:window --send-to-desktop next'),
-       keyStroke('ctrl', 'right')))
-
-for i = 1, 9 do
-  bind('ctrl-shift', tostring(i), compose2(
-         execute('chunkc tiling:window --send-to-desktop ' .. tostring(i)),
-         keyStroke('ctrl', tostring(i))))
-end
-
--- Resize mode
-local main = hs.hotkey.modal.new(one, ',')
-function main:entered()
-  self.alert = hs.alert([[
-  x - Mirror Vertically
-  y - Mirror Horizontally
-  r - Rotate
-  hjkl - Increase Size
-  HJKL - Decrease Size
-  b - Toggle Borders
-  m - Maximise
-  f - Fullscreen
-  z - Zoom to Parent
-  e - Toggle Split
-  t - Toggle Float
-  s - Toggle PIP]], 10)
-end
-function main:exited()
-  if self.alert ~= nil then
-    hs.alert.closeSpecific(self.alert)
-    self.alert = nil
-  end
-end
-main:bind('', 'x', execute('chunkc tiling:desktop --mirror vertical'))
-main:bind('', 'y', execute('chunkc tiling:desktop --mirror horizontal'))
-main:bind('', 'r', execute('chunkc tiling:desktop --rotate 90'))
-main:bind('', 'h', execute('chunkc tiling:window --use-temporary-ratio 0.1 --adjust-window-edge west'))
-main:bind('', 'j', execute('chunkc tiling:window --use-temporary-ratio 0.1 --adjust-window-edge south'))
-main:bind('', 'k', execute('chunkc tiling:window --use-temporary-ratio 0.1 --adjust-window-edge north'))
-main:bind('', 'l', execute('chunkc tiling:window --use-temporary-ratio 0.1 --adjust-window-edge east'))
-main:bind('shift', 'h', execute('chunkc tiling:window --use-temporary-ratio -0.1 --adjust-window-edge east'))
-main:bind('shift', 'j', execute('chunkc tiling:window --use-temporary-ratio -0.1 --adjust-window-edge north'))
-main:bind('shift', 'k', execute('chunkc tiling:window --use-temporary-ratio -0.1 --adjust-window-edge south'))
-main:bind('shift', 'l', execute('chunkc tiling:window --use-temporary-ratio -0.1 --adjust-window-edge west'))
-main:bind('', 'escape', function()
-            hs.alert('Esc')
-            main:exit()
-end)
-main:bind('', 'b', exitAfter(main, execute('chunkc tiling:desktop --toggle offset')))
-main:bind('', 'm', exitAfter(main, execute('chunkc tiling:window --toggle fullscreen')))
-main:bind('', 'f', exitAfter(main, execute('chunkc tiling:window --toggle native-fullscreen')))
-main:bind('', 'z', exitAfter(main, execute('chunkc tiling:window --toggle parent')))
-main:bind('', 'e', exitAfter(main, execute('chunkc tiling:window --toggle split')))
-main:bind('', 't', exitAfter(main, execute('chunkc tiling:window --toggle float')))
-main:bind('', 's', exitAfter(main, execute('chunkc tiling::window --toggle sticky; chunkc tiling::window --warp-floating pip-right')))
-
--- Next layout
-local layouts = {'bsp', 'monocle', 'float'}
-local layout = 1
-main:bind('', 'space', function()
-       layout = layout % #layouts + 1
-       hs.execute('chunkc tiling:desktop --layout ' .. layouts[layout], true)
-       hs.alert(layouts[layout]:gsub('^%l', string.upper))
-                   end, exit)
-
--- -- Window
--- bind(one, 'b', execute('chunkc tiling:desktop --toggle offset'))
--- bind(one, 'm', execute('chunkc tiling:window --toggle fullscreen'))
--- bind(one, 'f', execute('chunkc tiling:window --toggle native-fullscreen'))
--- bind(one, 'z', execute('chunkc tiling:window --toggle parent'))
--- bind(one, 'e', execute('chunkc tiling:window --toggle split'))
--- bind(one, 't', execute('chunkc tiling:window --toggle float'))
--- bind(one, 's', execute('chunkc tiling::window --toggle sticky; chunkc tiling::window --warp-floating pip-right'))
 
 -- Vim bindings
 local vim = hs.hotkey.modal.new(one, 'escape')
@@ -164,12 +150,6 @@ vim:bind('', 'escape', function() vim:exit() end)
   :bind('', 'j', keyStroke('', 'down'), nil, keyStroke('', 'down'))
   :bind('', 'k', keyStroke('', 'up'), nil, keyStroke('', 'up'))
   :bind('', 'l', keyStroke('', 'right'), nil, keyStroke('', 'right'))
-
--- Preview.app
-local wf = hs.window.filter
-wf.new {'Preview', 'Finder'}
-  :subscribe(wf.windowFocused, function() vim:enter() end)
-  :subscribe(wf.windowUnfocused, function() vim:exit() end)
 
 -- Mouse
 function mouseMove(x, y)
