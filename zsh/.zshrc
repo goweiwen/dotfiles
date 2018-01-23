@@ -1,30 +1,28 @@
 # Change iTerm2 Titlebar colour
 printf -- $'\033]6;1;bg;red;brightness;28\a\033]6;1;bg;green;brightness;32\a\033]6;1;bg;blue;brightness;34\a'
 
-# Source zim
-if [[ -s ${ZDOTDIR:-${HOME}}/.zim/init.zsh ]]; then
-  source ${ZDOTDIR:-${HOME}}/.zim/init.zsh
-fi
+# Source antibody
+source <(antibody init)
 
-# Source autoenv
-source "$HOME/.zsh-autoenv/autoenv.zsh"
+# oh-my-zsh
+antibody bundle robbyrussell/oh-my-zsh folder:lib
+antibody bundle robbyrussell/oh-my-zsh folder:plugins/command-not-found
+antibody bundle robbyrussell/oh-my-zsh folder:plugins/colored-man-pages
+antibody bundle robbyrussell/oh-my-zsh folder:plugins/z
 
-# Source fasd
-fasd_cache="$HOME/.fasd-init"
-if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
-  fasd --init auto >| "$fasd_cache"
-fi
-source "$fasd_cache"
-unset fasd_cache
-alias z='fasd_cd -d'     # cd, same functionality as j in autojump
-alias zz='fasd_cd -d -i'     # cd with interactive selection
+# QoL
+antibody bundle Tarrasch/zsh-autoenv
+antibody bundle marzocchi/zsh-notify
+antibody bundle djui/alias-tips
 
-# Setup virtualenv
-source /usr/local/anaconda3/bin/virtualenvwrapper.sh
+# fish-like
+antibody bundle zdharma/fast-syntax-highlighting
+antibody bundle zsh-users/zsh-history-substring-search
+antibody bundle zsh-users/zsh-autosuggestions
 
-# base16-shell
-# BASE16_SHELL=$HOME/.config/base16-shell/
-# [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+# Prompt
+setopt PROMPT_SUBST
+antibody bundle afnizarnur/work-line
 
 # Others
 HISTFILE=~/.histfile
@@ -32,16 +30,23 @@ HISTSIZE=1000000
 SAVEHIST=1000000
 setopt histignorealldups sharehistory appendhistory autocd extendedglob correct_all
 bindkey -e
+bindkey ' ' magic-space
+bindkey '^[OA' history-substring-search-up
+bindkey '^[OB' history-substring-search-down
+# bindkey -M emacs '^P' history-substring-search-up
+# bindkey -M emacs '^N' history-substring-search-down
 
 # Aliases
-alias vim='nocorrect nvim '
+alias vim='nocorrect nvim'
 alias please='sudo `fc -ln -1`'
 alias emacs='/usr/local/Cellar/emacs-mac/emacs-25.2-z-mac-6.5/bin/emacs'
 alias emacsclient='/usr/local/Cellar/emacs-mac/emacs-25.2-z-mac-6.5/bin/emacsclient'
+alias wine='/Applications/Wine\ Staging.app/Contents/Resources/wine/bin/wine'
+alias trash='rmtrash'
 
 alias jn='jupyter notebook'
 alias v='nocorrect nvim'
-alias vf='f -e nvim'
+alias vc='nocorrect code'
 alias o='open'
 
 alias ll='ls -l'
@@ -58,10 +63,176 @@ alias bcl='brew cask list'
 
 alias vrc='vim ~/.config/nvim/init.vim'
 alias zrc='vim ~/.zshrc'
+alias zenv='vim ~/.zshenv'
 alias hrc='vim ~/.hammerspoon/init.lua'
-alias crc='vim ~/.chunkwmrc'
 
-# added by travis gem
-[ -f /Users/weiwen/.travis/travis.sh ] && source /Users/weiwen/.travis/travis.sh
+# #
+# Git Aliases
+#
 
-export PATH="$HOME/.yarn/bin:$PATH"
+# Git
+alias g='git'
+
+# Branch (b)
+alias gb='git branch'
+alias gbc='git checkout -b'
+alias gbl='git branch -v'
+alias gbL='git branch -av'
+alias gbx='git branch -d'
+alias gbX='git branch -D'
+alias gbm='git branch -m'
+alias gbM='git branch -M'
+alias gbs='git show-branch'
+alias gbS='git show-branch -a'
+
+# Commit (c)
+alias gc='git commit --verbose'
+alias gca='git commit --verbose --all'
+alias gcm='git commit --message'
+alias gco='git checkout'
+alias gcO='git checkout --patch'
+alias gcf='git commit --amend --reuse-message HEAD'
+alias gcF='git commit --verbose --amend'
+alias gcp='git cherry-pick --ff'
+alias gcP='git cherry-pick --no-commit'
+alias gcr='git revert'
+alias gcR='git reset "HEAD^"'
+alias gcs='git show'
+alias gcl='git-commit-lost'
+alias gcS='git commit -S'
+alias gpS='git show --pretty=short --show-signature'
+
+# Conflict (C)
+alias gCl='git status | sed -n "s/^.*both [a-z]*ed: *//p"'
+alias gCa='git add $(gCl)'
+alias gCe='git mergetool $(gCl)'
+alias gCo='git checkout --ours --'
+alias gCO='gCo $(gCl)'
+alias gCt='git checkout --theirs --'
+alias gCT='gCt $(gCl)'
+
+# Data (d)
+alias gd='git ls-files'
+alias gdc='git ls-files --cached'
+alias gdx='git ls-files --deleted'
+alias gdm='git ls-files --modified'
+alias gdu='git ls-files --other --exclude-standard'
+alias gdk='git ls-files --killed'
+alias gdi='git status --porcelain --short --ignored | sed -n "s/^!! //p"'
+
+# Fetch (f)
+alias gf='git fetch'
+alias gfc='git clone'
+alias gfm='git pull'
+alias gfr='git pull --rebase'
+alias gfu='git remote update -p; git merge --ff-only @\{u\}'
+
+# Grep (g)
+alias gg='git grep'
+alias ggi='git grep --ignore-case'
+alias ggl='git grep --files-with-matches'
+alias ggL='git grep --files-without-match'
+alias ggv='git grep --invert-match'
+alias ggw='git grep --word-regexp'
+
+# Index (i)
+alias gia='git add'
+alias giA='git add --patch'
+alias giu='git add --update'
+alias gid='git diff --no-ext-diff --cached'
+alias giD='git diff --no-ext-diff --cached --word-diff'
+alias gir='git reset'
+alias giR='git reset --patch'
+alias gix='git rm -r --cached'
+alias giX='git rm -rf --cached'
+
+# Log (l)
+alias gl='git log --topo-order --pretty=format:"${_git_log_medium_format}"'
+alias gls='git log --topo-order --stat --pretty=format:"${_git_log_medium_format}"'
+alias gld='git log --topo-order --stat --patch --full-diff --pretty=format:"${_git_log_medium_format}"'
+alias glo='git log --topo-order --pretty=format:"${_git_log_oneline_format}"'
+alias glg='git log --topo-order --all --graph --pretty=format:"${_git_log_oneline_format}"'
+alias glG='git log --topo-order --all --graph --pretty=format:"${_git_log_fullgraph_format}" --date=relative'
+alias glb='git log --topo-order --pretty=format:"${_git_log_brief_format}"'
+alias glc='git shortlog --summary --numbered'
+alias glS='git log --show-signature'
+
+# Merge (m)
+alias gm='git merge'
+alias gmC='git merge --no-commit'
+alias gmF='git merge --no-ff'
+alias gma='git merge --abort'
+alias gmt='git mergetool'
+
+# Push (p)
+alias gp='git push'
+alias gpf='git push --force'
+alias gpa='git push --all'
+alias gpA='git push --all && git push --tags'
+alias gpt='git push --tags'
+alias gpc='git push --set-upstream origin "$(git-branch-current 2> /dev/null)"'
+alias gpp='git pull origin "$(git-branch-current 2> /dev/null)" && git push origin "$(git-branch-current 2> /dev/null)"'
+
+# Rebase (r)
+alias gr='git rebase'
+alias gra='git rebase --abort'
+alias grc='git rebase --continue'
+alias gri='git rebase --interactive'
+alias grs='git rebase --skip'
+
+# Remote (R)
+alias gR='git remote'
+alias gRl='git remote --verbose'
+alias gRa='git remote add'
+alias gRx='git remote rm'
+alias gRm='git remote rename'
+alias gRu='git remote update'
+alias gRp='git remote prune'
+alias gRs='git remote show'
+alias gRb='git-hub-browse'
+
+# Stash (s)
+alias gs='git stash'
+alias gsa='git stash apply'
+alias gsx='git stash drop'
+alias gsX='git-stash-clear-interactive'
+alias gsl='git stash list'
+alias gsL='git-stash-dropped'
+alias gsd='git stash show --patch --stat'
+alias gsp='git stash pop'
+alias gsr='git-stash-recover'
+alias gss='git stash save --include-untracked'
+alias gsS='git stash save --patch --no-keep-index'
+alias gsw='git stash save --include-untracked --keep-index'
+alias gsu='git stash show -p | git apply -R'
+
+# Submodule (S)
+alias gS='git submodule'
+alias gSa='git submodule add'
+alias gSf='git submodule foreach'
+alias gSi='git submodule init'
+alias gSI='git submodule update --init --recursive'
+alias gSl='git submodule status'
+alias gSm='git-submodule-move'
+alias gSs='git submodule sync'
+alias gSu='git submodule foreach git pull origin master'
+alias gSx='git-submodule-remove'
+
+# Tag (t)
+alias gts='git tag -s'
+alias gtv='git verify-tag'
+
+# Working Copy (w)
+alias gws='git status --short'
+alias gwS='git status'
+alias gwd='git diff --no-ext-diff'
+alias gwD='git diff --no-ext-diff --word-diff'
+alias gwr='git reset --soft'
+alias gwR='git reset --hard'
+alias gwc='git clean -n'
+alias gwC='git clean -df'
+alias gwx='git rm -r'
+alias gwX='git rm -rf'
+
+# Misc
+alias g..='cd $(git-root || print .)'
