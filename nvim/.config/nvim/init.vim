@@ -261,6 +261,10 @@ autocmd FileType html,css EmmetInstall
 
 let g:javascript_plugin_flow = 1
 
+" Paths
+let g:python_host_prog = '/usr/local/bin/python2'
+let g:python3_host_prog = '/usr/local/bin/python3'
+
 " Linting
 let g:ale_fixers = {
       \   'javascript': ['remove_trailing_lines', 'trim_whitespace', 'eslint'],
