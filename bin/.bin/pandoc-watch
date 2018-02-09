@@ -1,0 +1,5 @@
+#! /bin/sh
+
+pandoc "$1" -o "$1.pdf"
+echo "Watching \"$1\" for changes..."
+fswatch "$1" | xargs -n1 -I{} -- pandoc "$1" -o "$1.pdf"
