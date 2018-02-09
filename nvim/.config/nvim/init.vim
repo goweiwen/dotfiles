@@ -53,16 +53,31 @@ if dein#load_state('~/.config/nvim/dein')
   call dein#add('lambdalisue/gina.vim')
 
   call dein#add('Shougo/deoplete.nvim')
-  call dein#add('artur-shaik/vim-javacomplete2') " Java
-  call dein#add('carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }) " JavaScript
-  call dein#add('zchee/deoplete-jedi') " Python
+
+  " C/C++
+  call dein#add('zchee/deoplete-clang')
+
+  " Java
+  call dein#add('artur-shaik/vim-javacomplete2')
+
+  " Python
+  call dein#add('zchee/deoplete-jedi')
 
   call dein#add('mattn/emmet-vim')              " Emmet
-  call dein#add('neovimhaskell/haskell-vim')    " Haskell
-  call dein#add('itchyny/vim-haskell-indent')   " Haskell
-  call dein#add('pangloss/vim-javascript')      " JavaScript
-  call dein#add('mxw/vim-jsx')                  " JSX
-  call dein#add('posva/vim-vue')                " Vue
+
+  " Haskell
+  call dein#add('neovimhaskell/haskell-vim')
+  call dein#add('itchyny/vim-haskell-indent')
+
+  " JavaScript
+  call dein#add('pangloss/vim-javascript')
+  call dein#add('carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' })
+  call dein#add('mxw/vim-jsx')
+
+  " Vue
+  call dein#add('posva/vim-vue')
+
+  " HTML/CSS preprocessors
   call dein#add('digitaltoad/vim-pug')          " Pug
   call dein#add('wavded/vim-stylus')            " Stylus
 
