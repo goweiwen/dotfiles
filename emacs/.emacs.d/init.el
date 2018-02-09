@@ -658,6 +658,9 @@
 (use-package markdown-mode)
 (use-package haskell-mode)
 (use-package swift-mode)
+(use-package company-coq
+  :init
+  (add-hook 'coq-mode-hook 'company-coq-mode))
 
 ;; Writing
 ;; ===
@@ -698,6 +701,6 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (markdown-mode elm-mode vue-mode wc-mode ranger olivetti olivetti-mode writeroom-mode minimap evil-snipe evil-mc company-anaconda py-yapf ag))))
+    (company-coq markdown-mode elm-mode vue-mode wc-mode ranger olivetti olivetti-mode writeroom-mode minimap evil-snipe evil-mc company-anaconda py-yapf ag))))
 
 ;;; init.el ends here
