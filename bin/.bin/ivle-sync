@@ -1,0 +1,3 @@
+#! /bin/sh
+
+(cd $HOME/Documents; $(cd $HOME/.bin/repos/ivle-sync; pipenv --py) $HOME/.bin/repos/ivle-sync/ivle-sync.py $1)
