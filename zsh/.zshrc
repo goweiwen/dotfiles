@@ -65,6 +65,11 @@ GEOMETRY_SYMBOL_GIT_CONFLICTS_SOLVED="!"      # when all conflicts have been sol
 GEOMETRY_SYMBOL_GIT_CONFLICTS_UNSOLVED="!"    # when there are still unsolved conflicts
 
 antibody bundle geometry-zsh/geometry
+antibody bundle desyncr/geometry-datetime
+
+GEOMETRY_PLUGIN_DATETIME_FORMAT="+%T"
+GEOMETRY_PLUGIN_DATETIME_PREFIX="" # "\e[35m"
+GEOMETRY_PLUGIN_DATETIME_SUFFIX=""
 
 # Autocompletion
 autoload -Uz compinit
