@@ -63,6 +63,10 @@ if dein#load_state('~/.config/nvim/dein')
   " Python
   call dein#add('zchee/deoplete-jedi')
 
+  " Julia
+  call dein#add('JuliaEditorSupport/julia-vim')
+  call dein#add('JuliaEditorSupport/deoplete-julia')
+
   call dein#add('mattn/emmet-vim')              " Emmet
 
   " Haskell
