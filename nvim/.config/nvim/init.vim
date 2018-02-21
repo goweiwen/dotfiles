@@ -6,59 +6,191 @@ set runtimepath+=~/.config/nvim/dein/repos/github.com/Shougo/dein.vim
 if dein#load_state('~/.config/nvim/dein')
   call dein#begin('~/.config/nvim/dein')
 
+  " Plugin manager
   call dein#add('~/.config/nvim/dein/repos/github.com/Shougo/dein.vim')
 
+
+  "
+  " Appearance
+  "
+
+  " Theme
   call dein#add('vim-airline/vim-airline')
+  let g:airline#extensions#ale#enabled = 1
+  let g:airline#extensions#tabline#enabled = 1
+  let g:airline#extensions#whitespace#enabled = 1
+  call dein#add('vim-airline/vim-airline-themes')
   call dein#add('chriskempson/base16-vim')
-  call dein#add('ap/vim-buftabline')
-  call dein#add('scrooloose/nerdtree')
-  call dein#add('Xuyuanp/nerdtree-git-plugin')
-  call dein#add('airblade/vim-gitgutter')
-  call dein#add('kshenoy/vim-signature')
 
-  call dein#add('justinmk/vim-sneak')
+  " Color characters based on f-key
   call dein#add('unblevable/quick-scope')
-  call dein#add('easymotion/vim-easymotion')
-  call dein#add('terryma/vim-multiple-cursors')
-  call dein#add('terryma/vim-expand-region')
-  call dein#add('bfredl/nvim-miniyank')
-  call dein#add('chaoren/vim-wordmotion')
+  let g:qs_highlight_on_keys = ['f', 'F', 't', 'T', 's', 'S']
 
-  call dein#add('tpope/vim-abolish')
-  call dein#add('tpope/vim-commentary')
-  call dein#add('tpope/vim-endwise')
-  call dein#add('tpope/vim-eunuch')
+  " Git gutter
+  call dein#add('airblade/vim-gitgutter')
+
+  " Marks gutter
+  call dein#add('kshenoy/vim-signature')
+  let g:SignatureMarkTextHLDynamic = 1
+
+
+  "
+  " Misc
+  "
+
+  " Git and GitHub
   call dein#add('tpope/vim-fugitive')
   call dein#add('tpope/vim-rhubarb')
-  call dein#add('tpope/vim-repeat')
-  call dein#add('tpope/vim-rsi')
-  call dein#add('tpope/vim-sleuth')
-  call dein#add('tpope/vim-surround')
+  call dein#add('lambdalisue/gina.vim')
+
+  " Sessions
   call dein#add('tpope/vim-obsession')
   call dein#add('dhruvasagar/vim-prosession')
+  "
+  " Save edit position
+  call dein#add('farmergreg/vim-lastplace')
+
+
+  "
+  " Files
+  "
+
+  " File browsers
+  call dein#add('airodactyl/neovim-ranger')
+  call dein#add('scrooloose/nerdtree')
+  call dein#add('Xuyuanp/nerdtree-git-plugin')
+
+  " Helm-like
+  call dein#add('Shougo/denite.nvim')
+  call denite#custom#map(
+        \ 'insert',
+        \ '<C-j>',
+        \ '<denite:move_to_next_line>',
+        \ 'noremap'
+        \)
+  call denite#custom#map(
+        \ 'insert',
+        \ '<C-k>',
+        \ '<denite:move_to_previous_line>',
+        \ 'noremap'
+        \)
+
+  " grep
+  call dein#add('rking/ag.vim')
+
+  " Find and replace (:Far)
+  call dein#add('brooth/far.vim')
+
+  " Automatically sets working directory
+  call dein#add('airblade/vim-rooter')
+
+  " Open in Finder/Terminal (gof/got)
+  call dein#add('justinmk/vim-gtfo')
+  let g:gtfo#terminals = { 'mac': 'iterm' }
+
+  " Path navigator
+  call dein#add('justinmk/vim-dirvish')
+
+
+  "
+  " Editor
+  "
+
+  " Multiple cursors (C-n, C-p, C-x, :MultipleCursorsFind)
+  call dein#add('terryma/vim-multiple-cursors')
+
+  " Sneaking (maps s/S to 2-char f/t)
+  call dein#add('justinmk/vim-sneak')
+
+  " Easymotion (<Leader><Leader>)
+  call dein#add('easymotion/vim-easymotion')
+
+  " Smart words
+  call dein#add('chaoren/vim-wordmotion')
+
+  " Expand region (+/_ in visual mode)
+  call dein#add('terryma/vim-expand-region')
+
+  " Kill-ring
+  call dein#add('bfredl/nvim-miniyank')
+  map p <Plug>(miniyank-autoput)
+  map P <Plug>(miniyank-autoPut)
+  map <Leader>n <Plug>(miniyank-cycle)
+
+  " Substitution (:Subvert/thing{1,2}/other{1,2}/)
+  call dein#add('tpope/vim-abolish')
+
+  " Commenting (gcc)
+  call dein#add('tpope/vim-commentary')
+
+  " Auto end block
+  call dein#add('tpope/vim-endwise')
+
+  " Shell command wrappers
+  call dein#add('tpope/vim-eunuch')
+
+  " Repeat more actions
+  call dein#add('tpope/vim-repeat')
+
+  " Emacs bindings
+  call dein#add('tpope/vim-rsi')
+
+  " Smart tab widths
+  call dein#add('tpope/vim-sleuth')
+
+  " Surround motion
+  call dein#add('tpope/vim-surround')
+
+
+  "
+  " Snippets
+  "
 
   call dein#add('SirVer/ultisnips')
   call dein#add('honza/vim-snippets')
+  let g:UltiSnipsExpandTrigger="<Leader><Tab>"
+  let g:UltiSnipsJumpForwardTrigger="<C-b>"
+  let g:UltiSnipsJumpBackwardTrigger="<C-z>"
+
+
+  "
+  " Linting
+  "
 
   call dein#add('w0rp/ale')
-  " call dein#add('bronson/vim-trailing-whitespace')
+  let g:ale_fixers = {
+        \   'javascript': ['remove_trailing_lines', 'trim_whitespace', 'eslint'],
+        \   'vue': ['remove_trailing_lines', 'trim_whitespace', 'eslint'],
+        \   'python': ['isort', 'remove_trailing_lines', 'trim_whitespace', 'autopep8', 'yapf'],
+        \}
+  let g:ale_javascript_eslint_executable='eslint_d'
+  let g:ale_fix_on_save = 1
+  let g:ale_sign_column_always = 1
+  let g:ale_lint_on_enter = 0
+  call dein#add('bronson/vim-trailing-whitespace')
 
-  call dein#add('Shougo/denite.nvim')
-  call dein#add('rking/ag.vim')
-  call dein#add('brooth/far.vim')
-  call dein#add('airblade/vim-rooter')
-  call dein#add('justinmk/vim-gtfo')
-  call dein#add('justinmk/vim-dirvish')
-  call dein#add('farmergreg/vim-lastplace')
-  call dein#add('lambdalisue/gina.vim')
 
-  call dein#add('Shougo/deoplete.nvim')
+  "
+  " Autocompletion
+  "
+
+  " Deoplete
+  inoremap <Expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 
   " C/C++
-  call dein#add('zchee/deoplete-clang')
+  call dein#add('tweekmonster/deoplete-clang2')
 
   " Java
   call dein#add('artur-shaik/vim-javacomplete2')
+  let g:neomake_java_javac_maker = {
+        \ 'errorformat':
+        \ '%E%f:%l: %trror: %m,' .
+        \ '%W%f:%l: %tarning: %m,' .
+        \ '%E%f:%l: %m,'.
+        \ '%Z%p^,'.
+        \ '%-G%.%#',
+        \ }
+  let g:neomake_java_enabled_makers = ['javac']
 
   " Python
   call dein#add('zchee/deoplete-jedi')
@@ -67,23 +199,32 @@ if dein#load_state('~/.config/nvim/dein')
   call dein#add('JuliaEditorSupport/julia-vim')
   call dein#add('JuliaEditorSupport/deoplete-julia')
 
-  call dein#add('mattn/emmet-vim')              " Emmet
+  " Emmet
+  call dein#add('mattn/emmet-vim')
+  let g:user_emmet_install_global = 0
+  autocmd FileType html,css EmmetInstall
+  " imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
 
   " Haskell
   call dein#add('neovimhaskell/haskell-vim')
   call dein#add('itchyny/vim-haskell-indent')
 
+  " Go
+  call dein#add('nsf/gocode', { 'rtp': 'nvim/' })
+
   " JavaScript
   call dein#add('pangloss/vim-javascript')
   call dein#add('carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' })
   call dein#add('mxw/vim-jsx')
+  let g:neomake_javascript_enabled_makers = ['eslint']
+  let g:javascript_plugin_flow = 1
 
   " Vue
   call dein#add('posva/vim-vue')
 
   " HTML/CSS preprocessors
-  call dein#add('digitaltoad/vim-pug')          " Pug
-  call dein#add('wavded/vim-stylus')            " Stylus
+  call dein#add('digitaltoad/vim-pug')
+  call dein#add('wavded/vim-stylus')
 
   call dein#end()
   call dein#save_state()
@@ -95,43 +236,62 @@ endif
 
 filetype plugin indent on
 
+" Theme
+syntax enable
+set background=dark
+let base16colorspace=256
+colorscheme base16-ashes
+set termguicolors
+let g:airline_theme='base16_ashes'
+
+" Set terminal title
 set title
-set number
+
+" Status bar
 set ruler
 set showcmd
-set cursorline
-set relativenumber
-set wrap
-set wildmenu
-set lazyredraw
+
+" Show matching pairs
 set showmatch
 
-set scrolloff=3
+" Highlight cursor line
+set cursorline
 
+" 80-char line
+set textwidth=80
+set colorcolumn=+1
+
+" Soft word-wrap
+set wrap
+
+" Don't redraw during macros
+set lazyredraw
+
+" Line numbers
+set number
+set relativenumber
+
+" Command line completion
+set wildmenu
+
+" Scroll space
+set scrolloff=20
+
+" GUI
 set guioptions=t
 
+" Search
 set ignorecase
 set smartcase
 set incsearch
 set hlsearch
 set wildmode=list:longest,full
 
-set visualbell
-set noerrorbells
-
+" QOL
+set mouse=a
 set backspace=indent,eol,start
 
-set hidden
-
-syntax enable
-set background=dark
-" let base16colorspace=256
-colorscheme base16-ashes
-set termguicolors
-
-" set textwidth=80
-" set colorcolumn=+1
-
+" Tabs
 set tabstop=2
 set softtabstop=2
 set expandtab
@@ -140,7 +300,8 @@ set shiftround
 set smarttab
 set list
 
-set showbreak=↪\ 
+" Visible whitespace
+set showbreak=↪
 set listchars=tab:→\ ,eol:↲,nbsp:␣,extends:›,precedes:‹,trail:·
 set formatprg=par\ -w80\ -T4
 
@@ -152,8 +313,8 @@ augroup configgroup
   autocmd FileType python setlocal softtabstop=4
 augroup END
 
+" Folds
 set foldmethod=syntax
-
 set foldenable
 set foldlevelstart=99
 set foldnestmax=99
@@ -166,41 +327,6 @@ set foldnestmax=99
 " let sh_fold_enabled=1         " sh
 " let vimsyn_folding='af'       " Vim script
 " let xml_syntax_folding=1      " XML
-
-set guioptions-=T
-
-" vim-signature
-let g:SignatureMarkTextHLDynamic = 1
-
-" fasd
-" :Z - cd to recent / frequent directories
-command! -nargs=* Z :call Z(<f-args>)
-function! Z(...)
-  let cmd = 'fasd -d -e printf'
-  for arg in a:000
-    let cmd = cmd . ' ' . arg
-  endfor
-  let path = system(cmd)
-  if isdirectory(path)
-    echo path
-    exec 'cd ' . "\"${path}\""
-  endif
-endfunction
-cnoreabbrev z Z
-
-" Denite
-call denite#custom#map(
-      \ 'insert',
-      \ '<C-j>',
-      \ '<denite:move_to_next_line>',
-      \ 'noremap'
-      \)
-call denite#custom#map(
-      \ 'insert',
-      \ '<C-k>',
-      \ '<denite:move_to_previous_line>',
-      \ 'noremap'
-      \)
 
 " Map Leader -> Space
 let g:mapleader = "\<Space>"
@@ -218,31 +344,16 @@ nmap <Leader>D "_D
 nmap <Leader>c "_c
 nmap <Leader>C "_C
 
-" Wordmotion
-let g:wordmotion_prefix = '<Leader>'
-
-" Quickscope
-let g:qs_highlight_on_keys = ['f', 'F', 't', 'T', 's', 'S']
-
 " Switch between buffers
 noremap <Leader>` <C-^>
 noremap <Leader><Tab> :bnext<CR>
 noremap <Leader><S-Tab> :bprev<CR>
+nnoremap gt :bn<CR>
+nnoremap gT :bp<CR>
+set hidden
 
 " Visual select block
 nnoremap gV `[v`]
-
-" Yank ring
-map p <Plug>(miniyank-autoput)
-map P <Plug>(miniyank-autoPut)
-map <Leader>n <Plug>(miniyank-cycle)
-
-" Mouse
-set mouse=a
-
-" Autocomplete
-let g:deoplete#enable_at_startup = 1
-inoremap <Expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 
 " File jumping
 noremap <F1> :NERDTreeToggle<CR>
@@ -254,44 +365,8 @@ noremap <Leader>gs :Gina status<CR>
 noremap <Leader>gc :Gina commit<CR>
 noremap <C-s> :Denite line<CR>
 
-" Snippets
-let g:UltiSnipsExpandTrigger="<Leader><Tab>"
-let g:UltiSnipsJumpForwardTrigger="<C-b>"
-let g:UltiSnipsJumpBackwardTrigger="<C-z>"
-
-
-" Languages
-let g:clang_complete_auto = 1
-
-let g:neomake_java_javac_maker = {
-      \ 'errorformat':
-      \ '%E%f:%l: %trror: %m,' .
-      \ '%W%f:%l: %tarning: %m,' .
-      \ '%E%f:%l: %m,'.
-      \ '%Z%p^,'.
-      \ '%-G%.%#',
-      \ }
-let g:neomake_java_enabled_makers = ['javac']
-let g:neomake_javascript_enabled_makers = ['eslint']
-
-let g:user_emmet_install_global = 0
-autocmd FileType html,css EmmetInstall
-" imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
-
-let g:javascript_plugin_flow = 1
-
 " Paths
 let g:python_host_prog = '/usr/local/bin/python2'
 let g:python3_host_prog = '/usr/local/bin/python3'
 
-" Linting
-let g:ale_fixers = {
-      \   'javascript': ['remove_trailing_lines', 'trim_whitespace', 'eslint'],
-      \   'vue': ['remove_trailing_lines', 'trim_whitespace', 'eslint'],
-      \   'python': ['isort', 'remove_trailing_lines', 'trim_whitespace', 'autopep8', 'yapf'],
-      \}
-let g:ale_javascript_eslint_executable='eslint_d'
-let g:ale_fix_on_save = 1
-let g:ale_sign_column_always = 1
-" let g:ale_lint_on_enter = 0
-let g:airline#extensions#ale#enabled = 1
+
