@@ -1,0 +1,5 @@
+#! /bin/sh
+
+cd ~/.wine/drive_c/Program\ Files/Voobly/
+STAGING_WRITECOPY=1 wine voobly.exe
+
