@@ -62,18 +62,6 @@ if dein#load_state('~/.config/nvim/dein')
 
   " Helm-like
   call dein#add('Shougo/denite.nvim')
-  call denite#custom#map(
-        \ 'insert',
-        \ '<C-j>',
-        \ '<denite:move_to_next_line>',
-        \ 'noremap'
-        \)
-  call denite#custom#map(
-        \ 'insert',
-        \ '<C-k>',
-        \ '<denite:move_to_previous_line>',
-        \ 'noremap'
-        \)
 
   " grep
   call dein#add('rking/ag.vim')
@@ -327,6 +315,20 @@ set foldnestmax=99
 " let sh_fold_enabled=1         " sh
 " let vimsyn_folding='af'       " Vim script
 " let xml_syntax_folding=1      " XML
+
+" Denite
+call denite#custom#map(
+      \ 'insert',
+      \ '<C-j>',
+      \ '<denite:move_to_next_line>',
+      \ 'noremap'
+      \)
+call denite#custom#map(
+      \ 'insert',
+      \ '<C-k>',
+      \ '<denite:move_to_previous_line>',
+      \ 'noremap'
+      \)
 
 " Map Leader -> Space
 let g:mapleader = "\<Space>"
