@@ -1,5 +1,5 @@
 [global]
-    font = Tamsyn 10.5
+    font = Fira Code 9
     
     # Allow a small subset of html markup:
     #   <b>bold</b>
@@ -64,7 +64,7 @@
     # the top and down respectevly.
     # The width can be negative.  In this case the actual width is the
     # screen width minus the width defined in within the geometry option.
-    geometry = "300x5-10+28"
+    geometry = "300x5-10+30"
     
     # Shrink window if it's smaller than the width.  Will be ignored if
     # width is 0.
@@ -114,7 +114,7 @@
     # Draw a line of "separatpr_height" pixel height between two
     # notifications.
     # Set to 0 to disable.
-    separator_height = 3
+    separator_height = 2
     
     # Padding between text and separator.
     padding = 10
@@ -148,8 +148,8 @@
     icon_folders = /usr/share/icons/paper/32x32/status/:/usr/share/icons/paper/32x32/devices/:/usr/share/icons/gnome/32x32/status/:/usr/share/icons/gnome/32x32/devices/
 
 [frame]
-    width = 3
-    color = "#808080"
+    width = 2
+    color = "#1c2023"
 
 [shortcuts]
 
@@ -159,7 +159,7 @@
     # Xev might be helpful to find names for keys.
     
     # Close notification.
-    # close = ctrl+space
+    close = ctrl+shift+grave
     
     # Close all notifications.
     # close_all = ctrl+shift+space
@@ -175,18 +175,18 @@
 [urgency_low]
     # IMPORTANT: colors have to be defined in quotation marks.
     # Otherwise the "#" and following would be interpreted as a comment.
-    background = "#404040"
-    foreground = "#888888"
+    background = "#1c2023"
+    foreground = "#c7ccd1"
     timeout = 10
 
 [urgency_normal]
-    background = "#404040"
-    foreground = "#888888"
+    background = "#1c2023"
+    foreground = "#c7ccd1"
     timeout = 30
 
 [urgency_critical]
-    background = "#404040"
-    foreground = "#cc99cc"
+    background = "#1c2023"
+    foreground = "#c7ccd1"
     timeout = 0
 
 
