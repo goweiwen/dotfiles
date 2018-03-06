@@ -4,3 +4,6 @@
 [submodule "nvim/.config/nvim/dein/repos/github.com/Shougo/dein.vim"]
 	path = nvim/.config/nvim/dein/repos/github.com/Shougo/dein.vim
 	url = https://github.com/Shougo/dein.vim
+[submodule "compton/.bin/repos/compton"]
+	path = compton/.bin/repos/compton
+	url = https://github.com/BlackCapCoder/compton.git
