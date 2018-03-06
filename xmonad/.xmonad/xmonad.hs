@@ -11,7 +11,7 @@ import XMonad.Util.SpawnOnce
 -- General config
 myModMask = mod4Mask
 myTerminal = "kitty tmux"
-myLauncher = "albert"
+myLauncher = "rofi -show combi -combi-modi 'window,drun,run,ssh'"
 myWorkspaces = [ "home", "www", "dev", "comm", "doc" ]
 
 -- Appearance
@@ -26,7 +26,7 @@ myBorderWidth = 0
 -- Hotkeys
 myKeys =
   [ ("M-<Return>", spawn myTerminal)
-  , ("M-<Space>", spawn "rofi -show run")
+  , ("M-<Space>", spawn myLauncher)
 
   -- Browser buttons
   , ("M-<F1>", spawn "xdotool key XF86_Back")
@@ -63,7 +63,7 @@ myLogHook h = do
   logHook desktopConfig
 
 -- Startup hook
-myStartupPrograms = ["compton", "dunst", "firefox", myTerminal]
+myStartupPrograms = ["feh --bg-fill $HOME/Pictures/greenhouse.jpg", "compton", "dunst", "firefox", myTerminal]
 myStartupHook :: X ()
 myStartupHook = do
   setDefaultCursor xC_left_ptr
