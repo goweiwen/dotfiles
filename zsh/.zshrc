@@ -90,7 +90,6 @@ alias please='sudo `fc -ln -1`'
 # alias emacs='/usr/local/Cellar/emacs-mac/emacs-25.2-z-mac-6.5/bin/emacs'
 # alias emacsclient='/usr/local/Cellar/emacs-mac/emacs-25.2-z-mac-6.5/bin/emacsclient'
 alias wine='/Applications/Wine\ Staging.app/Contents/Resources/wine/bin/wine'
-alias trash='rmtrash'
 
 alias jn='jupyter notebook'
 alias v='nocorrect nvim'
@@ -110,4 +109,5 @@ alias vrc='vim ~/.config/nvim/init.vim'
 alias zrc='vim ~/.zshrc'
 alias zenv='vim ~/.zshenv'
 alias hrc='vim ~/.hammerspoon/init.lua'
+alias mrc='vim ~/.xmonad/xmonad.hs'
 
