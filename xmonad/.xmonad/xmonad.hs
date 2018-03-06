@@ -7,10 +7,13 @@ import XMonad.Layout.Spacing (smartSpacingWithEdge)
 import XMonad.Util.Cursor
 import XMonad.Util.EZConfig
 import XMonad.Util.SpawnOnce
+import XMonad.Util.Scratchpad
+import XMonad.StackSet (RationalRect (..))
 
 -- General config
 myModMask = mod4Mask
-myTerminal = "kitty tmux"
+myTerminal = "kitty -1"
+myScratchpad = "kitty -1 --name scratchpad tmux"
 myLauncher = "rofi -show combi -combi-modi 'window,drun,run,ssh'"
 myWorkspaces = [ "home", "www", "dev", "comm", "doc" ]
 
@@ -27,6 +30,7 @@ myBorderWidth = 0
 myKeys =
   [ ("M-<Return>", spawn myTerminal)
   , ("M-<Space>", spawn myLauncher)
+  , ("M-`", scratchPad)
 
   -- Browser buttons
   , ("M-<F1>", spawn "xdotool key XF86_Back")
@@ -52,7 +56,9 @@ myPP = def
 
   , ppTitle = wrap "<fn=1>" "</fn>"
   , ppTitleSanitize = xmobarStrip
-  , ppLayout = \ _ -> ""
+
+  , ppOrder = \ (ws:_:t:_) -> [ws,t]
+  , ppSort = pure scratchpadFilterOutWorkspace
 
   , ppSep = " :: "
   , ppWsSep = " "
@@ -63,16 +69,25 @@ myLogHook h = do
   logHook desktopConfig
 
 -- Startup hook
-myStartupPrograms = ["feh --bg-fill $HOME/Pictures/greenhouse.jpg", "compton", "dunst", "firefox", myTerminal]
+myStartupPrograms = ["feh --bg-fill $HOME/Pictures/greenhouse.jpg", "compton", "dunst"]
 myStartupHook :: X ()
 myStartupHook = do
   setDefaultCursor xC_left_ptr
   mapM_ spawnOnce myStartupPrograms
 
+-- Scratchpad
+manageScratchPad = scratchpadManageHook $ RationalRect x y w h
+  where
+    h = 1
+    w = 1/3
+    x = 1-w
+    y = 0
+scratchPad = scratchpadSpawnActionCustom myScratchpad
+
 -- Hooks
 myManageHook = composeAll
   [ className =? "Firefox" --> doShift "www"
-  ]
+  ] <+> manageScratchPad
 
 myLayoutHook = smartBorders . smartSpacingWithEdge 5 $ layoutHook desktopConfig
 
@@ -81,8 +96,8 @@ main = do
   h <- spawnPipe "xmobar"
   xmonad $ desktopConfig
     { modMask = myModMask
-      , terminal = myTerminal
-      , workspaces = myWorkspaces
+    , terminal = myTerminal
+    , workspaces = myWorkspaces
 
     , normalBorderColor = myNormalBorderColor
     , focusedBorderColor = myFocusedBorderColor
