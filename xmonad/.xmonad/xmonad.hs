@@ -24,7 +24,7 @@ myForegroundColor = "#80c080"
 myNormalBorderColor = myBackgroundColor
 myFocusedBorderColor = myForegroundColor
 
-myBorderWidth = 0
+myBorderWidth = 2
 
 -- Hotkeys
 myKeys =
