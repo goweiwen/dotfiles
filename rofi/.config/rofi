@@ -1,0 +1,18 @@
+rofi.font: Fira Code 9
+rofi.terminal: kitty
+rofi.show-icons: true
+
+rofi.color-window: #1c2023, #1c2023, #1c2023
+rofi.color-normal: #1c2023, #f3f4f5, #1c2023, #80c080, #1c2023
+rofi.color-urgent: #1c2023, #ff0000, #1c2023, #ff0000, #1c2023
+rofi.color-active: #1c2023, #80c080, #1c2023, #80c080, #1c2023
+
+rofi.xoffset: 455
+rofi.yoffset: 0
+rofi.padding: 0
+rofi.width: 455
+rofi.lines: 10
+rofi.columns: 1
+rofi.location: 1
+
+rofi.matching: fuzzy

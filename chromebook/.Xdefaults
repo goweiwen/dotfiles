@@ -4,18 +4,7 @@ Xft.hinting: full
 Xft.hintstyle: hintslight
 Xft.rgba: rgb
 
-rofi.key-run: superl+r
-rofi.fuzzy: true
-rofi.lines: 25
-rofi.width: 1366
-rofi.location: 1
-rofi.terminal: urxvt
-rofi.i: true
-rofi.font: Droid Sans 9
-rofi.bg: #2d2d2d
-rofi.fg: #888888
-rofi.bg-active: #cc99cc
-rofi.fg-active: #ffffff
+#include "/home/weiwen/.config/rofi"
 
 URxvt.perl-ext-common:  default,clipboard,matcher
 URxvt.iso14755: false
@@ -38,8 +27,8 @@ URxvt.internalBorder: 20
 URxvt*cursorBlink: true
 URxvt*cursorUnderline: true
 
-URxvt.font: xft:Droid Sans Mono-9
-URxvt.boldFont: xft:Droid Sans Mono-9
+URxvt.font: xft:Fira Code-9
+URxvt.boldFont: xft:Fira Code-9
 URxvt.letterSpace: -2
 
 URxvt*termName: rxvt-unicode
