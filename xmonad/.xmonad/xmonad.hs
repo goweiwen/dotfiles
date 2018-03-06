@@ -26,6 +26,7 @@ myBorderWidth = 0
 -- Hotkeys
 myKeys =
   [ ("M-<Return>", spawn myTerminal)
+  , ("M-<Space>", spawn "rofi -show run")
 
   -- Browser buttons
   , ("M-<F1>", spawn "xdotool key XF86_Back")
