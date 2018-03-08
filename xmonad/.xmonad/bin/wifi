@@ -1,0 +1,3 @@
+#! /bin/sh
+
+nmcli -t con show | grep -E 'wlp1s0' | sed 's/:.*$//'

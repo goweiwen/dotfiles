@@ -1,0 +1,3 @@
+#! /bin/sh
+
+pactl list sinks | grep -m 1 'Volume: ' | grep -Eo '[0-9]+%' | head -n 1

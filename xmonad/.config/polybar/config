@@ -1,0 +1,126 @@
+[colors]
+bg = #1c2023
+fg = #f3f4f5
+primary = #80c080
+danger = #ff0000
+
+[bar/default]
+width = 100%
+height = 18
+offset-x = 0
+offset-y = 0
+radius = 0
+
+background = ${colors.bg}
+foreground = ${colors.fg}
+
+font-0 = Fira Code:size=9;2
+font-1 = Fira Code:size=9:weight=bold;2
+font-2 = Material Icons:pixelsize=10;3
+font-3 = Font Awesome 5 Free:pixelsize=10;1
+font-4 = Font Awesome 5 Free Solid:pixelsize=10;1
+font-5 = Font Awesome 5 Brands:pixelsize=10;1
+
+separator = " "
+padding = 1
+
+modules-left = button xworkspaces
+modules-center = xwindow
+modules-right = wlan volume battery date
+
+[module/button]
+type = custom/text
+content = "♞"
+content-foreground = ${colors.primary}
+
+[module/xworkspaces]
+type = internal/xworkspaces
+
+label-active = " %name% "
+label-active-background = ${colors.primary}
+label-active-foreground = ${colors.bg}
+
+label-empty = " %name% "
+
+label-urgent= " %name% "
+label-urgent-foreground = ${colors.danger}
+
+[module/xwindow]
+type = internal/xwindow
+label = %{T2}%title:0:50:...%%{T-}
+
+[module/wlan]
+type = internal/network
+interface = wlp1s0
+interval = 3.0
+
+format-connected = <ramp-signal> <label-connected>
+format-disconnected =  <label-disconnected>
+format-connected-foreground = ${colors.primary}
+format-disconnected-foreground = ${colors.primary}
+
+label-connected = %essid%
+label-disconnected = -
+label-connected-foreground = ${colors.fg}
+label-disconnected-foreground = ${colors.fg}
+
+ramp-signal-0 = 
+
+[module/volume]
+type = internal/pulseaudio
+
+format-volume = <ramp-volume> <label-volume>
+format-muted =  <label-muted>
+format-volume-foreground = ${colors.primary}
+format-muted-foreground = ${colors.primary}
+
+label-volume = %percentage%%
+label-volume-foreground = ${colors.fg}
+label-muted = mute
+label-muted-foreground = ${colors.fg}
+
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
+
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = AC
+poll-interval = 0
+time-format = %Hh %Mm
+
+format-charging = <animation-charging> <label-charging>
+format-charging-foreground = ${colors.primary}
+
+format-discharging = <ramp-capacity> <label-discharging>
+format-discharging-foreground = ${colors.primary}
+
+label-charging = %percentage%%
+label-discharging = %percentage%%
+label-charging-foreground = ${colors.fg}
+label-discharging-foreground = ${colors.fg}
+
+ramp-capacity-0 = 
+
+animation-charging-0 = 
+animation-capacity-1 = 
+animation-charging-framerate = 1000
+
+[module/date]
+type = internal/date
+interval = 5
+
+date = %a
+date-alt =  %Y-%m-%d
+
+time = %H:%M
+time-alt = %H:%M:%S
+
+format =  <label>
+format-foreground= ${colors.primary}
+
+label = %date% %time%
+label-foreground= ${colors.fg}
+
+; vim:ft=dosini

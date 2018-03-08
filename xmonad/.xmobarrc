@@ -3,27 +3,20 @@ Config
   , additionalFonts =
       [ "xft:Fira Code:size=9:bold"
       , "xft:DejaVu Sans:size=9"
+      , "xft:Material Icons:pixelsize=8"
       ]
+
+  , position = Top C 100
 
   , bgColor = "#1C2023"
   , fgColor = "#F3F4F5"
 
-  , template = " <fn=2>♞</fn> %UnsafeStdinReader% }{ <fn=1>%battery%</fn> :: <fn=1>%date%</fn> "
+  , template = " <fc=#80c080><fn=2>♞</fn></fc> %UnsafeStdinReader% }{ <fc=#80c080><fn=3></fn></fc> %wifi%  <fc=#80c080><fn=3></fn></fc> %volume% <fc=#80c080><fn=3></fn></fc> %battery%  <fc=#80c080><fn=3></fn></fc> <fn=1>%date%</fn> "
 
   , commands =
-      [ Run Battery [ "--template", "<acstatus>"
-
-                    , "--Low", "10"
-                    , "--High", "80"
-
-                    , "--"
-                    -- discharging
-                    , "-o", "<left>% (<timeleft>)"
-                    -- charging
-                    , "-O", "<fc=#00ff00><left>% (<timeleft>)</fc>"
-                    -- charged
-                    , "-i", "<fc=#00ff00><left>%</fc>"
-                    ] 50
+      [ Run Com "/home/weiwen/.xmonad/bin/wifi" [] "wifi" 600
+      , Run Com "/home/weiwen/.xmonad/bin/volume" [] "volume" 100
+      , Run Com "/home/weiwen/.xmonad/bin/battery" [] "battery" 600
       , Run Date "%a %H:%M" "date" 10
       , Run UnsafeStdinReader
       ]

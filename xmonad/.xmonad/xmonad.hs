@@ -1,19 +1,21 @@
 import XMonad
-import XMonad.Util.Run
 import XMonad.Config.Desktop
 import XMonad.Hooks.DynamicLog
 import XMonad.Layout.NoBorders (smartBorders)
 import XMonad.Layout.Spacing (smartSpacingWithEdge)
+import XMonad.StackSet (RationalRect (..))
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Util.Cursor
 import XMonad.Util.EZConfig
-import XMonad.Util.SpawnOnce
+import XMonad.Util.Run
 import XMonad.Util.Scratchpad
-import XMonad.StackSet (RationalRect (..))
+import XMonad.Util.SpawnOnce
+import XMonad.Util.WorkspaceCompare
 
 -- General config
 myModMask = mod4Mask
 myTerminal = "kitty -1"
-myScratchpad = "kitty -1 --name scratchpad tmux"
+myScratchpad = "kitty --name scratchpad tmux"
 myLauncher = "rofi -show combi -combi-modi 'window,drun,run,ssh'"
 myWorkspaces = [ "home", "www", "dev", "comm", "doc" ]
 
@@ -47,29 +49,13 @@ myKeys =
   , ("M-<F10>", spawn "pactl set-sink-volume 0 +1024")
   ]
 
--- Status bar
-myPP = def
-  { ppCurrent = xmobarColor myBackgroundColor myForegroundColor . wrap " " " "
-  , ppVisible = xmobarColor myForegroundColor "" . wrap " " " "
-  , ppHidden = wrap " " " "
-  , ppUrgent = xmobarColor "red" myBackgroundColor . wrap " " " "
-
-  , ppTitle = wrap "<fn=1>" "</fn>"
-  , ppTitleSanitize = xmobarStrip
-
-  , ppOrder = \ (ws:_:t:_) -> [ws,t]
-  , ppSort = pure scratchpadFilterOutWorkspace
-
-  , ppSep = " :: "
-  , ppWsSep = " "
-  }
-
-myLogHook h = do
-  dynamicLogWithPP myPP { ppOutput = hPutStrLn h }
-  logHook desktopConfig
-
 -- Startup hook
-myStartupPrograms = ["feh --bg-fill $HOME/Pictures/greenhouse.jpg", "compton", "dunst"]
+myStartupPrograms =
+  [ "feh --bg-fill $HOME/Pictures/greenhouse.jpg"
+  , "compton"
+  , "dunst"
+  , "polybar"
+  ]
 myStartupHook :: X ()
 myStartupHook = do
   setDefaultCursor xC_left_ptr
@@ -92,9 +78,7 @@ myManageHook = composeAll
 myLayoutHook = smartBorders . smartSpacingWithEdge 5 $ layoutHook desktopConfig
 
 -- Status Bar
-main = do
-  h <- spawnPipe "xmobar"
-  xmonad $ desktopConfig
+main = xmonad $ desktopConfig
     { modMask = myModMask
     , terminal = myTerminal
     , workspaces = myWorkspaces
@@ -106,6 +90,7 @@ main = do
     , startupHook = startupHook desktopConfig <+> myStartupHook
     , manageHook = myManageHook <+> manageHook desktopConfig
     , layoutHook = myLayoutHook
-    , logHook = myLogHook h
+    , logHook = logHook desktopConfig
+        <+> ewmhDesktopsLogHookCustom scratchpadFilterOutWorkspace
     }
     `additionalKeysP` myKeys

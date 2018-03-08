@@ -1,0 +1,12 @@
+#! /bin/sh
+
+let percentage=$(acpi | head -n 1 | grep -Eo '[0-9]*%' | sed 's/.$//')
+
+case $percentage in
+  [0-1][0-9]) echo "$percentage%" ;;
+  [2-4][0-9]) echo "$percentage%" ;;
+  [4-6][0-9]) echo "$percentage%" ;;
+  [7-9][0-9]) echo "$percentage%" ;;
+  100) echo " $percentage%" ;;
+  *) echo "Error" ;;
+esac
