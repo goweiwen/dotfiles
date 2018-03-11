@@ -1,7 +1,7 @@
 [colors]
 bg = #1c2023
 fg = #f3f4f5
-primary = #80c080
+primary = #99cc99
 danger = #ff0000
 
 [bar/default]
@@ -17,9 +17,9 @@ foreground = ${colors.fg}
 font-0 = Fira Code:size=9;2
 font-1 = Fira Code:size=9:weight=bold;2
 font-2 = Material Icons:pixelsize=10;3
-font-3 = Font Awesome 5 Free:pixelsize=10;1
-font-4 = Font Awesome 5 Free Solid:pixelsize=10;1
-font-5 = Font Awesome 5 Brands:pixelsize=10;1
+font-3 = Font Awesome 5 Free:pixelsize=10;2
+font-4 = Font Awesome 5 Free Solid:pixelsize=10;2
+font-5 = Font Awesome 5 Brands:pixelsize=10;2
 
 separator = " "
 padding = 1
@@ -95,6 +95,9 @@ format-charging-foreground = ${colors.primary}
 
 format-discharging = <ramp-capacity> <label-discharging>
 format-discharging-foreground = ${colors.primary}
+
+format-full=  100%
+format-full-foreground = ${colors.primary}
 
 label-charging = %percentage%%
 label-discharging = %percentage%%

@@ -5,23 +5,25 @@ import XMonad.Layout.NoBorders (smartBorders)
 import XMonad.Layout.Spacing (smartSpacingWithEdge)
 import XMonad.StackSet (RationalRect (..))
 import XMonad.Hooks.EwmhDesktops
-import XMonad.Util.Cursor
 import XMonad.Util.EZConfig
 import XMonad.Util.Run
 import XMonad.Util.Scratchpad
 import XMonad.Util.SpawnOnce
 import XMonad.Util.WorkspaceCompare
 
+import qualified XMonad.StackSet as W
+
 -- General config
 myModMask = mod4Mask
 myTerminal = "kitty -1"
 myScratchpad = "kitty --name scratchpad tmux"
 myLauncher = "rofi -show combi -combi-modi 'window,drun,run,ssh'"
+myWallpaper = "feh --bg-fill \"$HOME/Pictures/Wallpapers/$(ls $HOME/Pictures/Wallpapers | sort -R | head -n 1)\""
 myWorkspaces = [ "home", "www", "dev", "comm", "doc" ]
 
 -- Appearance
 myBackgroundColor = "#1c2023"
-myForegroundColor = "#80c080"
+myForegroundColor = "#99cc99"
 
 myNormalBorderColor = myBackgroundColor
 myFocusedBorderColor = myForegroundColor
@@ -33,6 +35,7 @@ myKeys =
   [ ("M-<Return>", spawn myTerminal)
   , ("M-<Space>", spawn myLauncher)
   , ("M-`", scratchPad)
+  , ("M-n", spawn myWallpaper)
 
   -- Browser buttons
   , ("M-<F1>", spawn "xdotool key XF86_Back")
@@ -47,18 +50,35 @@ myKeys =
   , ("M-<F8>", spawn "pactl set-sink-mute 0 toggle")
   , ("M-<F9>", spawn "pactl set-sink-volume 0 -1024")
   , ("M-<F10>", spawn "pactl set-sink-volume 0 +1024")
+  ] ++ myWorkspaceKeys
+
+myWorkspaceKeys =
+  concat $ map workspaceKeys workspaces
+    where
+      workspaces = zip myWorkspaces $ map show [1..9]
+      workspaceKeys = \ (i, k) ->
+        [ ("C-" ++ k, windows $ W.greedyView i)
+        , ("C-S-" ++ k, windows $ W.greedyView i . W.shift i)
+        ]
+
+myWorkspaceKeys' =
+  [ (m ++ k, windows $ f i)
+  | (i, k) <- zip myWorkspaces $ map show [1..9]
+  , (f, m) <-
+    [ (W.greedyView, "C-")
+    , (\ w -> W.greedyView w . W.shift w, "C-S-")
+    ]
   ]
 
 -- Startup hook
 myStartupPrograms =
-  [ "feh --bg-fill $HOME/Pictures/greenhouse.jpg"
+  [ myWallpaper
   , "compton"
   , "dunst"
   , "polybar"
   ]
 myStartupHook :: X ()
 myStartupHook = do
-  setDefaultCursor xC_left_ptr
   mapM_ spawnOnce myStartupPrograms
 
 -- Scratchpad
@@ -77,7 +97,7 @@ myManageHook = composeAll
 
 myLayoutHook = smartBorders . smartSpacingWithEdge 5 $ layoutHook desktopConfig
 
--- Status Bar
+-- Main
 main = xmonad $ desktopConfig
     { modMask = myModMask
     , terminal = myTerminal

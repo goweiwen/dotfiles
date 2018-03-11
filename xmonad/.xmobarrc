@@ -9,9 +9,9 @@ Config
   , position = Top C 100
 
   , bgColor = "#1C2023"
-  , fgColor = "#F3F4F5"
+  , fgColor = "#d3d0c8"
 
-  , template = " <fc=#80c080><fn=2>♞</fn></fc> %UnsafeStdinReader% }{ <fc=#80c080><fn=3></fn></fc> %wifi%  <fc=#80c080><fn=3></fn></fc> %volume% <fc=#80c080><fn=3></fn></fc> %battery%  <fc=#80c080><fn=3></fn></fc> <fn=1>%date%</fn> "
+  , template = " <fc=#99cc99><fn=2>♞</fn></fc> %UnsafeStdinReader% }{ <fc=#99cc99><fn=3></fn></fc> %wifi%  <fc=#99cc99><fn=3></fn></fc> %volume% <fc=#99cc99><fn=3></fn></fc> %battery%  <fc=#99cc99><fn=3></fn></fc> <fn=1>%date%</fn> "
 
   , commands =
       [ Run Com "/home/weiwen/.xmonad/bin/wifi" [] "wifi" 600
