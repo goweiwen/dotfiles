@@ -110,4 +110,4 @@ alias zrc='vim ~/.zshrc'
 alias zenv='vim ~/.zshenv'
 alias hrc='vim ~/.hammerspoon/init.lua'
 alias mrc='vim ~/.xmonad/xmonad.hs'
-
+alias trc='vim ~/.tmux.conf'
