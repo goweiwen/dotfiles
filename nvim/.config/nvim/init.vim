@@ -198,7 +198,7 @@ if dein#load_state('~/.config/nvim/dein')
   call dein#add('itchyny/vim-haskell-indent')
 
   " Go
-  call dein#add('nsf/gocode', { 'rtp': 'nvim/' })
+  call dein#add('fatih/vim-go')
 
   " JavaScript
   call dein#add('pangloss/vim-javascript')
