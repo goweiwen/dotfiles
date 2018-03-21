@@ -1,1 +1,0 @@
-((prettier-js :fetcher github :repo "prettier/prettier-emacs" :branch "prettier-js-prettify-region") (quelpa :repo "quelpa/quelpa" :fetcher github) (quelpa-use-package :fetcher github :repo "quelpa/quelpa-use-package"))
