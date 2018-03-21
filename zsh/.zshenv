@@ -15,7 +15,7 @@ export PATH=${PATH}:/usr/local/texlive/2017/bin/x86_64-darwin/
 
 export WINEARCH=win32
 
-export EDITOR='nvim'
+export EDITOR='emacsclient'
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
