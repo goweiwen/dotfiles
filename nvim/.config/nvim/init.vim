@@ -222,13 +222,17 @@ if dein#load_state('~/.config/nvim/dein')
   endif
 endif
 
+" base-16
+if filereadable(expand("~/.vimrc_background"))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
+
 filetype plugin indent on
 
 " Theme
 syntax enable
 set background=dark
-let base16colorspace=256
-colorscheme base16-ashes
 set termguicolors
 let g:airline_theme='base16_ashes'
 

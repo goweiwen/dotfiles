@@ -113,3 +113,6 @@ alias zenv='vim ~/.zshenv'
 alias hrc='vim ~/.hammerspoon/init.lua'
 alias mrc='vim ~/.xmonad/xmonad.hs'
 alias trc='vim ~/.tmux.conf'
+
+BASE16_SHELL=$HOME/.config/base16-shell/
+[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
