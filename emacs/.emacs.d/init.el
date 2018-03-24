@@ -502,17 +502,17 @@
 ;; Python
 ;; ===
 
-(setq-default python-indent 2)
+(setq-default python-indent 4)
 (add-hook 'python-mode-hook (lambda () (aggressive-indent-mode -1)))
 
 ;; Anaconda mode
 (use-package anaconda-mode
-  :init
-  (add-hook 'python-mode-hook 'anaconda-mode)
-  (add-hook 'python-mpde-hook 'anaconda-eldoc-mode))
+  :hook ((python-mode-hook anaconda-mode)
+         (python-mode-hook anaconda-eldoc-mode)))
 
 ;; Autocompletion
 (use-package company-anaconda
+  :after anaconda-mode
   :config
   (eval-after-load "company"
     '(add-to-list 'company-backends '(company-anaconda))))
@@ -522,15 +522,13 @@
 
 ;; Highlight Indent Guides
 (use-package highlight-indent-guides
-  :init
-  (add-hook 'python-mode-hook 'highlight-indent-guides-mode)
+  :hook (python-mode-hook . highlight-indent-guides-mode)
   :config
   (setq highlight-indent-guides-method 'character))
 
 ;; Use yapf to format
 (use-package yapfify
-  :init
-  (add-hook 'python-mode-hook 'yapf-mode))
+  :hook (python-mode-hook . yapf-mode))
 
 ;; HTML
 ;; ===
@@ -550,16 +548,18 @@
 
 ;; CSS
 ;; ===
+
 (setq-default css-indent-offset 2)
-(use-package less-css-mode)
-(use-package sass-mode)
+(use-package less-css-mode
+  :hook less-mode-hook)
+(use-package sass-mode
+  :hook sass-mode-hook)
 (use-package rainbow-mode
-  :diminish rainbow-mode
-  :config
-  (add-hook 'css-mode-hook 'rainbow-mode)
-  (add-hook 'sass-mode-hook 'rainbow-mode)
-  (add-hook 'html-mode-hook 'rainbow-mode)
-  (add-hook 'less-mode-hook 'rainbow-mode))
+  :hook ((css-mode-hook . rainbow-mode)
+         (sass-mode-hook . rainbow-mode)
+         (html-mode-hook . rainbow-mode)
+         (less-mode-hook . rainbow-mode))
+  :diminish rainbow-mode)
 
 ;; JavaScript
 ;; ===
@@ -568,39 +568,16 @@
 
 ;; Prettier
 (use-package prettier-js
+  :hook ((js2-mode-hook . prettier-js-mode)
+         (web-mode-hook . prettier-js-mode)
+         (vue-mode-hook . prettier-js-mode)
+         (rjsx-mode-hook . prettier-js-mode))
   :ensure nil
   :quelpa (prettier-js
            :fetcher github
            :repo "prettier/prettier-emacs"
            :branch "prettier-js-prettify-region")
   :config
-  (setq prettier-js-args '("--trailing-comma" "es5"
-                           "--no-semi"
-                           "--single-quote")))
-
-;; Flycheck
-(require 'flycheck)
-(flycheck-add-mode 'javascript-eslint 'rjsx-mode)
-(flycheck-add-mode 'javascript-eslint 'js2-mode)
-(flycheck-add-mode 'javascript-eslint 'web-mode)
-
-;; React
-(use-package rjsx-mode
-  :mode ("\\.js\\'" . rjsx-mode)
-  :init
-  (add-hook 'rjsx-mode-hook 'prettier-js-mode)
-  :config
-  (setq js2-mode-show-strict-warnings nil
-        js2-mode-show-parse-errors nil
-        js2-indent-level 2
-        js2-basic-offset 2
-        js2-strict-trailing-comma-warning nil
-        js2-strict-missing-semi-warning nil))
-
-;; Vue
-(use-package vue-mode
-  :after 'prettier-js
-  :init
   (defun prettier-vue ()
     (interactive)
     (progn
@@ -626,13 +603,40 @@
             (lambda ()
               (prettier-js-mode)
               (add-hook 'before-save-hook 'prettier-vue nil 'local)))
+  (setq prettier-js-args '("--trailing-comma" "es5"
+                           "--no-semi"
+                           "--single-quote")))
+
+;; React
+(use-package rjsx-mode
+  :mode ("\\.js\\'" . rjsx-mode)
+  :config
+  (setq js2-mode-show-strict-warnings nil
+        js2-mode-show-parse-errors nil
+        js2-indent-level 2
+        js2-basic-offset 2
+        js2-strict-trailing-comma-warning nil
+        js2-strict-missing-semi-warning nil))
+
+;; Vue
+(use-package vue-mode
+  :mode ("\\.vue\\'" . vue-mode)
+  :init
   :config
   (setq mmm-submode-decoration-level 0))
+
+;; Flycheck
+(require 'flycheck)
+(flycheck-add-mode 'javascript-eslint 'rjsx-mode)
+(flycheck-add-mode 'javascript-eslint 'js2-mode)
+(flycheck-add-mode 'javascript-eslint 'web-mode)
+(flycheck-add-mode 'javascript-eslint 'vue-mode)
 
 ;; Org
 ;; ===
 
 (use-package org
+  ;; :mode ("\\.org\\" . org-mode)
   :ensure org-plus-contrib
   :init
   (add-hook 'org-mode-hook
@@ -661,6 +665,44 @@
                                                (right-char 2)
                                                (org-preview-latex-fragment)))))))
 
+;; Coq
+;; ===
+(use-package company-coq
+  :mode (("\\.v\\'" . company-coq-mode)
+         ("\\.v\\'" . coq-mode))
+  :config
+  (setenv "PATH" (concat (getenv "PATH") "/Users/weiwen/.opam/4.05.0/bin"))
+  (setq exec-path (append exec-path '("/Users/weiwen/.opam/4.05.0/bin")))
+  (setq prettify-symbols-alist
+        (quote
+         (("|-" . 8866)
+          ("||" . 8214)
+          ("/\\" . 8743)
+          ("\\/" . 8744)
+          ("->" . 8594)
+          ("<-" . 8592)
+          ("<->" . 8596)
+          ("=>" . 8658)
+          ("<=" . 8804)
+          (">=" . 8805)
+          ("True" . 8868)
+          ("False" . 8869)
+          ("fun" . 955)
+          ("forall" . 8704)
+          ("exists" . 8707)
+          ("nat" . 8469)
+          ("Prop" . 8473)
+          ("Real" . 8477)
+          ("bool" . 120121)
+          (">->" . 8611)
+          ("-->" . 10230)
+          ("<--" . 10229)
+          ("<-->" . 10231)
+          ("==>" . 10233)
+          ("<==" . 10232)
+          ("~~>" . 10239)
+          ("<~~" . 11059)))))
+
 ;; Export
 (require 'ox-md)
 (require 'ox-beamer)
@@ -668,16 +710,20 @@
 ;; Other Languages
 ;; ===
 
-(use-package coffee-mode)
-(use-package lua-mode)
-(use-package elm-mode)
-(use-package json-mode)
-(use-package markdown-mode)
-(use-package haskell-mode)
-(use-package swift-mode)
-(use-package company-coq
-  :init
-  (add-hook 'coq-mode-hook 'company-coq-mode))
+(use-package coffee-mode
+  :mode "\\.coffee\\'")
+(use-package lua-mode
+  :mode "\\.lua\\'")
+(use-package elm-mode
+  :mode "\\.elm\\'")
+(use-package json-mode
+  :mode "\\.json\\'")
+(use-package markdown-mode
+  :mode "\\.md\\'")
+(use-package haskell-mode
+  :mode "\\.hs\\'")
+(use-package swift-mode
+  :mode "\\.swift\\'")
 
 ;; Writing
 ;; ===
