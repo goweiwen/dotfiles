@@ -107,7 +107,7 @@ alias bcs='brew cask search'
 alias bcl='brew cask list'
 
 alias vrc='$EDITOR ~/.config/nvim/init.vim'
-alias crc='$EDITOR ~/.chunkwm'
+alias crc='$EDITOR ~/.chunkwmrc'
 alias zrc='$EDITOR ~/.zshrc'
 alias zenv='$EDITOR ~/.zshenv'
 alias hrc='$EDITOR ~/.hammerspoon/init.lua'
