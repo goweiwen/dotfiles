@@ -106,12 +106,13 @@ alias bcr='brew cask remove'
 alias bcs='brew cask search'
 alias bcl='brew cask list'
 
-alias vrc='vim ~/.config/nvim/init.vim'
-alias zrc='vim ~/.zshrc'
-alias zenv='vim ~/.zshenv'
-alias hrc='vim ~/.hammerspoon/init.lua'
-alias mrc='vim ~/.xmonad/xmonad.hs'
-alias trc='vim ~/.tmux.conf'
+alias vrc='$EDITOR ~/.config/nvim/init.vim'
+alias crc='$EDITOR ~/.chunkwm'
+alias zrc='$EDITOR ~/.zshrc'
+alias zenv='$EDITOR ~/.zshenv'
+alias hrc='$EDITOR ~/.hammerspoon/init.lua'
+alias mrc='$EDITOR ~/.xmonad/xmonad.hs'
+alias trc='$EDITOR ~/.tmux.conf'
 
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
