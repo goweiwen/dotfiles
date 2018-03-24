@@ -142,7 +142,11 @@
           (evil   . (telephone-line-airline-position-segment))))
   (telephone-line-mode))
 
-;; Mouse scrolling
+;; Terminal stuff
+(xterm-mouse-mode 1)
+(normal-erase-is-backspace-mode 1)
+
+;; ;; Mouse scrolling
 ;; (setq mac-mouse-wheel-smooth-scroll nil
 ;;       mouse-wheel-follow-mouse t
 ;;       mouse-wheel-progressive-speed nil
