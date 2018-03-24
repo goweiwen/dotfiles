@@ -8,12 +8,15 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-(eval-and-compile
-  (defvar use-package-verbose t)
-  (require 'use-package)
-  (require 'bind-key)
-  (require 'diminish)
-  (setq use-package-always-ensure t))
+(unless (package-installed-p 'diminish)
+  (package-refresh-contents)
+  (package-install 'diminish))
+
+(eval-when-compile
+  (require 'use-package))
+(require 'bind-key)
+(require 'diminish)
+(setq use-package-always-ensure t)
 
 ;; quelpa-use-package
 (setq-default quelpa-update-melpa-p nil)
@@ -45,12 +48,11 @@
   (interactive)
   (switch-to-buffer (find-file-noselect "~/.emacs.d/init.el")))
 
-;; Hot reloading init.el
-(defun hot-reload-init ()
-  (when (string= (buffer-file-name) "/Users/weiwen/.dotfiles/emacs/.emacs.d/init.el")
-    (load-file (buffer-file-name))))
-
-(add-hook 'after-save-hook 'hot-reload-init)
+;; ;; Hot reloading init.el
+;; (defun hot-reload-init ()
+;;   (when (string= (buffer-file-name) "/Users/weiwen/.dotfiles/emacs/.emacs.d/init.el")
+;;     (load-file (buffer-file-name))))
+;; (add-hook 'after-save-hook 'hot-reload-init)
 
 ;; Backup directory
 (setq backup-by-copying t
@@ -89,8 +91,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Menlo" :height 140))))
- '(fixed-pitch ((t (:family "Menlo" :height 140))))
+ '(default ((t (:family "Fira Code" :height 140))))
+ '(fixed-pitch ((t (:family "Fira Code" :height 140))))
  '(variable-pitch ((t (:family "SFNS" :height 140)))))
 
 ;; Theme
@@ -116,7 +118,8 @@
   (setq dashboard-startup-banner 'official
         dashboard-items '((recents . 5)
                           (bookmarks . 5)
-                          (projects . 5))))
+                          (projects . 5)
+                          (agenda . 5))))
 
 ;; Frame title
 (setq frame-title-format '((:eval (projectile-project-name))))
@@ -268,6 +271,7 @@
 (define-key leader-map "bd" 'kill-this-buffer)
 (define-key leader-map "fe" 'edit-init)
 (define-key leader-map "ff" 'counsel-find-file)
+(define-key leader-map "fp" 'counsel-git)
 (define-key leader-map "fr" 'counsel-recentf)
 (define-key leader-map "fs" 'swiper)
 (define-key leader-map "fv" 'counsel-ag)
@@ -289,6 +293,7 @@
 (define-key leader-map [C-p] 'projectile-switch-project)
 (define-key leader-map [C-v] 'hrs/search-project-for-symbol-at-point)
 (define-key leader-map [tab] 'mode-line-other-buffer)
+(define-key leader-map [esc] 'evil-ex-nohighlight)
 
 ;; Zoom
 (use-package default-text-scale
@@ -297,8 +302,8 @@
   (global-set-key "\M--" #'default-text-scale-decrease))
 
 ;; Copy/Paste
-;; (define-key global-map "\M-c" 'evil-yank)
-;; (define-key global-map "\M-v" 'yank)
+(define-key global-map "\M-c" 'evil-yank)
+(define-key global-map "\M-v" 'yank)
 
 ;; Switch buffers
 (define-key global-map [C-tab] 'next-buffer)
@@ -326,18 +331,21 @@
 (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
 
 ;; Line numbers
-(use-package linum-relative
+(use-package nlinum-relative
   :init
-  (add-hook 'prog-mode-hook 'linum-mode)
+  (add-hook 'prog-mode-hook 'nlinum-mode)
+  (add-hook 'prog-mode-hook 'nlinum-relative-mode)
   :config
-  (linum-relative-global-mode)
+  (nlinum-relative-setup-evil)
+  (setq nlinum-format " %d ")
+  (set-face-attribute 'linum nil :background nil)
   (setq linum-relative-current-symbol ""))
 
 ;; Git Gutter
-;; (use-package git-gutter
-;;   :config
-;;   (global-git-gutter-mode +1)
-;;   (git-gutter:linum-setup))
+(use-package git-gutter
+  :config
+  (global-git-gutter-mode +1)
+  (git-gutter:linum-setup))
 
 ;; Line wrapping
 (setq-default truncate-lines t)
@@ -431,9 +439,7 @@
   (define-key evil-normal-state-map "\C-p" 'projectile-find-file))
 
 (use-package counsel-projectile
-  :after ivy
-  :init
-  (counsel-projectile-on))
+  :after ivy)
 
 (use-package ag)
 
@@ -448,6 +454,13 @@
         enable-recursive-minibuffers t)
   (add-to-list 'ivy-ignore-buffers "\\*Messages\\*")
   (add-to-list 'ivy-ignore-buffers "\\*magit"))
+
+;; Swiper
+;; ===
+
+(use-package swiper
+  :bind
+  ("C-s" . swiper))
 
 ;; Dired
 ;; ===
@@ -705,6 +718,6 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (company-coq markdown-mode elm-mode vue-mode wc-mode ranger olivetti olivetti-mode writeroom-mode minimap evil-snipe evil-mc company-anaconda py-yapf ag))))
+    (nlinum-relative evil-visual-mark-mode company-coq markdown-mode elm-mode vue-mode wc-mode ranger olivetti olivetti-mode writeroom-mode minimap evil-snipe evil-mc company-anaconda py-yapf ag))))
 
 ;;; init.el ends here
