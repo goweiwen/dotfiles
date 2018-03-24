@@ -90,3 +90,7 @@ main:bind('', 'space', function()
        hs.execute(chunkc .. ' tiling:desktop --layout ' .. layouts[layout], true)
        hs.alert(layouts[layout]:gsub('^%l', string.upper))
                    end, exit)
+
+-- Screenhots
+bind('cmd-shift', '4', execute(chunkc .. ' border::clear'))
+bind('ctrl-cmd-shift', '4', execute(chunkc .. ' border::clear'))
