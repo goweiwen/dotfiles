@@ -66,8 +66,8 @@ chunkc set mouse_follows_focus           intrinsic
 chunkc set window_float_next             0
 chunkc set window_region_locked          1
 
-chunkc set mouse_move_window             \"alt 1\"
-chunkc set mouse_resize_window           \"alt 2\"
+chunkc set mouse_move_window             \"cmd+alt 1\"
+chunkc set mouse_resize_window           \"cmd+alt 2\"
 
 chunkc set preselect_border_color        0xff99cc99
 chunkc set preselect_border_width        5
@@ -97,7 +97,8 @@ chunkc set focused_border_skip_floating  1
 # NOTE: the following are config variables for the chunkwm-ffm plugin.
 #
 
-chunkc set mouse_modifier                alt
+chunkc set mouse_modifier                \"cmd+alt\"
+kkk
 
 #
 # chunkwm-blur
@@ -134,6 +135,7 @@ chunkc tiling::rule --owner \"System Preferences\" --subrole AXStandardWindow --
 chunkc tiling::rule --owner \"QuickTime Player\" --name=\"Screen Recording\" --state float
 chunkc tiling::rule --owner \"Accessibility Inspector\" --state float
 chunkc tiling::rule --owner iTerm --name \"Hotkey\" --state float
+chunkc tiling::rule --owner "Emacs" --subrole AXDialog --state tile
 chunkc tiling::rule --owner "Emacs.*" --except "^$" --state tile
 chunkc tiling::rule --owner Beamer --state float
 chunkc tiling::rule --owner \"IntelliJ IDEA\" --state float
