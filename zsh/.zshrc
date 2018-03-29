@@ -95,7 +95,7 @@ alias jn='jupyter notebook'
 alias v='nocorrect nvim'
 alias vc='nocorrect code'
 alias o='open'
-alias e='nocorrect emacsclient -nw'
+alias e='nocorrect emacsclient'
 
 alias bi='brew install'
 alias br='brew remove'
