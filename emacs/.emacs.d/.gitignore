@@ -1,5 +1,9 @@
+secrets.el
+
 history
 recentf
+bookmarks
 projectile-bookmarks.eld
 quelpa/
 elpa/
+org-gcal/
