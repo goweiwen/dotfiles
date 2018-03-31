@@ -20,6 +20,7 @@ antibody bundle djui/alias-tips
 antibody bundle rupa/z
 antibody bundle mwilliammyers/plugin-osx
 antibody bundle mahmoudelbadry/zsh-mkcd
+antibody bundle voronkovich/gitignore.plugin.zsh
 
 # fish-like
 antibody bundle zdharma/fast-syntax-highlighting
