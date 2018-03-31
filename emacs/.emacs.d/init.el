@@ -119,15 +119,15 @@
 ;; Blend fringe background
 (set-face-attribute 'fringe nil :background nil)
 
-;; Dashboard
-(use-package dashboard
-  :config
-  (dashboard-setup-startup-hook)
-  (setq dashboard-startup-banner 'official
-        dashboard-items '((recents . 5)
-                          (bookmarks . 5)
-                          (projects . 5)
-                          (agenda))))
+;; ;; Dashboard
+;; (use-package dashboard
+;;   :config
+;;   (dashboard-setup-startup-hook)
+;;   (setq dashboard-startup-banner 'official
+;;         dashboard-items '((recents . 5)
+;;                           (bookmarks . 5)
+;;                           (projects . 5)
+;;                           (agenda))))
 
 ;; Frame title
 (setq frame-title-format '((:eval (projectile-project-name))))
@@ -352,14 +352,15 @@
 (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
 
 ;; Line numbers
-(use-package nlinum-relative
-  :hook ((prog-mode-hook nlinum-mode)
-         (prog-mode-hook nlinum-relative-mode))
+(use-package linum-relative
+  :ensure t
+  :after evil
+  :custom-face (linum ((nil (:background nil))))
   :config
-  (nlinum-relative-setup-evil)
-  (setq nlinum-format " %d ")
-  (set-face-attribute 'linum nil :background nil)
-  (setq linum-relative-current-symbol ""))
+  (global-linum-mode)
+  (linum-relative-global-mode)
+  (setq linum-format " %d "
+        linum-relative-current-symbol ""))
 
 ;; Git Gutter
 (use-package git-gutter
@@ -403,7 +404,9 @@
 ;; Autocompletion
 (use-package company
   :diminish
-  :hook (after-init-hook global-company-mode))
+  :hook (after-init-hook global-company-mode)
+  :config
+  (setq company-idle-delay 0.2))
 
 ;; Code highlighting
 (use-package highlight-numbers
@@ -705,10 +708,9 @@
 ;; Coq
 ;; ===
 (use-package company-coq
-  :mode (("\\.v\\'" . company-coq-mode)
-         ("\\.v\\'" . coq-mode))
-  :hook ((company-coq-mode . coq-symbols-list)
-         (coq-mode . coq-symbols-list))
+  :mode ("\\.v\\'" . coq-mode)
+  :hook (('coq-mode-hook . 'company-coq-mode)
+         ('coq-mode-hook . 'coq-symbols-list))
   :bind (:map company-coq-map
               ("M-j" . proof-assert-next-command-interactive)
               ("M-k" . proof-undo-last-successful-command)
@@ -725,6 +727,7 @@
   (setq exec-path (append exec-path '("/Users/weiwen/.opam/4.05.0/bin")))
 
   ;; Prettify symbols
+  (company-coq-features/prettify-symbols nil)
   (setq coq-symbols-list
         '(lambda()
            (setq prettify-symbols-alist
