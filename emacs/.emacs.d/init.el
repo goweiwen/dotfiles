@@ -104,11 +104,11 @@
  '(variable-pitch ((t (:family "SFNS" :height 140)))))
 
 ;; Theme
-(if window-system
-    (use-package base16-theme
-      :config
-      (setq base16-theme-256-color-source 'base16-shell)
-      (load-theme 'base16-ashes t)))
+(when (display-graphic-p)
+  (use-package base16-theme
+    :config
+    (setq base16-theme-256-color-source 'base16-shell)
+    (load-theme 'base16-ashes t)))
 
 ;; Tweak window chrome
 (tool-bar-mode 0)
@@ -117,6 +117,10 @@
   (scroll-bar-mode -1))
 
 ;; Blend fringe background
+(use-package linum
+  :config
+  (set-face-attribute 'linum nil :background nil)
+  (setq linum-format "%3d "))
 (set-face-attribute 'fringe nil :background nil)
 
 ;; ;; Dashboard
@@ -155,6 +159,10 @@
                      telephone-line-process-segment))
           (evil   . (telephone-line-airline-position-segment))))
   (telephone-line-mode))
+
+;; Quality of Life
+(setq vc-follow-symlinks t)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; Terminal stuff
 (xterm-mouse-mode 1)
@@ -313,8 +321,8 @@
 (define-key leader-map [? ] 'counsel-M-x)
 (define-key leader-map [C-p] 'projectile-switch-project)
 (define-key leader-map [C-v] 'hrs/search-project-for-symbol-at-point)
-(define-key leader-map [tab] 'mode-line-other-buffer)
-(define-key leader-map [esc] 'evil-ex-nohighlight)
+(define-key leader-map [?\t] 'mode-line-other-buffer)
+(define-key leader-map [escape] 'evil-ex-nohighlight)
 
 ;; Zoom
 (use-package default-text-scale
@@ -355,19 +363,17 @@
 (use-package linum-relative
   :ensure t
   :after evil
-  :custom-face (linum ((nil (:background nil))))
   :config
   (global-linum-mode)
   (linum-relative-global-mode)
-  (setq linum-format " %d "
-        linum-relative-current-symbol ""))
+  (setq linum-relative-current-symbol ""))
 
-;; Git Gutter
-(use-package git-gutter
-  :diminish
-  :config
-  (global-git-gutter-mode +1)
-  (git-gutter:linum-setup))
+;; ;; Git Gutter
+;; (use-package git-gutter
+;;   :diminish
+;;   :config
+;;   (global-git-gutter-mode +1)
+;;   (git-gutter:linum-setup))
 
 ;; Line wrapping
 (setq-default truncate-lines t)
