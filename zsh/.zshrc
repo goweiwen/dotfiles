@@ -1,38 +1,6 @@
 # Change iTerm2 Titlebar colour
 printf -- $'\033]6;1;bg;red;brightness;28\a\033]6;1;bg;green;brightness;32\a\033]6;1;bg;blue;brightness;34\a'
 
-# Source antibody
-source <(antibody init)
-
-# oh-my-zsh
-antibody bundle robbyrussell/oh-my-zsh folder:lib
-
-# zimfw
-antibody bundle zimfw/zimfw folder:modules/directory
-antibody bundle zimfw/zimfw folder:modules/environment
-antibody bundle zimfw/zimfw folder:modules/git
-antibody bundle zimfw/zimfw folder:modules/history
-antibody bundle zimfw/zimfw folder:modules/utility
-
-# QoL
-antibody bundle Tarrasch/zsh-autoenv
-antibody bundle djui/alias-tips
-antibody bundle rupa/z
-antibody bundle mwilliammyers/plugin-osx
-antibody bundle mahmoudelbadry/zsh-mkcd
-antibody bundle voronkovich/gitignore.plugin.zsh
-
-# fish-like
-antibody bundle zdharma/fast-syntax-highlighting
-antibody bundle zsh-users/zsh-history-substring-search
-antibody bundle zsh-users/zsh-autosuggestions
-antibody bundle zsh-users/zsh-completions
-ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
-ZSH_AUTOSUGGEST_USE_ASYNC=true
-
-# Version managers
-antibody bundle lukechilds/zsh-nvm
-
 # Prompt
 setopt PROMPT_SUBST
 GEOMETRY_SYMBOL_PROMPT="♞ "                 # default prompt symbol
@@ -65,12 +33,57 @@ GEOMETRY_SYMBOL_GIT_UNPUSHED="⇡"              # when there are unpushed change
 GEOMETRY_SYMBOL_GIT_CONFLICTS_SOLVED="!"      # when all conflicts have been solved
 GEOMETRY_SYMBOL_GIT_CONFLICTS_UNSOLVED="!"    # when there are still unsolved conflicts
 
-antibody bundle geometry-zsh/geometry
-antibody bundle desyncr/geometry-datetime
-
 GEOMETRY_PLUGIN_DATETIME_FORMAT="+%T"
 GEOMETRY_PLUGIN_DATETIME_PREFIX="" # "\e[35m"
 GEOMETRY_PLUGIN_DATETIME_SUFFIX=""
+
+# load zgen
+if [ ! -f "${HOME}/.zgen/zgen.zsh" ]; then
+  git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
+fi
+source "${HOME}/.zgen/zgen.zsh"
+
+# # if the init scipt doesn't exist
+if ! zgen saved; then
+
+  # oh-my-zsh
+  zgen load robbyrussell/oh-my-zsh
+
+  # zimfw
+  zgen load zimfw/zimfw modules/directory
+  zgen load zimfw/zimfw modules/environment
+  zgen load zimfw/zimfw modules/git
+  zgen load zimfw/zimfw modules/history
+  zgen load zimfw/zimfw modules/utility
+
+  # Autocompletions & aliases
+  zgen load robbyrussell/oh-my-zsh plugins/adb
+  zgen load robbyrussell/oh-my-zsh plugins/heroku
+  zgen load robbyrussell/oh-my-zsh plugins/httpie
+
+  # QoL
+  zgen load robbyrussell/oh-my-zsh plugins/autoenv
+  zgen load djui/alias-tips
+  zgen load rupa/z
+  zgen load mwilliammyers/plugin-osx
+  zgen load mahmoudelbadry/zsh-mkcd
+  zgen load robbyrussell/oh-my-zsh plugins/gitignore
+
+  # fish-like
+  zgen load zdharma/fast-syntax-highlighting
+  zgen load zsh-users/zsh-history-substring-search
+  zgen load zsh-users/zsh-autosuggestions
+  zgen load zsh-users/zsh-completions
+
+  # Version managers
+  zgen load robbyrussell/oh-my-zsh plugins/nvm
+
+  # Prompt
+  zgen load geometry-zsh/geometry
+  zgen load desyncr/geometry-datetime
+
+  zgen save
+fi
 
 # Autocompletion
 autoload -Uz compinit
@@ -88,15 +101,13 @@ bindkey '^[OB' history-substring-search-down
 # Aliases
 alias vim='nocorrect nvim'
 alias please='sudo `fc -ln -1`'
-# alias emacs='/usr/local/Cellar/emacs-mac/emacs-25.2-z-mac-6.5/bin/emacs'
-# alias emacsclient='/usr/local/Cellar/emacs-mac/emacs-25.2-z-mac-6.5/bin/emacsclient'
 alias wine='/Applications/Wine\ Staging.app/Contents/Resources/wine/bin/wine'
 
 alias jn='jupyter notebook'
 alias v='nocorrect nvim'
 alias vc='nocorrect code'
 alias o='open'
-alias e='nocorrect emacsclient'
+alias e='$EDITOR'
 
 alias bi='brew install'
 alias br='brew remove'
