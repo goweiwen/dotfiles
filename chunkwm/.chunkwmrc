@@ -119,9 +119,9 @@ chunkc set wallpaper_blur                0.0
 
 
 chunkc core::load tiling.so
-chunkc core::load ffm.so
+chunkc core::unload ffm.so
 chunkc core::load border.so
-chunkc core::load blur.so
+chunkc core::unload blur.so
 
 #
 # NOTE: shell commands require escaped quotes
