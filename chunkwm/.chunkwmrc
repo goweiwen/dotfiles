@@ -41,15 +41,15 @@ chunkc set global_desktop_offset_left    15
 chunkc set global_desktop_offset_right   15
 chunkc set global_desktop_offset_gap     15
 
-#
-# NOTE: syntax for desktop-specific settings
-#
-chunkc set 5_desktop_mode                monocle
-chunkc set 5_desktop_offset_top          0
-chunkc set 5_desktop_offset_bottom       0
-chunkc set 5_desktop_offset_left         0
-chunkc set 5_desktop_offset_right        0
-chunkc set 5_desktop_offset_gap          0
+
+ NOTE: syntax for desktop-specific settings
+
+chunkc set 4_desktop_mode                monocle
+chunkc set 4_desktop_offset_top          0
+chunkc set 4_desktop_offset_bottom       0
+chunkc set 4_desktop_offset_left         0
+chunkc set 4_desktop_offset_right        0
+chunkc set 4_desktop_offset_gap          0
 
 chunkc set desktop_padding_step_size     10.0
 chunkc set desktop_gap_step_size         5.0
@@ -97,8 +97,9 @@ chunkc set focused_border_skip_floating  1
 # NOTE: the following are config variables for the chunkwm-ffm plugin.
 #
 
-chunkc set mouse_modifier                \"cmd+alt\"
-kkk
+chunkc set ffm_bypass_modifier                \"cmd+alt\"
+chunkc set mouse_move_window                  \"cmd+alt 1\"
+chunkc set mouse_resize_window                  \"cmd+alt 2\"
 
 #
 # chunkwm-blur
@@ -129,15 +130,12 @@ chunkc core::unload blur.so
 #
 
 chunkc tiling::rule --owner Spotify --role AXWindow --subrole AXDialog --state tile
-# chunkc tiling::rule --owner Finder --name Copy --state float
+chunkc tiling::rule --owner Finder --name Copy --state float
 chunkc tiling::rule --owner \"App Store\" --state float
 chunkc tiling::rule --owner \"System Preferences\" --subrole AXStandardWindow --state float
 chunkc tiling::rule --owner \"QuickTime Player\" --name=\"Screen Recording\" --state float
 chunkc tiling::rule --owner \"Accessibility Inspector\" --state float
 chunkc tiling::rule --owner iTerm --name \"Hotkey\" --state float
-chunkc tiling::rule --owner "Emacs" --subrole AXDialog --state tile
-chunkc tiling::rule --owner "Emacs.*" --except "^$" --state tile
+chunkc tiling::rule --owner Emacs --except "^$" --state tile
 chunkc tiling::rule --owner Beamer --state float
-chunkc tiling::rule --owner \"IntelliJ IDEA\" --state float
-chunkc tiling::rule --owner Fantastical --name \"Fantastical 2\" --state float
 chunkc tiling::rule --owner Emacs --except \"^$\" --state tile
