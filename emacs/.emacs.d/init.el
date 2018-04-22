@@ -83,6 +83,10 @@
 ;; Save Session
 ; (desktop-save-mode 1)
 
+;; Backup to emacs directory
+(setq backup-directory-alist
+      `(("." . ,(concat user-emacs-directory "backups"))))
+
 ;; Recentf
 (require 'recentf)
 (run-at-time (* 5 60) nil
@@ -138,6 +142,9 @@
 ;; Frame title
 (setq frame-title-format '((:eval (projectile-project-name))))
 
+;; Undo window changes
+(winner-mode)
+
 ;; Hide a few minor modes
 (diminish 'undo-tree-mode)
 
@@ -155,8 +162,7 @@
           (nil    . (telephone-line-buffer-segment))))
   (setq telephone-line-rhs
         '((nil    . (telephone-line-major-mode-segment))
-          (accent . (telephone-line-minor-mode-segment
-                     telephone-line-misc-info-segment
+          (accent . (telephone-line-misc-info-segment
                      telephone-line-erc-modified-channels-segment
                      telephone-line-process-segment))
           (evil   . (telephone-line-airline-position-segment))))
@@ -188,6 +194,8 @@
 ;; ===
 
 (use-package evil
+  :init
+  (setq evil-want-abbrev-expand-on-insert-exit nil)
   :config
   (evil-mode 1))
 
@@ -352,7 +360,7 @@
 ;; Aggressive Indentation
 (use-package aggressive-indent
   :diminish aggressive-indent-mode
-  :config (add-hook 'prog-mode-hook 'aggressive-indent-mode))
+  :hook (prog-mode-hook aggressive-indent-mode))
 
 ;; Treat _ as part of a word-object
 (with-eval-after-load 'evil
@@ -718,7 +726,6 @@
 (use-package company-coq
   :mode ("\\.v\\'" . coq-mode)
   :hook (('coq-mode-hook . 'company-coq-mode)
-         ('coq-mode-hook . 'coq-symbols-list))
   :bind (:map company-coq-map
               ("M-j" . proof-assert-next-command-interactive)
               ("M-k" . proof-undo-last-successful-command)
@@ -728,6 +735,8 @@
   (proof-queue-face ((nil (:background "#116611"))))
   :config
 
+  (add-hook 'coq-mode-hook #'company-coq-mode)
+
   ;; Appearance
 
   ;; Use Coq 8.6 (for CS3234)
@@ -736,37 +745,60 @@
 
   ;; Prettify symbols
   (company-coq-features/prettify-symbols nil)
-  (setq coq-symbols-list
-        '(lambda()
-           (setq prettify-symbols-alist
-                 (quote
-                  (("|-" . 8866)
-                   ("||" . 8214)
-                   ("/\\" . 8743)
-                   ("\\/" . 8744)
-                   ("->" . 8594)
-                   ("<-" . 8592)
-                   ("<->" . 8596)
-                   ("=>" . 8658)
-                   ("<=" . 8804)
-                   (">=" . 8805)
-                   ("True" . 8868)
-                   ("False" . 8869)
-                   ("fun" . 955)
-                   ("forall" . 8704)
-                   ("exists" . 8707)
-                   ("nat" . 8469)
-                   ("Prop" . 8473)
-                   ("Real" . 8477)
-                   ("bool" . 120121)
-                   (">->" . 8611)
-                   ("-->" . 10230)
-                   ("<--" . 10229)
-                   ("<-->" . 10231)
-                   ("==>" . 10233)
-                   ("<==" . 10232)
-                   ("~~>" . 10239)
-                   ("<~~" . 11059)))))))
+  (add-hook 'coq-mode-hook
+            (lambda ()
+              (setq-local prettify-symbols-alist
+                          '(("|-" . 8866)
+                            ("||" . 8214)
+                            ("/\\" . 8743)
+                            ("\\/" . 8744)
+                            ("->" . 8594)
+                            ("<-" . 8592)
+                            ("<->" . 8596)
+                            ("=>" . 8658)
+                            ("<=" . 8804)
+                            (">=" . 8805)
+                            ("True" . 8868)
+                            ("False" . 8869)
+                            ("fun" . 955)
+                            ("forall" . 8704)
+                            ("exists" . 8707)
+                            ("nat" . 8469)
+                            ("Prop" . 8473)
+                            ("Real" . 8477)
+                            ("bool" . 120121)
+                            (">->" . 8611)
+                            ("-->" . 10230)
+                            ("<--" . 10229)
+                            ("<-->" . 10231)
+                            ("==>" . 10233)
+                            ("<==" . 10232)
+                            ("~~>" . 10239)
+                            ("<~~" . 11059))))))
+
+;; Haskell
+(use-package haskell-mode
+  :mode "\\.hs\\'"
+  :mode ("\\.ghci$" . ghci-script-mode)
+  :mode ("\\.cabal$" . haskell-cabal-mode)
+  :interpreter (("runghc" . haskell-mode)
+                ("runhaskell" . haskell-mode))
+  :config
+  (load "haskell-mode-autoloads" nil t)
+
+  (push ".hi" completion-ignored-extensions))
+
+(use-package intero
+  :hook (haskell-mode . intero-mode)
+  :config
+  (unless (executable-find "stack")
+    (warn "haskell-mode: couldn't find stack, disabling intero")
+    (remove-hook 'haskell-mode-hook #'intero-mode))
+
+  (add-hook 'intero-mode-hook #'(flycheck-mode eldoc-mode)))
+
+(use-package hindent
+  :hook (haskell-mode . hindent-mode))
 
 ;; Export
 (require 'ox-md)
@@ -785,8 +817,6 @@
   :mode "\\.json\\'")
 (use-package markdown-mode
   :mode "\\.md\\'")
-(use-package haskell-mode
-  :mode "\\.hs\\'")
 (use-package swift-mode
   :mode "\\.swift\\'")
 
@@ -828,6 +858,6 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (frames-only-mode mixed-pitch calfw-org calfw mode-icons nlinum-relative evil-visual-mark-mode company-coq markdown-mode elm-mode vue-mode wc-mode ranger olivetti olivetti-mode writeroom-mode minimap evil-snipe evil-mc company-anaconda py-yapf ag))))
+    (intero esup frames-only-mode mixed-pitch calfw-org calfw mode-icons nlinum-relative evil-visual-mark-mode company-coq markdown-mode elm-mode vue-mode wc-mode ranger olivetti olivetti-mode writeroom-mode minimap evil-snipe evil-mc company-anaconda py-yapf ag))))
 
 ;;; init.el ends here
