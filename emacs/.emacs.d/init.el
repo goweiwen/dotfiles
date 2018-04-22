@@ -101,6 +101,8 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Fira Code" :height 140))))
  '(fixed-pitch ((t (:family "Fira Code" :height 140))))
+ '(proof-locked-face ((nil (:background "#003300"))))
+ '(proof-queue-face ((nil (:background "#116611"))))
  '(variable-pitch ((t (:family "SFNS" :height 140)))))
 
 ;; Theme
