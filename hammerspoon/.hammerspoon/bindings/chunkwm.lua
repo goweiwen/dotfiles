@@ -73,7 +73,7 @@ main
   :bind('shift', 'j', execute(chunkc .. ' tiling:window --use-temporary-ratio -0.1 --adjust-window-edge north'))
   :bind('shift', 'k', execute(chunkc .. ' tiling:window --use-temporary-ratio -0.1 --adjust-window-edge south'))
   :bind('shift', 'l', execute(chunkc .. ' tiling:window --use-temporary-ratio -0.1 --adjust-window-edge west'))
-  :bind('', 'escape', function() hs.alert('Esc'); main:exit() end)
+  :bind('', 'escape', function() main:exit() end)
   :bind('', 'b', exitAfter(main, execute(chunkc .. ' tiling:desktop --toggle offset')))
   :bind('', 'm', exitAfter(main, execute(chunkc .. ' tiling:window --toggle fullscreen')))
   :bind('', 'f', exitAfter(main, execute(chunkc .. ' tiling:window --toggle native-fullscreen')))

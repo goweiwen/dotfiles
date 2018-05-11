@@ -1,19 +1,19 @@
 require '../utils'
 
 local apps = {
-  {'q', 'Finder'},
-  {'w', 'Safari Technology Preview'},
+  {'f', 'Finder'},
   {'e', 'Emacs'},
-  {'r', 'iTerm2'},
-  {'a', 'Telegram'},
-  {'s', 'WhatsApp'},
+  {'w', 'Safari Technology Preview'},
+  {'c', 'Google Chrome'},
+  {'t', 'Telegram'},
+  {'w', 'WhatsApp'},
   {'d', 'Discord'},
-  {'f', 'Slack'},
-  {'z', 'Fantastical'},
-  {'x', 'Boxy'},
+  {'s', 'Slack'},
+  {'b', 'Boxy'},
+  {'f', 'Fantastical'},
 }
 
-local main = hs.hotkey.modal.new(one, 'r')
+local main = hs.hotkey.modal.new(one, '.')
 
 local summary = ''
 for _, app in ipairs(apps) do
@@ -33,4 +33,4 @@ function main:exited()
   end
 end
 
-main:bind('', 'escape', function() hs.alert('Esc'); main:exit() end)
+main:bind('', 'escape', function() main:exit() end)
