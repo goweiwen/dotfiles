@@ -1,0 +1,1 @@
+../kakoune-extra/powerline.kak

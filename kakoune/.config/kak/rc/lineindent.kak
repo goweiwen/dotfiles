@@ -1,0 +1,1 @@
+../kakoune-extra/lineindent.kak

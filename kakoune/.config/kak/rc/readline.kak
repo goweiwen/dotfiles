@@ -1,0 +1,1 @@
+../kakoune-extra/readline.kak

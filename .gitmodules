@@ -10,3 +10,6 @@
 [submodule "bin/.bin/repos/osu"]
 	path = bin/.bin/repos/osu
 	url = https://github.com/ppy/osu
+[submodule "kakoune/.config/kak/kakoune-extra"]
+	path = kakoune/.config/kak/kakoune-extra
+	url = https://github.com/lenormf/kakoune-extra.git
