@@ -1,0 +1,3 @@
+#!/bin/sh
+
+dotnet repos/osu/osu.Desktop/bin/Debug/netcoreapp2.0/osu\!.dll
