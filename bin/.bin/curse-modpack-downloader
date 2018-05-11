@@ -1,0 +1,3 @@
+#!/bin/sh
+
+java -jar $HOME/.bin/repos/minecraft/CurseModpackDownloader-1.0.8.20-all.jar
