@@ -1,5 +1,7 @@
 #! /bin/sh
+outfile=$(echo "$1" | sed "s/.md$/.pdf/")
+echo "Outputting to $outfile"
 
-pandoc "$1" -o "$1.pdf"
+pandoc "$1" -o "$outfile"
 echo "Watching \"$1\" for changes..."
-fswatch "$1" | xargs -n1 -I{} -- pandoc "$1" -o "$1.pdf"
+fswatch "$1" | xargs -n1 -I{} -- pandoc "$1" -o "$outfile"
