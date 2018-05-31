@@ -15,8 +15,8 @@ import qualified XMonad.StackSet as W
 
 -- General config
 myModMask = mod4Mask
-myTerminal = "kitty -1"
-myScratchpad = "kitty --name scratchpad tmux"
+myTerminal = "alacritty -e tmux"
+myScratchpad = "alacritty --name scratchpad -e tmux"
 myLauncher = "rofi -show combi -combi-modi 'window,drun,run,ssh'"
 myWallpaper = "feh --bg-fill \"$HOME/Pictures/Wallpapers/$(ls $HOME/Pictures/Wallpapers | sort -R | head -n 1)\""
 myWorkspaces = [ "home", "www", "dev", "comm", "doc" ]
@@ -71,12 +71,10 @@ myWorkspaceKeys' =
   ]
 
 -- Startup hook
-myStartupPrograms =
-  [ myWallpaper
-  , "compton"
-  , "dunst"
-  , "polybar"
+myStartupPrograms = 
+  [ "polybar default"
   ]
+
 myStartupHook :: X ()
 myStartupHook = do
   mapM_ spawnOnce myStartupPrograms
