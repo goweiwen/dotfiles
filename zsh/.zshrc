@@ -62,7 +62,6 @@ if ! zgen saved; then
   zgen load robbyrussell/oh-my-zsh plugins/httpie
 
   # QoL
-  zgen load robbyrussell/oh-my-zsh plugins/autoenv
   zgen load djui/alias-tips
   zgen load rupa/z
   zgen load mwilliammyers/plugin-osx
