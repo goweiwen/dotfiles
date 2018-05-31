@@ -1,5 +1,5 @@
 rofi.font: Fira Code 9
-rofi.terminal: kitty
+rofi.terminal: alacritty
 rofi.show-icons: true
 
 rofi.color-window: #1c2023, #1c2023, #1c2023
