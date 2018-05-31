@@ -232,9 +232,9 @@ filetype plugin indent on
 
 " Theme
 syntax enable
-set background=dark
+set background=light
 set termguicolors
-let g:airline_theme='base16_ashes'
+let g:airline_theme='solarized'
 
 " Set terminal title
 set title
