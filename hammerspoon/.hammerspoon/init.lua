@@ -32,7 +32,7 @@ bind(one, 'n', compose(
        keyStroke('ctrl-cmd', 'n')))
 
 require 'bindings/runner'
-require 'bindings/hackintosh'
+-- require 'bindings/hackintosh'
 -- require 'bindings/tiling'
 require 'bindings/chunkwm'
 require 'bindings/vim'
