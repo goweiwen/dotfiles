@@ -6,6 +6,7 @@
     shell-env = pkgs.buildEnv {
       name = "shell-env";
       paths = [
+        alacritty
         ffmpeg
         ghostscript
         gitAndTools.gitFull
@@ -14,7 +15,6 @@
         graphviz
         imagemagick
         jq
-        neovim
         pandoc
         silver-searcher
         sloccount
@@ -26,6 +26,31 @@
         youtube-dl
         z3
         zsh
+      ];
+    };
+
+    neovim-env = pkgs.buildEnv {
+      name = "neovim-env";
+      paths = [
+        neovim
+        python35Packages.neovim
+        python27Packages.neovim
+      ];
+    };
+
+    python-env = pkgs.buildEnv {
+      name = "python-env";
+      paths = [
+        python35
+        python27
+      ];
+    };
+
+    javascript-env = pkgs.buildEnv {
+      name = "javascript-env";
+      paths = [
+        yarn
+        nodejs
       ];
     };
 
