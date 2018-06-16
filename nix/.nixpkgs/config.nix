@@ -16,6 +16,7 @@
         imagemagick
         jq
         pandoc
+        ranger
         silver-searcher
         sloccount
         stow
