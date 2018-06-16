@@ -63,5 +63,13 @@
       ];
     };
 
+go-env = pkgs.buildEnv {
+      name = "go-env";
+      paths = [
+        go
+        go2nix
+      ];
+    };
+
   };
 }
