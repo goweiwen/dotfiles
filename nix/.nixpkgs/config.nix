@@ -26,7 +26,15 @@
         xz
         youtube-dl
         z3
+      ];
+    };
+
+    zsh-env = pkgs.buildEnv {
+      name = "zsh-env";
+      paths = [
         zsh
+        zsh-completions
+        nix-zsh-completions
       ];
     };
 
