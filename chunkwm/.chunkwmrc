@@ -127,4 +127,4 @@ chunkc tiling::rule --owner \"QuickTime Player\" --name=\"Screen Recording\" --s
 chunkc tiling::rule --owner \"Accessibility Inspector\" --state float
 chunkc tiling::rule --owner iTerm --name \"Hotkey\" --state float
 chunkc tiling::rule --owner Beamer --state float
-chunkc tiling::rule --owner Emacs --except \"^$\" --role AXWindow --subrole AXStandardWindow --state tile
+chunkc tiling::rule --owner Emacs --except \"^$\" --state tile
