@@ -20,8 +20,8 @@ hs.alert.defaultStyle.radius = 32
 --
 
 -- Terminal
--- bind(one, 'return', function() hs.applescript('tell application "iTerm" to create window with default profile') end)
-bind(one, 'return', execute('open -nb io.alacritty'))
+bind(one, 'return', function() hs.applescript('tell application "iTerm" to create window with default profile') end)
+-- bind(one, 'return', execute('open -nb io.alacritty'))
 
 -- Finder
 bind(one, 'e', execute('open ~'))
