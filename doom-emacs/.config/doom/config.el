@@ -7,6 +7,13 @@
 (setq doom-font (font-spec :family "Fira Code" :size 14))
 
 ;;
+;; which-key
+;;
+
+(setq which-key-idle-delay 0.1)
+(setq which-key-secondary-idle-delay 0.0001)
+
+;;
 ;; Coq - Proof General
 ;;
 
