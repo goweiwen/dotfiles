@@ -33,6 +33,13 @@ chunkc core::hotload 0
 # NOTE: the following are config variables for the chunkwm-tiling plugin.
 #
 
+chunkc set custom_bar_enabled            1
+chunkc set custom_bar_all_monitors       0
+chunkc set custom_bar_offset_top         22
+chunkc set custom_bar_offset_bottom      0
+chunkc set custom_bar_offset_left        0
+chunkc set custom_bar_offset_right       0
+
 chunkc set global_desktop_mode           bsp
 
 chunkc set global_desktop_offset_top     0
@@ -58,6 +65,7 @@ chunkc set window_region_locked          1
 
 chunkc set mouse_move_window             \"cmd+alt 1\"
 chunkc set mouse_resize_window           \"cmd+alt 2\"
+chunkc set mouse_motion_interval         35
 
 chunkc set preselect_border_color        0xff99cc99
 chunkc set preselect_border_width        5
@@ -82,6 +90,7 @@ chunkc set focused_border_color          0xff99cc99
 chunkc set focused_border_width          5
 chunkc set focused_border_radius         0
 chunkc set focused_border_skip_floating  1
+chunkc set focused_border_skip_monocle   0
 
 #
 # NOTE: the following are config variables for the chunkwm-ffm plugin.
