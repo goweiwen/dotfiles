@@ -12,6 +12,7 @@
         gitAndTools.gitFull
         gitAndTools.hub
         gitAndTools.tig
+        gnutar
         graphviz
         imagemagick
         jq
