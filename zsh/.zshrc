@@ -108,6 +108,8 @@ alias vc='nocorrect code'
 alias o='open'
 alias e='$EDITOR'
 
+alias emacs="~/Applications/Emacs.app/Contents/MacOS/Emacs"
+
 alias bi='brew install'
 alias br='brew remove'
 alias bs='brew search'
