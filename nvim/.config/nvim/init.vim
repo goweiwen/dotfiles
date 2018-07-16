@@ -232,7 +232,7 @@ filetype plugin indent on
 
 " Theme
 syntax enable
-set background=light
+set background=dark
 set termguicolors
 let g:airline_theme='solarized'
 
