@@ -7,9 +7,6 @@
 [submodule "zsh/.config/base16-shell"]
 	path = zsh/.config/base16-shell
 	url = https://github.com/chriskempson/base16-shell.git
-[submodule "bin/.bin/repos/osu"]
-	path = bin/.bin/repos/osu
-	url = https://github.com/ppy/osu
 [submodule "kakoune/.config/kak/kakoune-extra"]
 	path = kakoune/.config/kak/kakoune-extra
 	url = https://github.com/lenormf/kakoune-extra.git
