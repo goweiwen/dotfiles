@@ -45,7 +45,6 @@ if ! zgen saved; then
   # zimfw
   zgen load zimfw/zimfw modules/directory
   zgen load zimfw/zimfw modules/environment
-  zgen load zimfw/zimfw modules/git
   zgen load zimfw/zimfw modules/history
   zgen load zimfw/zimfw modules/utility
 
@@ -108,6 +107,10 @@ alias zenv='$EDITOR ~/.zshenv'
 alias hrc='$EDITOR ~/.hammerspoon/init.lua'
 alias mrc='$EDITOR ~/.xmonad/xmonad.hs'
 alias trc='$EDITOR ~/.tmux.conf'
+
+if [ -f "${HOME}/.config/zsh/git.zsh" ]; then
+  source "${HOME}/.config/zsh/git.zsh"
+fi
 
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
