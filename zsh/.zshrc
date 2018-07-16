@@ -42,9 +42,6 @@ source "${HOME}/.zgen/zgen.zsh"
 # # if the init scipt doesn't exist
 if ! zgen saved; then
 
-  # oh-my-zsh
-  zgen load robbyrussell/oh-my-zsh
-
   # zimfw
   zgen load zimfw/zimfw modules/directory
   zgen load zimfw/zimfw modules/environment
@@ -52,26 +49,16 @@ if ! zgen saved; then
   zgen load zimfw/zimfw modules/history
   zgen load zimfw/zimfw modules/utility
 
-  # Autocompletions & aliases
-  zgen load robbyrussell/oh-my-zsh plugins/adb
-  zgen load robbyrussell/oh-my-zsh plugins/heroku
-  zgen load robbyrussell/oh-my-zsh plugins/httpie
-
   # QoL
   zgen load djui/alias-tips
   zgen load rupa/z
-  zgen load mwilliammyers/plugin-osx
   zgen load mahmoudelbadry/zsh-mkcd
-  zgen load robbyrussell/oh-my-zsh plugins/gitignore
 
   # fish-like
   zgen load zdharma/fast-syntax-highlighting
   zgen load zsh-users/zsh-history-substring-search
   zgen load zsh-users/zsh-autosuggestions
   zgen load zsh-users/zsh-completions
-
-  # Version managers
-  zgen load robbyrussell/oh-my-zsh plugins/nvm
 
   # Prompt
   zgen load geometry-zsh/geometry
