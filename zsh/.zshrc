@@ -33,10 +33,6 @@ GEOMETRY_SYMBOL_GIT_UNPUSHED="⇡"              # when there are unpushed change
 GEOMETRY_SYMBOL_GIT_CONFLICTS_SOLVED="!"      # when all conflicts have been solved
 GEOMETRY_SYMBOL_GIT_CONFLICTS_UNSOLVED="!"    # when there are still unsolved conflicts
 
-GEOMETRY_PLUGIN_DATETIME_FORMAT="+%T"
-GEOMETRY_PLUGIN_DATETIME_PREFIX="" # "\e[35m"
-GEOMETRY_PLUGIN_DATETIME_SUFFIX=""
-
 # load zgen
 if [ ! -f "${HOME}/.zgen/zgen.zsh" ]; then
   git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
@@ -79,7 +75,6 @@ if ! zgen saved; then
 
   # Prompt
   zgen load geometry-zsh/geometry
-  zgen load desyncr/geometry-datetime
 
   zgen save
 fi
