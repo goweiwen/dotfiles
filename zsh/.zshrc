@@ -73,10 +73,12 @@ compinit
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 bindkey -e
 bindkey ' ' magic-space
-bindkey '^[OA' history-substring-search-up
-bindkey '^[OB' history-substring-search-down
-# bindkey -M emacs '^P' history-substring-search-up
-# bindkey -M emacs '^N' history-substring-search-down
+bindkey "${terminfo[kcuu1]}"  history-substring-search-up
+bindkey "${terminfo[kcud1]}" history-substring-search-down
+bindkey "${terminfo[khome]}" beginning-of-line
+bindkey "${terminfo[kend]}" end-of-line
+bindkey "${terminfo[kpp]}" up-line-or-history
+bindkey "${terminfo[knp]}" down-line-or-history
 
 # Aliases
 alias vim='nocorrect nvim'
