@@ -66,6 +66,11 @@ fi
 autoload -Uz compinit
 compinit
 
+# Exercism
+if [ -f ~/.config/exercism/exercism_completion.zsh ]; then
+  source ~/.config/exercism/exercism_completion.zsh
+fi
+
 # Others
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 bindkey -e
