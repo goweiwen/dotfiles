@@ -59,6 +59,9 @@ if ! zgen saved; then
   zgen load zsh-users/zsh-autosuggestions
   zgen load zsh-users/zsh-completions
 
+  # Completions
+  zgen load docker/cli contrib/completion/zsh
+
   # Prompt
   zgen load geometry-zsh/geometry
 
