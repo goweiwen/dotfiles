@@ -94,8 +94,6 @@ alias vc='nocorrect code'
 alias o='open'
 alias e='$EDITOR'
 
-alias emacs="~/Applications/Emacs.app/Contents/MacOS/Emacs"
-
 alias bi='brew install'
 alias br='brew remove'
 alias bs='brew search'
@@ -113,9 +111,17 @@ alias hrc='$EDITOR ~/.hammerspoon/init.lua'
 alias mrc='$EDITOR ~/.xmonad/xmonad.hs'
 alias trc='$EDITOR ~/.tmux.conf'
 
+alias :q='exit'
+alias sl='ls | cowsay'
+
+alias kctl='kubectl'
+alias kadm='kubeadm'
+
 if [ -f "${HOME}/.config/zsh/git.zsh" ]; then
   source "${HOME}/.config/zsh/git.zsh"
 fi
+
+source <(helm completion zsh)
 
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
