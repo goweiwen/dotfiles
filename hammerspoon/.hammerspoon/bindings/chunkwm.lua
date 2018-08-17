@@ -14,12 +14,16 @@ bind(one, 'h', execute(chunkc .. ' tiling:window --focus west'))
 bind(one, 'j', execute(chunkc .. ' tiling:window --focus south'))
 bind(one, 'k', execute(chunkc .. ' tiling:window --focus north'))
 bind(one, 'l', execute(chunkc .. ' tiling:window --focus east'))
+bind(one, 'e', execute(chunkc .. ' tiling:monitor --focus prev'))
+bind(one, 'r', execute(chunkc .. ' tiling:monitor --focus next'))
 
 -- Move window
 bind(two, 'h', execute(chunkc .. ' tiling:window --warp west'))
 bind(two, 'j', execute(chunkc .. ' tiling:window --warp south'))
 bind(two, 'k', execute(chunkc .. ' tiling:window --warp north'))
 bind(two, 'l', execute(chunkc .. ' tiling:window --warp east'))
+bind(two, 'e', execute(chunkc .. ' tiling:window --send-to-monitor prev'))
+bind(two, 'r', execute(chunkc .. ' tiling:window --send-to-monitor next'))
 
 
 -- Move Space/Monitor

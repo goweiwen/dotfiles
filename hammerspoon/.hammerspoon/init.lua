@@ -23,9 +23,6 @@ hs.alert.defaultStyle.radius = 32
 bind(one, 'return', function() hs.applescript('tell application "iTerm" to create window with default profile') end)
 -- bind(one, 'return', execute('open -nb io.alacritty'))
 
--- Finder
-bind(one, 'e', execute('open ~'))
-
 -- Do not disturb
 bind(one, 'n', compose(
        function() hs.alert(hs.caffeinate.toggle('displayIdle') and 'Caffeine' or 'Decaff') end,

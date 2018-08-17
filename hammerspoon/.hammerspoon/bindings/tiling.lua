@@ -35,8 +35,8 @@ bind(two, 'h', hs.grid.pushWindowLeft)
 bind(two, 'l', hs.grid.pushWindowRight)
 bind(two, 'k', hs.grid.pushWindowUp)
 bind(two, 'j', hs.grid.pushWindowDown)
-bind(two, 'E', hs.grid.pushWindowNextScreen)
-bind(two, 'R', hs.grid.pushWindowPrevScreen)
+bind(two, 'e', hs.grid.pushWindowNextScreen)
+bind(two, 'r', hs.grid.pushWindowPrevScreen)
 
 -- Move window to spaces (hacky)
 function moveWindowNextSpace() moveWindowRelativeSpace(1) end
