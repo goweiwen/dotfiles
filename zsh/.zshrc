@@ -1,37 +1,12 @@
 # Change iTerm2 Titlebar colour
 printf -- $'\033]6;1;bg;red;brightness;28\a\033]6;1;bg;green;brightness;32\a\033]6;1;bg;blue;brightness;34\a'
 
-# Prompt
-setopt PROMPT_SUBST
-GEOMETRY_SYMBOL_PROMPT="♞ "                 # default prompt symbol
-GEOMETRY_SYMBOL_RPROMPT="♞ "                # multiline prompts
-GEOMETRY_SYMBOL_EXIT_VALUE="♞ "             # displayed when exit value is != 0
-GEOMETRY_SYMBOL_ROOT="♛ "                   # when logged in user is root
-GEOMETRY_COLOR_EXIT_VALUE="magenta"         # prompt symbol color when exit value is != 0
-GEOMETRY_COLOR_PROMPT="white"               # prompt symbol color
-GEOMETRY_COLOR_ROOT="red"                   # root prompt symbol color
-GEOMETRY_COLOR_DIR="blue"                   # current directory color
-GEOMETRY_PROMPT_PREFIX="\n"                 # prefix prompt with a new line
-GEOMETRY_PROMPT_SUFFIX=""                   # suffix prompt
-GEOMETRY_PROMPT_PREFIX_SPACER=""            # string to place between prefix and symbol
-GEOMETRY_SYMBOL_SPACER=" "                  # string to place between symbol and directory
-GEOMETRY_PLUGIN_SEPARATOR=" :: "               # use ' ' to separate right prompt parts
-
-GEOMETRY_PROMPT_PLUGINS=(exec_time node git)
-
-PROMPT_GEOMETRY_EXEC_TIME=true
-
-GEOMETRY_COLOR_PACKAGER_VERSION="green"
-GEOMETRY_SYMBOL_NODE_NPM_VERSION="⬢ "
-
-GEOMETRY_SYMBOL_GIT_DIRTY="╳"                 # when repo has "dirty" state
-GEOMETRY_SYMBOL_GIT_CLEAN="✓"                 # when repo has "clean" state
-GEOMETRY_SYMBOL_GIT_BARE="✓"                  # when repo is bare (no working tree)
-GEOMETRY_SYMBOL_GIT_REBASE="\uE0A0"           # when in middle of rebase
-GEOMETRY_SYMBOL_GIT_UNPULLED="⇣"              # when there are unpulled changes
-GEOMETRY_SYMBOL_GIT_UNPUSHED="⇡"              # when there are unpushed changes
-GEOMETRY_SYMBOL_GIT_CONFLICTS_SOLVED="!"      # when all conflicts have been solved
-GEOMETRY_SYMBOL_GIT_CONFLICTS_UNSOLVED="!"    # when there are still unsolved conflicts
+SPACESHIP_CHAR_SUFFIX=" "
+SPACESHIP_CHAR_SYMBOL=$
+SPACESHIP_TIME_SHOW=true
+SPACESHIP_GIT_SYMBOL="🔀 "
+SPACESHIP_GIT_STATUS_PREFIX=" "
+SPACESHIP_GIT_STATUS_SUFFIX=""
 
 # load zgen
 if [ ! -f "${HOME}/.zgen/zgen.zsh" ]; then
@@ -39,7 +14,7 @@ if [ ! -f "${HOME}/.zgen/zgen.zsh" ]; then
 fi
 source "${HOME}/.zgen/zgen.zsh"
 
-# # if the init scipt doesn't exist
+# if the init scipt doesn't exist
 if ! zgen saved; then
 
   # zimfw
@@ -63,7 +38,9 @@ if ! zgen saved; then
   zgen load docker/cli contrib/completion/zsh
 
   # Prompt
-  zgen load geometry-zsh/geometry
+  # zgen load denysdovhan/spaceship-prompt spaceship
+  zgen load mafredri/zsh-async
+  zgen load maximbaz/spaceship-prompt spaceship # async fork
 
   zgen save
 fi
@@ -121,6 +98,7 @@ if [ -f "${HOME}/.config/zsh/git.zsh" ]; then
   source "${HOME}/.config/zsh/git.zsh"
 fi
 
+# Completions
 source <(helm completion zsh)
 
 BASE16_SHELL=$HOME/.config/base16-shell/
