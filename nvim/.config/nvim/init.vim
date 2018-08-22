@@ -233,8 +233,6 @@ filetype plugin indent on
 " Theme
 syntax enable
 set background=dark
-" set termguicolors
-let g:airline_theme='bubblegum'
 
 " Set terminal title
 set title
@@ -246,12 +244,11 @@ set showcmd
 " Show matching pairs
 set showmatch
 
-" Highlight cursor line
-set cursorline
-
 " 80-char line
 set textwidth=80
 set colorcolumn=+1
+" set formatprg=par\ -w80\ -T4
+highlight ColorColumn ctermbg=darkgrey
 
 " Soft word-wrap
 set wrap
@@ -262,6 +259,7 @@ set lazyredraw
 " Line numbers
 set number
 set relativenumber
+highlight LineNr ctermfg=darkgrey
 
 " Command line completion
 set wildmenu
@@ -293,9 +291,7 @@ set smarttab
 set list
 
 " Visible whitespace
-set showbreak=↪
-set listchars=tab:→\ ,eol:↲,nbsp:␣,extends:›,precedes:‹,trail:·
-set formatprg=par\ -w80\ -T4
+set listchars=tab:→\ ,nbsp:␣,extends:›,precedes:‹,trail:·
 
 augroup configgroup
   autocmd!
