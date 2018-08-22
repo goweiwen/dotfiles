@@ -2,12 +2,13 @@
 alias g='git'
 
 # Add
-alias ga='git add'
-alias gap='git add --patch'
+alias gia='git add'
+alias giap='git add --patch'
 
 # Reset
-alias gar='git reset'
-alias garp='git reset --patch'
+alias gir='git reset'
+alias girp='git reset --patch'
+alias gic='git clean'
 
 # Branch
 alias gb='git branch'
@@ -43,6 +44,7 @@ alias ggw='git grep --word-regexp'
 # Log
 alias gl='git log --topo-order --all --graph --oneline'
 alias glo='git log --topo-order --oneline'
+alias grl='git reflog'
 
 # Merge
 alias gm='git merge'
@@ -88,4 +90,8 @@ alias gt='git tag'
 # Status
 alias gws='git status --short'
 alias gwss='git status'
+alias gwd='git diff'
+alias gwdw='git diff --color-words'
 
+# Blame
+alias gb='git blame'
