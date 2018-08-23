@@ -14,13 +14,8 @@ if dein#load_state('~/.config/nvim/dein')
   " Appearance
   "
 
-  " Theme
-  call dein#add('vim-airline/vim-airline')
-  let g:airline#extensions#ale#enabled = 1
-  let g:airline#extensions#tabline#enabled = 1
-  let g:airline#extensions#whitespace#enabled = 1
-  call dein#add('vim-airline/vim-airline-themes')
-  call dein#add('chriskempson/base16-vim')
+  " Modeline
+  call dein#add('itchyny/lightline.vim')
 
   " Color characters based on f-key
   call dein#add('unblevable/quick-scope')
@@ -46,7 +41,7 @@ if dein#load_state('~/.config/nvim/dein')
   " Sessions
   call dein#add('tpope/vim-obsession')
   call dein#add('dhruvasagar/vim-prosession')
-  "
+
   " Save edit position
   call dein#add('farmergreg/vim-lastplace')
 
@@ -62,6 +57,7 @@ if dein#load_state('~/.config/nvim/dein')
 
   " Helm-like
   call dein#add('Shougo/denite.nvim')
+  call dein#add('cloudhead/neovim-fuzzy')
 
   " grep
   call dein#add('rking/ag.vim')
@@ -89,12 +85,13 @@ if dein#load_state('~/.config/nvim/dein')
 
   " Sneaking (maps s/S to 2-char f/t)
   call dein#add('justinmk/vim-sneak')
+  let g:sneak#label = 1
 
-  " Easymotion (<Leader><Leader>)
-  call dein#add('easymotion/vim-easymotion')
+  " Quick scope
+  call dein#add('unblevable/quick-scope')
 
-  " Smart words
-  call dein#add('chaoren/vim-wordmotion')
+  " More text objects
+  call dein#add('wellle/targets.vim')
 
   " Expand region (+/_ in visual mode)
   call dein#add('terryma/vim-expand-region')
@@ -164,6 +161,8 @@ if dein#load_state('~/.config/nvim/dein')
 
   " Deoplete
   inoremap <Expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+  call dein#add('Shougo/deoplete.nvim')
+  let g:deoplete#enable_at_startup = 1
 
   " C/C++
   call dein#add('tweekmonster/deoplete-clang2')
@@ -196,6 +195,7 @@ if dein#load_state('~/.config/nvim/dein')
   " Haskell
   call dein#add('neovimhaskell/haskell-vim')
   call dein#add('itchyny/vim-haskell-indent')
+  call dein#add('eagletmt/neco-ghc')
 
   " Go
   call dein#add('fatih/vim-go')
@@ -222,17 +222,12 @@ if dein#load_state('~/.config/nvim/dein')
   endif
 endif
 
-" base-16
-if filereadable(expand("~/.vimrc_background"))
-  let base16colorspace=256
-  source ~/.vimrc_background
-endif
-
 filetype plugin indent on
 
 " Theme
 syntax enable
 set background=dark
+highlight StatusLine ctermbg=0
 
 " Set terminal title
 set title
@@ -248,7 +243,7 @@ set showmatch
 set textwidth=80
 set colorcolumn=+1
 " set formatprg=par\ -w80\ -T4
-highlight ColorColumn ctermbg=darkgrey
+highlight ColorColumn ctermbg=DarkGray
 
 " Soft word-wrap
 set wrap
@@ -316,6 +311,16 @@ set foldnestmax=99
 " let vimsyn_folding='af'       " Vim script
 " let xml_syntax_folding=1      " XML
 
+" Haskell
+
+" Disable haskell-vim omnifunc
+let g:haskellmode_completion_ghc = 0
+
+" neco-ghc
+autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc 
+let g:necoghc_enable_detailed_browse = 1
+
+
 " Denite
 call denite#custom#map(
       \ 'insert',
@@ -332,6 +337,12 @@ call denite#custom#map(
 
 " Map Leader -> Space
 let g:mapleader = "\<Space>"
+
+" Align lines
+nnoremap <Leader>= :Tabularize /=<CR>
+nnoremap <Leader>- :Tabularize /-><CR>
+nnoremap <Leader>, :Tabularize /,<CR>
+nnoremap <Leader># :Tabularize /#-}<CR>
 
 " vimrc
 map <Leader>ef :e ~/.config/nvim/init.vim<CR>
@@ -360,8 +371,8 @@ nnoremap gV `[v`]
 " File jumping
 noremap <F1> :NERDTreeToggle<CR>
 noremap <F2> :Gina status<CR>
-noremap <C-p> :DeniteProjectDir file_rec<CR>
-noremap <Leader>p :DeniteProjectDir file_rec<CR>
+noremap <C-p> :FuzzyOpen<CR>
+noremap <Leader>p :FuzzyOpen<CR>
 noremap <Leader>f :Dirvish<CR>
 noremap <Leader>gs :Gina status<CR>
 noremap <Leader>gc :Gina commit<CR>
