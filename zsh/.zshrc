@@ -108,9 +108,6 @@ alias trc='$EDITOR ~/.tmux.conf'
 alias :q='exit'
 alias sl='ls | cowsay'
 
-alias kctl='kubectl'
-alias kadm='kubeadm'
-
 if [ -f "${HOME}/.config/zsh/git.zsh" ]; then
   source "${HOME}/.config/zsh/git.zsh"
 fi
