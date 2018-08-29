@@ -80,6 +80,9 @@ if dein#load_state('~/.config/nvim/dein')
   " Editor
   "
 
+  " Pairwise mappings
+  call dein#add('tpope/vim-unimpaired')
+
   " Multiple cursors (C-n, C-p, C-x, :MultipleCursorsFind)
   call dein#add('terryma/vim-multiple-cursors')
 
@@ -156,6 +159,14 @@ if dein#load_state('~/.config/nvim/dein')
 
 
   "
+  " Syntax Highlighting
+  "
+
+  " Most languages
+  call dein#add('sheerun/vim-polyglot')
+
+
+  "
   " Autocompletion
   "
 
@@ -183,7 +194,6 @@ if dein#load_state('~/.config/nvim/dein')
   call dein#add('zchee/deoplete-jedi')
 
   " Julia
-  call dein#add('JuliaEditorSupport/julia-vim')
   call dein#add('JuliaEditorSupport/deoplete-julia')
 
   " Emmet
@@ -193,26 +203,12 @@ if dein#load_state('~/.config/nvim/dein')
   " imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
 
   " Haskell
-  call dein#add('neovimhaskell/haskell-vim')
-  call dein#add('itchyny/vim-haskell-indent')
   call dein#add('eagletmt/neco-ghc')
 
-  " Go
-  call dein#add('fatih/vim-go')
-
   " JavaScript
-  call dein#add('pangloss/vim-javascript')
   call dein#add('carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' })
-  call dein#add('mxw/vim-jsx')
   let g:neomake_javascript_enabled_makers = ['eslint']
   let g:javascript_plugin_flow = 1
-
-  " Vue
-  call dein#add('posva/vim-vue')
-
-  " HTML/CSS preprocessors
-  call dein#add('digitaltoad/vim-pug')
-  call dein#add('wavded/vim-stylus')
 
   call dein#end()
   call dein#save_state()
@@ -240,13 +236,15 @@ set showcmd
 set showmatch
 
 " 80-char line
-set textwidth=80
-set colorcolumn=+1
-" set formatprg=par\ -w80\ -T4
+" set textwidth=80
+set colorcolumn=80
+set formatprg=par\ -w80\ -T4
 highlight ColorColumn ctermbg=DarkGray
 
 " Soft word-wrap
 set wrap
+set breakindent
+set breakindentopt=shift:4
 
 " Don't redraw during macros
 set lazyredraw
@@ -370,12 +368,12 @@ nnoremap gV `[v`]
 
 " File jumping
 noremap <F1> :NERDTreeToggle<CR>
-noremap <F2> :Gina status<CR>
+noremap <F2> :Gstatus<CR>
 noremap <C-p> :FuzzyOpen<CR>
 noremap <Leader>p :FuzzyOpen<CR>
 noremap <Leader>f :Dirvish<CR>
-noremap <Leader>gs :Gina status<CR>
-noremap <Leader>gc :Gina commit<CR>
+noremap <Leader>gs :Gstatus<CR>
+noremap <Leader>gc :Gcommit<CR>
 noremap <C-s> :Denite line<CR>
 
 " Paths
