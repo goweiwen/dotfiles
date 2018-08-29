@@ -1,0 +1,10 @@
+[user]
+	email = goweiwen@gmail.com
+	name = Goh Wei Wen
+
+[core]
+	pager = /usr/local/Cellar/git/2.18.0/share/git-core/contrib/diff-highlight/diff-highlight | less
+
+[color]
+	ui = always
+
