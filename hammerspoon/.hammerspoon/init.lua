@@ -30,8 +30,8 @@ bind(one, 'n', compose(
 
 require 'bindings/runner'
 -- require 'bindings/hackintosh'
--- require 'bindings/tiling'
-require 'bindings/chunkwm'
+require 'bindings/tiling'
+-- require 'bindings/chunkwm'
 require 'bindings/vim'
 
 hs.alert('Config loaded.')
