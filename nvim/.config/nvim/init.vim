@@ -14,8 +14,12 @@ if dein#load_state('~/.config/nvim/dein')
   " Appearance
   "
 
+  " Theme
+  call dein#add('rafi/awesome-vim-colorschemes')
+
   " Modeline
   call dein#add('itchyny/lightline.vim')
+  call dein#add('ap/vim-buftabline')
 
   " Color characters based on f-key
   call dein#add('unblevable/quick-scope')
@@ -37,6 +41,7 @@ if dein#load_state('~/.config/nvim/dein')
   call dein#add('tpope/vim-fugitive')
   call dein#add('tpope/vim-rhubarb')
   call dein#add('lambdalisue/gina.vim')
+  call dein#add('rhysd/committia.vim')
 
   " Sessions
   call dein#add('tpope/vim-obsession')
@@ -51,16 +56,14 @@ if dein#load_state('~/.config/nvim/dein')
   "
 
   " File browsers
-  call dein#add('airodactyl/neovim-ranger')
-  call dein#add('scrooloose/nerdtree')
-  call dein#add('Xuyuanp/nerdtree-git-plugin')
+  call dein#add('tpope/vim-vinegar')
 
   " Helm-like
   call dein#add('Shougo/denite.nvim')
   call dein#add('cloudhead/neovim-fuzzy')
 
   " grep
-  call dein#add('rking/ag.vim')
+  call dein#add('jremmen/vim-ripgrep')
 
   " Find and replace (:Far)
   call dein#add('brooth/far.vim')
@@ -95,6 +98,8 @@ if dein#load_state('~/.config/nvim/dein')
 
   " More text objects
   call dein#add('wellle/targets.vim')
+  call dein#add('michaeljsmith/vim-indent-object')
+  call dein#add('andymass/vim-matchup')
 
   " Expand region (+/_ in visual mode)
   call dein#add('terryma/vim-expand-region')
@@ -146,15 +151,6 @@ if dein#load_state('~/.config/nvim/dein')
   "
 
   call dein#add('w0rp/ale')
-  let g:ale_fixers = {
-        \   'javascript': ['remove_trailing_lines', 'trim_whitespace', 'eslint'],
-        \   'vue': ['remove_trailing_lines', 'trim_whitespace', 'eslint'],
-        \   'python': ['isort', 'remove_trailing_lines', 'trim_whitespace', 'autopep8', 'yapf'],
-        \}
-  let g:ale_javascript_eslint_executable='eslint_d'
-  let g:ale_fix_on_save = 1
-  let g:ale_sign_column_always = 1
-  let g:ale_lint_on_enter = 0
   call dein#add('bronson/vim-trailing-whitespace')
 
 
@@ -193,6 +189,9 @@ if dein#load_state('~/.config/nvim/dein')
   " Python
   call dein#add('zchee/deoplete-jedi')
 
+  " Golang
+  call dein#add('fatih/vim-go')
+
   " Julia
   call dein#add('JuliaEditorSupport/deoplete-julia')
 
@@ -224,6 +223,10 @@ filetype plugin indent on
 syntax enable
 set background=dark
 highlight StatusLine ctermbg=0
+colorscheme apprentice
+" set termguicolors
+" let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+" let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 
 " Set terminal title
 set title
@@ -336,12 +339,6 @@ call denite#custom#map(
 " Map Leader -> Space
 let g:mapleader = "\<Space>"
 
-" Align lines
-nnoremap <Leader>= :Tabularize /=<CR>
-nnoremap <Leader>- :Tabularize /-><CR>
-nnoremap <Leader>, :Tabularize /,<CR>
-nnoremap <Leader># :Tabularize /#-}<CR>
-
 " vimrc
 map <Leader>ef :e ~/.config/nvim/init.vim<CR>
 map <Leader>er :source ~/.config/nvim/init.vim<CR>
@@ -369,9 +366,8 @@ nnoremap gV `[v`]
 " File jumping
 noremap <F1> :NERDTreeToggle<CR>
 noremap <F2> :Gstatus<CR>
-noremap <C-p> :FuzzyOpen<CR>
 noremap <Leader>p :FuzzyOpen<CR>
-noremap <Leader>f :Dirvish<CR>
+noremap <Leader>f :FuzzyGrep<CR>
 noremap <Leader>gs :Gstatus<CR>
 noremap <Leader>gc :Gcommit<CR>
 noremap <C-s> :Denite line<CR>
@@ -380,4 +376,15 @@ noremap <C-s> :Denite line<CR>
 let g:python_host_prog = '/usr/local/bin/python2'
 let g:python3_host_prog = '/usr/local/bin/python3'
 
-
+" Linting
+let g:ale_fixers = {
+      \   'javascript': ['remove_trailing_lines', 'trim_whitespace', 'eslint'],
+      \   'vue': ['remove_trailing_lines', 'trim_whitespace', 'eslint'],
+      \   'python': ['isort', 'remove_trailing_lines', 'trim_whitespace', 'autopep8', 'yapf'],
+      \}
+let g:ale_javascript_eslint_executable='eslint_d'
+let g:ale_fix_on_save = 1
+let g:ale_sign_column_always = 1
+let g:ale_lint_on_enter = 0
+noremap <Leader>an :ALENext<cr>
+noremap <Leader>ap :ALEPrevious<cr>
