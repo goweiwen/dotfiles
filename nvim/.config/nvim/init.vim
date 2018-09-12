@@ -234,6 +234,7 @@ set title
 " Status bar
 set ruler
 set showcmd
+set noshowmode
 
 " Show matching pairs
 set showmatch
