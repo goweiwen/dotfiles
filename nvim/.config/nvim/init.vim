@@ -19,6 +19,7 @@ if dein#load_state('~/.config/nvim/dein')
 
   " Modeline
   call dein#add('itchyny/lightline.vim')
+  call dein#add('maximbaz/lightline-ale')
   call dein#add('ap/vim-buftabline')
 
   " Color characters based on f-key
@@ -190,7 +191,7 @@ if dein#load_state('~/.config/nvim/dein')
   call dein#add('zchee/deoplete-jedi')
 
   " Golang
-  call dein#add('fatih/vim-go')
+  " call dein#add('fatih/vim-go')
 
   " Julia
   call dein#add('JuliaEditorSupport/deoplete-julia')
@@ -322,6 +323,27 @@ let g:haskellmode_completion_ghc = 0
 autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc 
 let g:necoghc_enable_detailed_browse = 1
 
+" Status line
+let g:lightline = {}
+
+let g:lightline.component_expand = {
+      \     'linter_checking': 'lightline#ale#checking',
+      \     'linter_warnings': 'lightline#ale#warnings',
+      \     'linter_errors': 'lightline#ale#errors',
+      \     'linter_ok': 'lightline#ale#ok',
+      \ }
+
+let g:lightline.component_type = {
+      \     'linter_checking': 'left',
+      \     'linter_warnings': 'warning',
+      \     'linter_errors': 'error',
+      \     'linter_ok': 'left',
+      \ }
+
+let g:lightline.active = {
+      \     'left': [['mode', 'paste'], ['readonly', 'filename', 'modified']],
+      \     'right': [['linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok'], ['lineinfo'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
+      \ }
 
 " Denite
 call denite#custom#map(
@@ -382,10 +404,13 @@ let g:ale_fixers = {
       \   'javascript': ['remove_trailing_lines', 'trim_whitespace', 'eslint'],
       \   'vue': ['remove_trailing_lines', 'trim_whitespace', 'eslint'],
       \   'python': ['isort', 'remove_trailing_lines', 'trim_whitespace', 'autopep8', 'yapf'],
+      \   'go': ['gofmt'],
       \}
 let g:ale_javascript_eslint_executable='eslint_d'
 let g:ale_fix_on_save = 1
-let g:ale_sign_column_always = 1
 let g:ale_lint_on_enter = 0
-noremap <Leader>an :ALENext<cr>
-noremap <Leader>ap :ALEPrevious<cr>
+let g:ale_sign_column_always = 1
+let g:ale_sign_error = '>'
+let g:ale_sign_warning = '-'
+noremap <Leader>an <Plug>(ale_next_wrap)
+noremap <Leader>ap <Plug>(ale_previous_wrap)
