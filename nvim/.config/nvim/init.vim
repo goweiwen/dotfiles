@@ -24,14 +24,12 @@ if dein#load_state('~/.config/nvim/dein')
 
   " Color characters based on f-key
   call dein#add('unblevable/quick-scope')
-  let g:qs_highlight_on_keys = ['f', 'F', 't', 'T', 's', 'S']
 
   " Git gutter
   call dein#add('airblade/vim-gitgutter')
 
   " Marks gutter
   call dein#add('kshenoy/vim-signature')
-  let g:SignatureMarkTextHLDynamic = 1
 
 
   "
@@ -74,7 +72,6 @@ if dein#load_state('~/.config/nvim/dein')
 
   " Open in Finder/Terminal (gof/got)
   call dein#add('justinmk/vim-gtfo')
-  let g:gtfo#terminals = { 'mac': 'iterm' }
 
   " Path navigator
   call dein#add('justinmk/vim-dirvish')
@@ -92,7 +89,6 @@ if dein#load_state('~/.config/nvim/dein')
 
   " Sneaking (maps s/S to 2-char f/t)
   call dein#add('justinmk/vim-sneak')
-  let g:sneak#label = 1
 
   " Quick scope
   call dein#add('unblevable/quick-scope')
@@ -107,9 +103,6 @@ if dein#load_state('~/.config/nvim/dein')
 
   " Kill-ring
   call dein#add('bfredl/nvim-miniyank')
-  map p <Plug>(miniyank-autoput)
-  map P <Plug>(miniyank-autoPut)
-  map <Leader>n <Plug>(miniyank-cycle)
 
   " Substitution (:Subvert/thing{1,2}/other{1,2}/)
   call dein#add('tpope/vim-abolish')
@@ -142,9 +135,6 @@ if dein#load_state('~/.config/nvim/dein')
 
   call dein#add('SirVer/ultisnips')
   call dein#add('honza/vim-snippets')
-  let g:UltiSnipsExpandTrigger="<Leader><Tab>"
-  let g:UltiSnipsJumpForwardTrigger="<C-b>"
-  let g:UltiSnipsJumpBackwardTrigger="<C-z>"
 
 
   "
@@ -168,47 +158,31 @@ if dein#load_state('~/.config/nvim/dein')
   "
 
   " Deoplete
-  inoremap <Expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
   call dein#add('Shougo/deoplete.nvim')
-  let g:deoplete#enable_at_startup = 1
 
   " C/C++
   call dein#add('tweekmonster/deoplete-clang2')
 
   " Java
   call dein#add('artur-shaik/vim-javacomplete2')
-  let g:neomake_java_javac_maker = {
-        \ 'errorformat':
-        \ '%E%f:%l: %trror: %m,' .
-        \ '%W%f:%l: %tarning: %m,' .
-        \ '%E%f:%l: %m,'.
-        \ '%Z%p^,'.
-        \ '%-G%.%#',
-        \ }
-  let g:neomake_java_enabled_makers = ['javac']
 
   " Python
   call dein#add('zchee/deoplete-jedi')
 
   " Golang
-  " call dein#add('fatih/vim-go')
+  call dein#add('fatih/vim-go')
 
   " Julia
   call dein#add('JuliaEditorSupport/deoplete-julia')
 
   " Emmet
   call dein#add('mattn/emmet-vim')
-  let g:user_emmet_install_global = 0
-  autocmd FileType html,css EmmetInstall
-  " imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
 
   " Haskell
   call dein#add('eagletmt/neco-ghc')
 
   " JavaScript
   call dein#add('carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' })
-  let g:neomake_javascript_enabled_makers = ['eslint']
-  let g:javascript_plugin_flow = 1
 
   call dein#end()
   call dein#save_state()
@@ -375,10 +349,15 @@ nmap <Leader>D "_D
 nmap <Leader>c "_c
 nmap <Leader>C "_C
 
+" kill-ring
+map p <Plug>(miniyank-autoput)
+map P <Plug>(miniyank-autoPut)
+map <Leader>n <Plug>(miniyank-cycle)
+
 " Switch between buffers
 noremap <Leader>` <C-^>
-noremap <Leader><Tab> :bnext<CR>
-noremap <Leader><S-Tab> :bprev<CR>
+noremap <Leader><Tab> <silent> :bnext<CR>:if &buftype ==# 'quickfix'<Bar>:bnext<CR><Bar>endif<CR>
+noremap <Leader><S-Tab> <silent> :bprev<CR>:if &buftype ==# 'quickfix'<Bar>:bprev<CR><Bar>endif<CR>
 nnoremap gt :bn<CR>
 nnoremap gT :bp<CR>
 set hidden
@@ -399,6 +378,10 @@ noremap <C-s> :Denite line<CR>
 let g:python_host_prog = '/usr/local/bin/python2'
 let g:python3_host_prog = '/usr/local/bin/python3'
 
+" Autocomplete
+let g:deoplete#enable_at_startup = 1
+inoremap <Expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+
 " Linting
 let g:ale_fixers = {
       \   'javascript': ['remove_trailing_lines', 'trim_whitespace', 'eslint'],
@@ -414,3 +397,18 @@ let g:ale_sign_error = '>'
 let g:ale_sign_warning = '-'
 noremap <Leader>an <Plug>(ale_next_wrap)
 noremap <Leader>ap <Plug>(ale_previous_wrap)
+let g:javascript_plugin_flow = 1
+
+" Sneak and scope
+let g:sneak#label = 1
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T', 's', 'S']
+
+let g:SignatureMarkTextHLDynamic = 1
+
+" Snippets
+let g:UltiSnipsExpandTrigger="<Leader><Tab>"
+let g:UltiSnipsJumpForwardTrigger="<C-b>"
+let g:UltiSnipsJumpBackwardTrigger="<C-z>"
+
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall
