@@ -388,6 +388,7 @@ let g:ale_fixers = {
       \   'vue': ['remove_trailing_lines', 'trim_whitespace', 'eslint'],
       \   'python': ['isort', 'remove_trailing_lines', 'trim_whitespace', 'autopep8', 'yapf'],
       \   'go': ['gofmt'],
+      \   'haskell': ['brittany'],
       \}
 let g:ale_javascript_eslint_executable='eslint_d'
 let g:ale_fix_on_save = 1
