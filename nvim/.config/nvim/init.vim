@@ -412,3 +412,6 @@ let g:UltiSnipsJumpBackwardTrigger="<C-z>"
 
 let g:user_emmet_install_global = 0
 autocmd FileType html,css EmmetInstall
+autocmd Filetype go noremap <F3> <Plug>(go-import)
+autocmd Filetype go noremap <F4> <Plug>(go-imports)
+autocmd Filetype go noremap <F5> <Plug>(go-run)
