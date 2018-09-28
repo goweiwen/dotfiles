@@ -49,6 +49,9 @@ if dein#load_state('~/.config/nvim/dein')
   " Save edit position
   call dein#add('farmergreg/vim-lastplace')
 
+  " tmux
+  call dein#add('christoomey/vim-tmux-navigator')
+
 
   "
   " Files
@@ -356,8 +359,8 @@ map <Leader>n <Plug>(miniyank-cycle)
 
 " Switch between buffers
 noremap <Leader>` <C-^>
-noremap <Leader><Tab> <silent> :bnext<CR>:if &buftype ==# 'quickfix'<Bar>:bnext<CR><Bar>endif<CR>
-noremap <Leader><S-Tab> <silent> :bprev<CR>:if &buftype ==# 'quickfix'<Bar>:bprev<CR><Bar>endif<CR>
+noremap <Leader><Tab> :bnext<CR>
+noremap <Leader><S-Tab> :bprev<CR>
 nnoremap gt :bn<CR>
 nnoremap gT :bp<CR>
 set hidden
@@ -413,6 +416,6 @@ let g:UltiSnipsJumpBackwardTrigger="<C-z>"
 
 let g:user_emmet_install_global = 0
 autocmd FileType html,css EmmetInstall
-autocmd Filetype go noremap <F3> <Plug>(go-import)
-autocmd Filetype go noremap <F4> <Plug>(go-imports)
-autocmd Filetype go noremap <F5> <Plug>(go-run)
+autocmd Filetype go noremap <F3> :GoImport<CR>
+autocmd Filetype go noremap <F4> :GoImports<CR>
+autocmd Filetype go noremap <F5> :GoRun<CR>
