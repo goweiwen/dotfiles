@@ -94,4 +94,4 @@ alias gwd='git diff'
 alias gwdw='git diff --color-words'
 
 # Blame
-alias gb='git blame'
+alias gwb='git blame'
