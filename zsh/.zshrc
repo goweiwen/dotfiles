@@ -127,3 +127,6 @@ BASE16_SHELL=$HOME/.config/base16-shell/
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
+
+# opam configuration
+test -r /Users/weiwen/.opam/opam-init/init.zsh && . /Users/weiwen/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
