@@ -2,7 +2,7 @@
 
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(ns-appearance . dark))
-(menu-bar-mode 1)
+; (menu-bar-mode 1)
 
 (setq doom-font (font-spec :family "Fira Code" :size 14))
 
