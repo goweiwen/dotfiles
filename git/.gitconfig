@@ -3,7 +3,7 @@
 	name = Goh Wei Wen
 
 [core]
-	pager = `brew --prefix git`/share/git-core/contrib/diff-highlight/diff-highlight | less
+	pager = diff-highlight | less
 
 [color]
 	ui = always
