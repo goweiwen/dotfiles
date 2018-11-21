@@ -145,6 +145,10 @@
        ;;floobits          ; peer programming for a price
        ;;impatient-mode    ; show off code over HTTP
 
+       :collab
+      ;floobits          ; peer programming for a price
+      ;impatient-mode    ; show off code over HTTP
+
        :config
        ;; For literate config users. This will tangle+compile a config.org
        ;; literate config in your `doom-private-dir' whenever it changes.

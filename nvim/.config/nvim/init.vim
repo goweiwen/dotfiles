@@ -8,6 +8,7 @@ if dein#load_state('~/.config/nvim/dein')
 
   " Plugin manager
   call dein#add('~/.config/nvim/dein/repos/github.com/Shougo/dein.vim')
+  call dein#add('wsdjeg/dein-ui.vim')
 
 
   "
@@ -22,9 +23,6 @@ if dein#load_state('~/.config/nvim/dein')
   call dein#add('maximbaz/lightline-ale')
   call dein#add('ap/vim-buftabline')
 
-  " Color characters based on f-key
-  call dein#add('unblevable/quick-scope')
-
   " Git gutter
   call dein#add('airblade/vim-gitgutter')
 
@@ -37,10 +35,12 @@ if dein#load_state('~/.config/nvim/dein')
   "
 
   " Git and GitHub
-  call dein#add('tpope/vim-fugitive')
-  call dein#add('tpope/vim-rhubarb')
-  call dein#add('lambdalisue/gina.vim')
+  " call dein#add('tpope/vim-fugitive')
+  " call dein#add('tpope/vim-rhubarb')
   call dein#add('rhysd/committia.vim')
+  call dein#add('tpope/vim-fugitive', { 'on_ft': ['git', 'gitcommit'], 'on_cmd': [ 'Git', 'Gstatus', 'Gwrite', 'Glog', 'Gcommit', 'Gblame', 'Ggrep', 'Gdiff', ] })
+  call dein#add('tpope/vim-rhubarb', { 'on_ft': ['git', 'gitcommit'], 'on_cmd': [ 'Git', 'Gstatus', 'Gwrite', 'Glog', 'Gcommit', 'Gblame', 'Ggrep', 'Gdiff', ] })
+  " call dein#add('rhysd/committia.vim', { 'on_ft': ['git', 'gitcommit'] })
 
   " Sessions
   call dein#add('tpope/vim-obsession')
@@ -51,6 +51,9 @@ if dein#load_state('~/.config/nvim/dein')
 
   " tmux
   call dein#add('christoomey/vim-tmux-navigator')
+
+  " Terminal
+  call dein#add('kassio/neoterm')
 
 
   "
@@ -78,6 +81,7 @@ if dein#load_state('~/.config/nvim/dein')
 
   " Path navigator
   call dein#add('justinmk/vim-dirvish')
+  call dein#add('kristijanhusak/vim-dirvish-git')
 
 
   "
@@ -88,10 +92,10 @@ if dein#load_state('~/.config/nvim/dein')
   call dein#add('tpope/vim-unimpaired')
 
   " Multiple cursors (C-n, C-p, C-x, :MultipleCursorsFind)
-  call dein#add('terryma/vim-multiple-cursors')
+  call dein#add('terryma/vim-multiple-cursors', { 'on_map' : { 'n' : ['<C-n>', '<C-p>'], 'x' : '<C-n>'}, 'on-cmd': 'MultipleCursorsFind'})
 
   " Sneaking (maps s/S to 2-char f/t)
-  call dein#add('justinmk/vim-sneak')
+  call dein#add('justinmk/vim-sneak', {'on_map': {'n': ['s', 'S']}})
 
   " Quick scope
   call dein#add('unblevable/quick-scope')
@@ -102,7 +106,7 @@ if dein#load_state('~/.config/nvim/dein')
   call dein#add('andymass/vim-matchup')
 
   " Expand region (+/_ in visual mode)
-  call dein#add('terryma/vim-expand-region')
+  call dein#add('terryma/vim-expand-region', {'on_map': {'v': ['+', '-']}})
 
   " Kill-ring
   call dein#add('bfredl/nvim-miniyank')
@@ -129,7 +133,7 @@ if dein#load_state('~/.config/nvim/dein')
   call dein#add('tpope/vim-sleuth')
 
   " Surround motion
-  call dein#add('tpope/vim-surround')
+  call dein#add('tpope/vim-surround', {'on_map': {'n': ['cs', 'ds', 'ys']}})
 
 
   "
@@ -152,7 +156,6 @@ if dein#load_state('~/.config/nvim/dein')
   " Syntax Highlighting
   "
 
-  " Most languages
   call dein#add('sheerun/vim-polyglot')
 
 
@@ -160,32 +163,17 @@ if dein#load_state('~/.config/nvim/dein')
   " Autocompletion
   "
 
-  " Deoplete
   call dein#add('Shougo/deoplete.nvim')
 
-  " C/C++
-  call dein#add('tweekmonster/deoplete-clang2')
-
-  " Java
-  call dein#add('artur-shaik/vim-javacomplete2')
-
-  " Python
-  call dein#add('zchee/deoplete-jedi')
-
-  " Golang
-  call dein#add('fatih/vim-go')
-
-  " Julia
-  call dein#add('JuliaEditorSupport/deoplete-julia')
-
-  " Emmet
-  call dein#add('mattn/emmet-vim')
-
-  " Haskell
-  call dein#add('eagletmt/neco-ghc')
-
-  " JavaScript
-  call dein#add('carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' })
+  call dein#add('tweekmonster/deoplete-clang2', {'on_ft': ['c', 'c++']})
+  call dein#add('artur-shaik/vim-javacomplete2', {'on_ft': 'java'})
+  call dein#add('zchee/deoplete-jedi', {'on_ft': 'python'})
+  call dein#add('fatih/vim-go', {'on_ft': 'go'})
+  call dein#add('JuliaEditorSupport/deoplete-julia', {'on_ft': 'julia'})
+  call dein#add('eagletmt/neco-ghc', {'on_ft': 'haskell'})
+  call dein#add('carlitux/deoplete-ternjs', {'on_ft': 'javascript', 'do': 'npm install -g tern'})
+  call dein#add('reasonml-editor/vim-reason-plus', {'on_ft': 'reason'})
+  call dein#add('rust-lang/rust.vim', {'on_ft': 'rust'})
 
   call dein#end()
   call dein#save_state()
@@ -202,9 +190,9 @@ syntax enable
 set background=dark
 highlight StatusLine ctermbg=0
 colorscheme apprentice
-" set termguicolors
-" let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-" let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+set termguicolors
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 
 " Set terminal title
 set title
@@ -252,6 +240,9 @@ set incsearch
 set hlsearch
 set wildmode=list:longest,full
 
+" Neoterm
+let g:neoterm_default_mod=':belowright'
+
 " QOL
 set mouse=a
 set backspace=indent,eol,start
@@ -276,29 +267,33 @@ augroup configgroup
   autocmd FileType python setlocal softtabstop=4
 augroup END
 
+autocmd BufWritePre *.go GoImports
+
 " Folds
 set foldmethod=syntax
 set foldenable
 set foldlevelstart=99
 set foldnestmax=99
 
-" let javascript_fold=1         " JavaScript
-" let perl_fold=1               " Perl
-" let php_folding=1             " PHP
-" let r_syntax_folding=1        " R
-" let ruby_fold=1               " Ruby
-" let sh_fold_enabled=1         " sh
-" let vimsyn_folding='af'       " Vim script
-" let xml_syntax_folding=1      " XML
+let javascript_fold=1         " JavaScript
+let perl_fold=1               " Perl
+let php_folding=1             " PHP
+let r_syntax_folding=1        " R
+let ruby_fold=1               " Ruby
+let sh_fold_enabled=1         " sh
+let vimsyn_folding='af'       " Vim script
+let xml_syntax_folding=1      " XML
 
 " Haskell
-
 " Disable haskell-vim omnifunc
 let g:haskellmode_completion_ghc = 0
 
 " neco-ghc
 autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc 
 let g:necoghc_enable_detailed_browse = 1
+
+" Rust
+let g:rustfmt_autosave = 1
 
 " Status line
 let g:lightline = {}
@@ -405,11 +400,12 @@ let g:javascript_plugin_flow = 1
 
 " Sneak and scope
 let g:sneak#label = 1
-let g:qs_highlight_on_keys = ['f', 'F', 't', 'T', 's', 'S']
+" let g:qs_highlight_on_keys = ['f', 'F', 't', 'T', 's', 'S']
 
 let g:SignatureMarkTextHLDynamic = 1
 
 " Snippets
+set runtimepath+=~/.config/nvim/snippets/
 let g:UltiSnipsExpandTrigger="<Leader><Tab>"
 let g:UltiSnipsJumpForwardTrigger="<C-b>"
 let g:UltiSnipsJumpBackwardTrigger="<C-z>"

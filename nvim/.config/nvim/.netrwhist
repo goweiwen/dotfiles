@@ -1,0 +1,8 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =6
+let g:netrw_dirhist_1='/Users/weiwen.goh/amethyst/torus/src'
+let g:netrw_dirhist_2='/Users/weiwen.goh/.dotfiles/nvim/.config/nvim'
+let g:netrw_dirhist_3='/Users/weiwen.goh/amethyst/torus/src'
+let g:netrw_dirhist_4='/Users/weiwen.goh/amethyst/torus'
+let g:netrw_dirhist_5='/Users/weiwen.goh/amethyst'
+let g:netrw_dirhist_6='/Users/weiwen.goh'
