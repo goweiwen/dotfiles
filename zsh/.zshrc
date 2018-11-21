@@ -83,6 +83,9 @@ bindkey "${terminfo[kpp]}" up-line-or-history
 bindkey "${terminfo[knp]}" down-line-or-history
 
 # Aliases
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
 alias vim='nocorrect nvim'
 alias please='sudo `fc -ln -1`'
 alias wine='/Applications/Wine\ Staging.app/Contents/Resources/wine/bin/wine'
@@ -118,6 +121,8 @@ if [ -f "${HOME}/.config/zsh/git.zsh" ]; then
 fi
 
 # Completions
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 if which helm > /dev/null; then
   source <(helm completion zsh)
 fi
@@ -130,3 +135,8 @@ export PATH="$PATH:$HOME/.rvm/bin"
 
 # opam configuration
 test -r /Users/weiwen/.opam/opam-init/init.zsh && . /Users/weiwen/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+# rust
+source $HOME/.cargo/env
+
+eval $(thefuck --alias)
