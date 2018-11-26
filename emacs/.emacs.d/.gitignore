@@ -7,3 +7,7 @@ projectile-bookmarks.eld
 quelpa/
 elpa/
 org-gcal/
+backups/
+auto-saves/
+auto-save-list/
+eshell/

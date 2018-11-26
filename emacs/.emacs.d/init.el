@@ -4,6 +4,8 @@
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 (package-initialize)
 
+(add-to-list 'load-path (locate-user-emacs-file "lisp/"))
+
 ;; use-package
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -13,9 +15,9 @@
   (package-install 'diminish))
 
 (eval-when-compile
-  (require 'use-package))
-(require 'bind-key)
-(require 'diminish)
+  (require 'use-package)
+  (require 'bind-key)
+  (require 'diminish))
 (setq use-package-always-ensure t)
 
 ;; quelpa-use-package
@@ -31,15 +33,16 @@
       user-mail-address "goweiwen@gmail.com")
 
 ;; Secrets
-(load "~/.emacs.d/secrets.el")
+(if (file-exists-p "secrets.el")
+  (load-file "secrets.el"))
 
 ;; Persistent Server
 ;; (use-package mac-pseudo-daemon
 ;;   :init
 ;;   (mac-pseudo-daemon-mode))
-(require 'server)
-(unless (server-running-p)
-  (server-start))
+;; (require 'server)
+;; (unless (server-running-p)
+;;   (server-start))
 
 ;; Reload init.el
 (defun reload-init ()
@@ -64,7 +67,8 @@
 
 ;; Backup directory
 (setq backup-by-copying t
-      backup-directory-alist '(("." . "~/.emacs.d/backups"))
+      backup-directory-alist '(("." . "~/.emacs.d/backups/"))
+      auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-saves/" t))
       delete-old-versions t
       kept-new-versions 6
       kept-old-versions 2
@@ -83,10 +87,6 @@
 ;; Save Session
 ; (desktop-save-mode 1)
 
-;; Backup to emacs directory
-(setq backup-directory-alist
-      `(("." . ,(concat user-emacs-directory "backups"))))
-
 ;; Recentf
 (require 'recentf)
 (run-at-time (* 5 60) nil
@@ -103,41 +103,34 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Fira Code" :height 140))))
- '(fixed-pitch ((t (:family "Fira Code" :height 140))))
+ '(default ((t (:family "Menlo" :height 140))))
+ '(fixed-pitch ((t (:family "Menlo" :height 140))))
  '(proof-locked-face ((nil (:background "#003300"))))
  '(proof-queue-face ((nil (:background "#116611"))))
  '(variable-pitch ((t (:family "SFNS" :height 140)))))
 
 ;; Theme
 (when (display-graphic-p)
-  (use-package base16-theme
+  (use-package solarized-theme
     :config
-    (setq base16-theme-256-color-source 'base16-shell)
-    (load-theme 'base16-ashes t)))
+    (load-theme 'solarized-light t)))
 
 ;; Tweak window chrome
-(tool-bar-mode 0)
-(menu-bar-mode 1)
-(when window-system
-  (scroll-bar-mode -1))
+(tool-bar-mode -1)
+(unless (eq system-type 'darwin) menu-bar-mode -1)
+(when window-system (scroll-bar-mode -1))
 
 ;; Blend fringe background
-(use-package linum
-  :config
-  (set-face-attribute 'linum nil :background nil)
-  (setq linum-format "%3d "))
 (set-face-attribute 'fringe nil :background nil)
 
-;; ;; Dashboard
-;; (use-package dashboard
-;;   :config
-;;   (dashboard-setup-startup-hook)
-;;   (setq dashboard-startup-banner 'official
-;;         dashboard-items '((recents . 5)
-;;                           (bookmarks . 5)
-;;                           (projects . 5)
-;;                           (agenda))))
+;; Dashboard
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-startup-banner 'official
+        dashboard-items '((recents . 5)
+                          (bookmarks . 5)
+                          (projects . 5))))
 
 ;; Frame title
 (setq frame-title-format '((:eval (projectile-project-name))))
@@ -176,26 +169,16 @@
 (xterm-mouse-mode 1)
 (normal-erase-is-backspace-mode 1)
 
-;; Emacs is not a window manager
-(use-package frames-only-mode)
-
-;; ;; Mouse scrolling
-;; (setq mac-mouse-wheel-smooth-scroll nil
-;;       mouse-wheel-follow-mouse t
-;;       mouse-wheel-progressive-speed nil
-;;       mouse-wheel-scroll-amount '(2 ((shift) . 4) ((control) . 6)))
-
-;; ;; Focus on current paragraph
-;; (use-package focus
-;;   :config
-;;   (focus-mode))
+;; ;; Emacs is not a window manager
+;; (use-package frames-only-mode)
 
 ;; evil-mode
 ;; ===
 
 (use-package evil
   :init
-  (setq evil-want-abbrev-expand-on-insert-exit nil)
+  (setq evil-want-abbrev-expand-on-insert-exit nil
+        evil-want-C-u-scroll t)
   :config
   (evil-mode 1))
 
@@ -203,6 +186,12 @@
 (use-package evil-surround
   :config
   (global-evil-surround-mode 1))
+
+;; evil-unimpaired
+(use-package evil-unimpaired
+  :quelpa (evil-unimpaired :fetcher github :repo "zmaas/evil-unimpaired")
+  :config
+  (add-hook 'evil-mode-hook 'evil-unimpaired-mode))
 
 ;; evil-commentary
 (use-package evil-commentary
@@ -284,38 +273,36 @@
   (which-key-setup-side-window-bottom)
   (setq which-key-idle-delay 0.2))
 
-;; Leader key is <SPC>
-(defun hrs/search-project-for-symbol-at-point ()
-  "Use `projectile-ag' to search the current project for `symbol-at-point'."
-  (interactive)
-  (projectile-ag (projectile-symbol-at-point)))
+;; Buffer list
+(define-key evil-motion-state-map [?_] 'buffer-menu)
+(define-key evil-normal-state-map [?_] 'buffer-menu)
+(define-key Buffer-menu-mode-map [?_]
+  (lambda () (interactive) (switch-to-buffer nil) (ivy-switch-buffer)))
+(define-key evil-normal-state-map "]b" 'switch-to-next-buffer)
+(define-key evil-normal-state-map "[b" 'switch-to-prev-buffer)
+(define-key evil-motion-state-map "]b" 'switch-to-next-buffer)
+(define-key evil-motion-state-map "[b" 'switch-to-prev-buffer)
 
+;; Leader key is <SPC>
 (defvar leader-map (make-sparse-keymap))
-(define-key evil-normal-state-map [? ] leader-map)
+
 (define-key evil-motion-state-map [? ] leader-map)
-(require 'dired)
-(define-key dired-mode-map [? ] leader-map)
-(define-key leader-map "!!" 'flycheck-list-errors)
-(define-key leader-map "!n" 'flycheck-next-error)
-(define-key leader-map "!p" 'flycheck-previous-error)
+(define-key evil-normal-state-map [? ] leader-map)
+(define-key leader-map "[" 'switch-to-prev-buffer)
+(define-key leader-map "]" 'switch-to-next-buffer)
 (define-key leader-map "bb" 'switch-to-buffer)
 (define-key leader-map "bd" 'kill-this-buffer)
+(define-key leader-map "c" 'org-capture)
 (define-key leader-map "fe" 'edit-init)
-(define-key leader-map "ft" 'edit-todo)
 (define-key leader-map "ff" 'counsel-find-file)
 (define-key leader-map "fp" 'counsel-git)
 (define-key leader-map "fr" 'counsel-recentf)
 (define-key leader-map "fs" 'swiper)
-(define-key leader-map "fv" 'counsel-ag)
+(define-key leader-map "ft" 'edit-todo)
+(define-key leader-map "fg" 'counsel-rg)
 (define-key leader-map "g" 'magit-status)
 (define-key leader-map "h" 'counsel-describe-variable)
-(define-key leader-map "oa" 'org-agenda)
-(define-key leader-map "oc" 'cfw:open-org-calendar)
-(define-key leader-map "ol" 'org-agenda-list)
-(define-key leader-map "ob" 'org-iswitchb)
-(define-key leader-map "c" 'org-capture)
-(define-key leader-map "oe" 'edit-todo)
-(define-key leader-map "ol" 'org-store-link)
+(define-key leader-map "ot" (lambda () (interactive) (eshell 'N)))
 (define-key leader-map "pb" 'counsel-projectile-switch-to-buffer)
 (define-key leader-map "pc" 'projectile-compile-project)
 (define-key leader-map "pd" 'projectile-dired)
@@ -324,25 +311,18 @@
 (define-key leader-map "pr" 'projectile-recentf)
 (define-key leader-map "pt" 'projectile-test)
 (define-key leader-map "pv" 'projectile-ag)
-(define-key leader-map "wd" 'delete-window)
-(define-key leader-map "wh" 'split-window-verticaly)
-(define-key leader-map "wv" 'split-window-horizontally)
-(define-key leader-map "ww" 'other-window)
-(define-key leader-map [? ] 'counsel-M-x)
-(define-key leader-map [C-p] 'projectile-switch-project)
-(define-key leader-map [C-v] 'hrs/search-project-for-symbol-at-point)
+(define-key leader-map [?:] 'counsel-M-x)
 (define-key leader-map [?\t] 'mode-line-other-buffer)
+(define-key leader-map (kbd "C-p") 'projectile-switch-project)
+(define-key leader-map (kbd "C-v") 'hrs/search-project-for-symbol-at-point)
 (define-key leader-map [escape] 'evil-ex-nohighlight)
 
 ;; Zoom
 (use-package default-text-scale
   :config
-  (global-set-key "\M-=" #'default-text-scale-increase)
-  (global-set-key "\M--" #'default-text-scale-decrease))
-
-;; Copy/Paste
-(define-key global-map "\M-c" 'evil-yank)
-(define-key global-map "\M-v" 'yank)
+  (global-set-key "\M-0" 'default-text-scale-reset)
+  (global-set-key "\M-=" 'default-text-scale-increase)
+  (global-set-key "\M--" 'default-text-scale-decrease))
 
 ;; Switch buffers
 (define-key global-map [C-tab] 'next-buffer)
@@ -367,23 +347,17 @@
   (defalias #'forward-evil-word #'forward-evil-symbol))
 
 ;; Highlight current line
-(add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
+(global-hl-line-mode 1)
 
-;; Line numbers
-(use-package linum-relative
-  :ensure t
-  :after evil
+;; ;; Line numbers
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode 1)
+
+;; Git Gutter
+(use-package git-gutter
+  :diminish
   :config
-  (global-linum-mode)
-  (linum-relative-global-mode)
-  (setq linum-relative-current-symbol ""))
-
-;; ;; Git Gutter
-;; (use-package git-gutter
-;;   :diminish
-;;   :config
-;;   (global-git-gutter-mode +1)
-;;   (git-gutter:linum-setup))
+  (global-git-gutter-mode +1))
 
 ;; Line wrapping
 (setq-default truncate-lines t)
@@ -413,9 +387,8 @@
       uniquify-min-dir-content 7)
 
 ;; Smooth scrolling
-(use-package smooth-scrolling
-  :config
-  (smooth-scrolling-mode 1))
+(diminish 'pixel-scroll-mode)
+(pixel-scroll-mode)
 
 ;; Autocompletion
 (use-package company
@@ -442,23 +415,30 @@
 
 ;; Linting with Flycheck
 (use-package flycheck
-  ;; :diminish
-  :hook (prog-mode-hook flycheck-mode)
+  :after evil
+  :diminish
+  :init (global-flycheck-mode)
   :config
-
-  ;; ;; Flycheck
-  (flycheck-add-mode 'javascript-eslint 'rjsx-mode)
-  (flycheck-add-mode 'javascript-eslint 'js2-mode)
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
-  (flycheck-add-mode 'javascript-eslint 'vue-mode)
-
-  (setq-default flycheck-disabled-checkers
-                (append flycheck-disabled-checkers
-                        '(javascript-jshint)))
-  (use-package flycheck-pos-tip
-    :hook (flycheck-mode-hook flycheck-pos-tip-mode))
-  (use-package flycheck-color-mode-line
-    :hook (flycheck-mode-hook flycheck-color-mode-line-mode)))
+  (setq flycheck-display-errors-delay 0.2
+        flycheck-idle-change-delay 0.2)
+  (define-key evil-normal-state-map "!" nil)
+  (define-key evil-normal-state-map "!!" 'flycheck-list-errors)
+  (define-key evil-normal-state-map "!n" 'flycheck-next-error)
+  (define-key evil-normal-state-map "!p" 'flycheck-previous-error)
+  (define-key evil-normal-state-map "]!" 'flycheck-next-error)
+  (define-key evil-normal-state-map "[!" 'flycheck-previous-error)
+  (define-key evil-motion-state-map "!" nil)
+  (define-key evil-motion-state-map "!!" 'flycheck-list-errors)
+  (define-key evil-motion-state-map "!n" 'flycheck-next-error)
+  (define-key evil-motion-state-map "!p" 'flycheck-previous-error)
+  (define-key evil-motion-state-map "]!" 'flycheck-next-error)
+  (define-key evil-motion-state-map "[!" 'flycheck-previous-error))
+(use-package flycheck-pos-tip
+  :after flycheck
+  :hook (flycheck-mode-hook flycheck-pos-tip-mode))
+(use-package flycheck-color-mode-line
+  :after flycheck
+  :hook (flycheck-mode-hook flycheck-color-mode-line-mode))
 
 ;; Snippets
 (use-package yasnippet
@@ -481,18 +461,22 @@
 (use-package counsel-projectile
   :after ivy)
 
-(use-package ag)
-
 ;; Ivy
 ;; ===
+
 (use-package ivy
   :diminish ivy-mode
+  :bind
+  ("C-S-s" . counsel-rg)
   :config
   (ivy-mode 1)
+  (counsel-mode 1)
   (setq ivy-use-virtual-buffers t
         enable-recursive-minibuffers t)
+  (add-to-list 'ivy-ignore-buffers "\\*dashboard\\*")
+  (add-to-list 'ivy-ignore-buffers "\\*dired\\*")
   (add-to-list 'ivy-ignore-buffers "\\*Messages\\*")
-  (add-to-list 'ivy-ignore-buffers "\\*magit"))
+  (add-to-list 'ivy-ignore-buffers "\\magit"))
 
 ;; Swiper
 ;; ===
@@ -501,13 +485,33 @@
   :bind
   ("C-s" . swiper))
 
+;; Eshell
+;; ===
+(use-package exec-path-from-shell
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
+
 ;; Dired
 ;; ===
 
-(require 'dired)
-(use-package ranger
+;; (require 'dired)
+(use-package dired-single
   :config
-  (ranger-override-dired-mode t))
+  (add-hook 'dired-mode-hook (lambda () (dired-hide-details-mode)))
+  (put 'dired-find-alternate-file 'disabled nil)
+  (setq dired-recursive-copies 'always
+        dired-recursive-deletes 'top
+        dired-single-use-magic-buffer t)
+  (define-key evil-normal-state-map [?-]
+    (lambda () (interactive) (dired-single-magic-buffer default-directory)))
+  (define-key evil-motion-state-map [?-]
+    (lambda () (interactive) (dired-single-magic-buffer default-directory)))
+  (define-key dired-mode-map [? ] leader-map)
+  (define-key dired-mode-map [return] 'dired-single-buffer)
+  (define-key dired-mode-map [mouse-1] 'dired-single-buffer-mouse)
+  (define-key dired-mode-map [?^] 'dired-single-up-directory)
+  (define-key dired-mode-map [?-] 'dired-single-up-directory))
 
 ;; macOS GNU ls
 (let ((gls "/usr/local/bin/gls"))
@@ -537,317 +541,37 @@
   :hook ((prog-mode-hook turn-on-diff-hl-mode)
          (vc-dir-mode-hook turn-on-diff-hl-mode)))
 
-;; Python
+;; Languages
 ;; ===
 
-(setq-default python-indent 4)
-(add-hook 'python-mode-hook (lambda () (aggressive-indent-mode -1)))
+(require 'lang/coq)
+(require 'lang/elm)
+(require 'lang/go)
+(require 'lang/haskell)
+(require 'lang/lua)
+(require 'lang/moonscript)
+(require 'lang/ocaml)
+(require 'lang/python)
+(require 'lang/rust)
+(require 'lang/swift)
 
-;; Anaconda mode
-(use-package anaconda-mode
-  :hook ((python-mode-hook anaconda-mode)
-         (python-mode-hook anaconda-eldoc-mode)))
+(require 'lang/json)
+(require 'lang/yaml)
 
-;; Autocompletion
-(use-package company-anaconda
-  :after anaconda-mode
-  :config
-  (eval-after-load "company"
-    '(add-to-list 'company-backends '(company-anaconda))))
+(require 'lang/coffee)
+(require 'lang/css)
+(require 'lang/html)
+(require 'lang/js)
+(require 'lang/vue)
 
-;; Disable Aggressive Indentation
-(add-hook 'python-mode-hook (lambda () (aggressive-indent-mode -1)))
-
-;; Highlight Indent Guides
-(use-package highlight-indent-guides
-  :hook (python-mode-hook . highlight-indent-guides-mode)
-  :config
-  (setq highlight-indent-guides-method 'character))
-
-;; Use yapf to format
-(use-package yapfify
-  :hook (python-mode-hook . yapf-mode))
-
-;; HTML
-;; ===
-
-(use-package web-mode
-  :mode (("\\.html\\'" . web-mode)
-         ("\\.erb\\'" . web-mode)
-         ("\\.ejs\\'" . web-mode)
-         ("\\.php\\'" . web-mode))
-  :config
-  (setq web-mode-enable-css-colorization t)
-  (setq-default css-indent-offset 2
-                web-mode-markup-indent-offset 2
-                web-mode-css-indent-offset 2
-                web-mode-code-indent-offset 2
-                web-mode-attr-indent-offset 2))
-
-;; Preprocessors
-(use-package pug-mode)
-
-;; CSS
-;; ===
-
-(setq-default css-indent-offset 2)
-(use-package less-css-mode
-  :hook less-mode-hook)
-(use-package sass-mode
-  :hook sass-mode-hook)
-(use-package rainbow-mode
-  :hook ((css-mode-hook . rainbow-mode)
-         (sass-mode-hook . rainbow-mode)
-         (html-mode-hook . rainbow-mode)
-         (less-mode-hook . rainbow-mode))
-  :diminish rainbow-mode)
-
-;; JavaScript
-;; ===
-
-(setq-default js-indent-level 2)
-
-;; Prettier
-(use-package prettier-js
-  :hook ((js2-mode-hook . prettier-js-mode)
-         (web-mode-hook . prettier-js-mode)
-         (vue-mode-hook . prettier-js-mode)
-         (rjsx-mode-hook . prettier-js-mode))
-  :ensure nil
-  :quelpa (prettier-js
-           :fetcher github
-           :repo "prettier/prettier-emacs"
-           :branch "prettier-js-prettify-region")
-  :config
-  (defun prettier-vue ()
-    (interactive)
-    (progn
-      (let ((original (point)))
-        (goto-char 0)
-        (let* ((script-start (re-search-forward "<script>" nil t))
-               (start (+ script-start 1))
-               (script-end (re-search-forward "</script>" nil t))
-               (end (- script-end 9)))
-          (prettier-js--prettify start end)
-          (goto-char original)))
-      (let ((original (point)))
-        (goto-char 0)
-        (let* ((script-start (re-search-forward "<template>" nil t))
-               (start (+ script-start 1))
-               (script-end (re-search-forward "</template>" nil t))
-               (end (- script-end 11)))
-          ;; (sgml-pretty-print start end)
-          (indent-region start end)
-          (goto-char original)))
-      (vue-mode-reparse)))
-  (add-hook 'vue-mode-hook
-            (lambda ()
-              (prettier-js-mode)
-              (add-hook 'before-save-hook 'prettier-vue nil 'local)))
-  (setq prettier-js-args '("--trailing-comma" "es5"
-                           "--no-semi"
-                           "--single-quote")))
-
-;; React
-(use-package rjsx-mode
-  :mode ("\\.js\\'" . rjsx-mode)
-  :config
-  (setq js2-mode-show-strict-warnings nil
-        js2-mode-show-parse-errors nil
-        js2-indent-level 2
-        js2-basic-offset 2
-        js2-strict-trailing-comma-warning nil
-        js2-strict-missing-semi-warning nil))
-
-;; Vue
-(use-package vue-mode
-  :mode ("\\.vue\\'" . vue-mode)
-  :config
-  (setq mmm-submode-decoration-level 0))
-
-;; Org
-;; ===
-
-(use-package org
-  :mode ("\\.org\\'" . org-mode)
-  :ensure org-plus-contrib
-  :hook (org-mode-hook flyspell-mode)
-  :config
-  (setq org-agenda-files (quote ("~/Notes/todo.org" "~/Notes/inbox.org" "~/Notes/calendar.org")))
-  
-  (setq org-refile-targets (quote ((nil :maxlevel . 9)
-                                   (org-agenda-files :maxlevel . 9))))
-
-  (setq org-todo-keywords
-        (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
-  (setq org-capture-templates
-        (quote (("t" "todo" entry (file "~/Notes/inbox.org")
-                 "* TODO %?"))))
-
-  (set-face-attribute 'org-level-1 nil :weight 'bold :height 1.20)
-  (set-face-attribute 'org-level-2 nil :weight 'bold :height 1.15)
-  (set-face-attribute 'org-level-3 nil :weight 'bold :height 1.10)
-  (set-face-attribute 'org-level-4 nil :weight 'bold :height 1.05)
-  (set-face-attribute 'org-level-5 nil :weight 'bold :height 1.00)
-
-  (setq org-ellipsis " ▼"
-        org-src-fontify-natively t
-        org-src-tab-acts-natively t
-        org-src-window-setup 'current-window
-        org-html-postamble nil
-        org-latex-pdf-process '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                                "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                                "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f")
-        org-startup-with-latex-preview t
-        org-format-latex-options (plist-put org-format-latex-options :scale 0.8)
-        org-startup-with-inline-images t)
-
-  (define-key org-mode-map (kbd "$") (lambda ()
-                                       (interactive)
-                                       (insert "$")
-                                       (left-char 1)
-                                       (org-toggle-latex-fragment)
-                                       (right-char 1))))
-
-;; Calendar
-(use-package calfw)
-(use-package calfw-org
-  :after calfw)
-
-(use-package org-gcal
-  :config
-  (setq org-gcal-client-id "79887467989-4inb8t4kbrmqmb7453edv7i9bagsr673.apps.googleusercontent.com"
-        org-gcal-file-alist '(("goweiwen@gmail.com" . "~/Notes/calendar.org"))))
-
-
-;; Coq
-;; ===
-(use-package company-coq
-  :mode ("\\.v\\'" . coq-mode)
-  :hook (('coq-mode-hook . 'company-coq-mode)
-  :bind (:map company-coq-map
-              ("M-j" . proof-assert-next-command-interactive)
-              ("M-k" . proof-undo-last-successful-command)
-              ("M-<return>" . proof-goto-point))
-  :custom-face
-  (proof-locked-face ((nil (:background "#003300"))))
-  (proof-queue-face ((nil (:background "#116611"))))
-  :config
-
-  (add-hook 'coq-mode-hook #'company-coq-mode)
-
-  ;; Appearance
-
-  ;; Use Coq 8.6 (for CS3234)
-  (setenv "PATH" (concat (getenv "PATH") "/Users/weiwen/.opam/4.05.0/bin"))
-  (setq exec-path (append exec-path '("/Users/weiwen/.opam/4.05.0/bin")))
-
-  ;; Prettify symbols
-  (company-coq-features/prettify-symbols nil)
-  (add-hook 'coq-mode-hook
-            (lambda ()
-              (setq-local prettify-symbols-alist
-                          '(("|-" . 8866)
-                            ("||" . 8214)
-                            ("/\\" . 8743)
-                            ("\\/" . 8744)
-                            ("->" . 8594)
-                            ("<-" . 8592)
-                            ("<->" . 8596)
-                            ("=>" . 8658)
-                            ("<=" . 8804)
-                            (">=" . 8805)
-                            ("True" . 8868)
-                            ("False" . 8869)
-                            ("fun" . 955)
-                            ("forall" . 8704)
-                            ("exists" . 8707)
-                            ("nat" . 8469)
-                            ("Prop" . 8473)
-                            ("Real" . 8477)
-                            ("bool" . 120121)
-                            (">->" . 8611)
-                            ("-->" . 10230)
-                            ("<--" . 10229)
-                            ("<-->" . 10231)
-                            ("==>" . 10233)
-                            ("<==" . 10232)
-                            ("~~>" . 10239)
-                            ("<~~" . 11059))))))
-
-;; Haskell
-(use-package haskell-mode
-  :mode "\\.hs\\'"
-  :mode ("\\.ghci$" . ghci-script-mode)
-  :mode ("\\.cabal$" . haskell-cabal-mode)
-  :interpreter (("runghc" . haskell-mode)
-                ("runhaskell" . haskell-mode))
-  :config
-  (load "haskell-mode-autoloads" nil t)
-
-  (push ".hi" completion-ignored-extensions))
-
-(use-package intero
-  :hook (haskell-mode . intero-mode)
-  :config
-  (unless (executable-find "stack")
-    (warn "haskell-mode: couldn't find stack, disabling intero")
-    (remove-hook 'haskell-mode-hook #'intero-mode))
-
-  (add-hook 'intero-mode-hook #'(flycheck-mode eldoc-mode)))
-
-(use-package hindent
-  :hook (haskell-mode . hindent-mode))
-
-;; Export
-(require 'ox-md)
-(require 'ox-beamer)
-
-;; Other Languages
-;; ===
-
-(use-package coffee-mode
-  :mode "\\.coffee\\'")
-(use-package lua-mode
-  :mode "\\.lua\\'")
-(use-package elm-mode
-  :mode "\\.elm\\'")
-(use-package json-mode
-  :mode "\\.json\\'")
-(use-package markdown-mode
-  :mode "\\.md\\'")
-(use-package swift-mode
-  :mode "\\.swift\\'")
+(require 'lang/org)
 
 ;; Writing
 ;; ===
 
-;; ;; Darkroom
-;; (use-package darkroom
-;;   :config
-;;   (setq darkroom-text-scale-increase 0)
-;;   (add-hook 'org-mode-hook 'darkroom-tentative-mode))
-
 ;; Use variable pitch for text modes
 (use-package mixed-pitch
   :hook ('org-mode-hook 'mixed-pitch-mode))
-
-;; ;; Proselint
-;; (require 'flycheck)
-;; (flycheck-define-checker proselint
-;;   "A linter for prose."
-;;   :command ("proselint" source-inplace)
-;;   :error-patterns
-;;   ((warning line-start (file-name) ":" line ":" column ": "
-;;             (id (one-or-more (not (any " "))))
-;;             (message (one-or-more not-newline)
-;;                      (zero-or-more "\n" (any " ") (one-or-more not-newline)))
-;;             line-end))
-;;   :modes (text-mode markdown-mode gfm-mode org-mode))
-;; (add-to-list 'flycheck-checkers 'proselint)
-
-;; (add-hook 'text-mode-hook #'flycheck-mode)
 
 ;; Automatically generated
 
@@ -857,7 +581,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   (quote
-    (intero esup frames-only-mode mixed-pitch calfw-org calfw mode-icons nlinum-relative evil-visual-mark-mode company-coq markdown-mode elm-mode vue-mode wc-mode ranger olivetti olivetti-mode writeroom-mode minimap evil-snipe evil-mc company-anaconda py-yapf ag))))
+   (quote ())))
 
 ;;; init.el ends here
