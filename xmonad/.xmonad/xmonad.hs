@@ -2,7 +2,6 @@ import XMonad
 import XMonad.Config.Desktop
 import XMonad.Hooks.DynamicLog
 import XMonad.Layout.NoBorders (smartBorders)
-import XMonad.Layout.Spacing (smartSpacingWithEdge)
 import XMonad.StackSet (RationalRect (..))
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Util.EZConfig
@@ -15,8 +14,9 @@ import qualified XMonad.StackSet as W
 
 -- General config
 myModMask = mod4Mask
-myTerminal = "alacritty -e tmux"
-myScratchpad = "alacritty --name scratchpad -e tmux"
+myTerminalTmux = "termite -e tmux"
+myTerminal = "termite"
+myScratchpad = "termite --name scratchpad -e tmux"
 myLauncher = "rofi -show combi -combi-modi 'window,drun,run,ssh'"
 myWallpaper = "feh --bg-fill \"$HOME/Pictures/Wallpapers/$(ls $HOME/Pictures/Wallpapers | sort -R | head -n 1)\""
 myWorkspaces = [ "home", "www", "dev", "comm", "doc" ]
@@ -28,11 +28,12 @@ myForegroundColor = "#99cc99"
 myNormalBorderColor = myBackgroundColor
 myFocusedBorderColor = myForegroundColor
 
-myBorderWidth = 2
+myBorderWidth = 1
 
 -- Hotkeys
 myKeys =
-  [ ("M-<Return>", spawn myTerminal)
+  [ ("M-<Return>", spawn myTerminalTmux)
+  , ("M-S-<Return>", spawn myTerminal)
   , ("M-<Space>", spawn myLauncher)
   , ("M-`", scratchPad)
   , ("M-n", spawn myWallpaper)
@@ -71,8 +72,9 @@ myWorkspaceKeys' =
   ]
 
 -- Startup hook
-myStartupPrograms = 
+myStartupPrograms =
   [ "polybar default"
+  , myWallpaper
   ]
 
 myStartupHook :: X ()
@@ -91,9 +93,10 @@ scratchPad = scratchpadSpawnActionCustom myScratchpad
 -- Hooks
 myManageHook = composeAll
   [ className =? "Firefox" --> doShift "www"
+  , className =? "qutebrowser" --> doShift "www"
   ] <+> manageScratchPad
 
-myLayoutHook = smartBorders . smartSpacingWithEdge 5 $ layoutHook desktopConfig
+myLayoutHook = smartBorders $ layoutHook desktopConfig
 
 -- Main
 main = xmonad $ desktopConfig
