@@ -37,3 +37,6 @@ bind '"\e[B": history-search-forward'
 bind '"\e[C": forward-char'
 bind '"\e[D": backward-char'
 bind Space:magic-space
+
+EDITOR=nvim
+BROWSER=qutebrowser
