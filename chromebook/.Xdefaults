@@ -4,40 +4,6 @@ Xft.hinting: full
 Xft.hintstyle: hintslight
 Xft.rgba: rgb
 
-#include "/home/weiwen/.config/rofi"
-
-URxvt.perl-ext-common:  default,clipboard,matcher
-URxvt.iso14755: false
-
-URxvt*skipBuiltinGlyphs: true
-URxvt*buffered: false
-URxvt*urgentOnBell: true
-URxvt*visualBell:   false
-URxvt.secondaryScreen: 1
-URxvt.secondaryScroll: 0
-URxvt.secondaryWheel: 1
-
-URxvt.url-launcher: /usr/bin/firefox
-URxvt.matcher.button: 1
-
-URxvt.scrollstyle: plain
-URxvt.scrollBar: false
-URxvt.internalBorder: 20
-
-URxvt*cursorBlink: true
-URxvt*cursorUnderline: true
-
-URxvt.font: xft:Fira Code-9
-URxvt.boldFont: xft:Fira Code-9
-URxvt.letterSpace: -2
-
-URxvt*termName: rxvt-unicode
-URxvt.keysym.Control-BackSpace:  \033[33~
-URxvt.keysym.Shift-Control-C: perl:clipboard:copy
-URxvt.keysym.Shift-Control-V: perl:clipboard:paste
-URxvt.clipboard.copycmd:  xsel -ib
-URxvt.clipboard.pastecmd: xsel -ob
-
 ! Base16 Eighties
 ! Scheme: Chris Kempson (http://chriskempson.com)
 
