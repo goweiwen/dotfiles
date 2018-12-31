@@ -73,6 +73,7 @@
       kept-new-versions 6
       kept-old-versions 2
       version-control t)
+(auto-save-mode 0)
 
 ;; Use case-insensitive file search
 (setq read-file-name-completion-ignore-case t)
@@ -117,8 +118,9 @@
 
 ;; Tweak window chrome
 (tool-bar-mode -1)
-(unless (eq system-type 'darwin) menu-bar-mode -1)
-(when window-system (scroll-bar-mode -1))
+(menu-bar-mode -1)
+(when window-system
+  (scroll-bar-mode -1))
 
 ;; Blend fringe background
 (set-face-attribute 'fringe nil :background nil)
@@ -167,7 +169,7 @@
 
 ;; Terminal stuff
 (xterm-mouse-mode 1)
-(normal-erase-is-backspace-mode 1)
+(normal-erase-is-backspace-mode 0)
 
 ;; ;; Emacs is not a window manager
 ;; (use-package frames-only-mode)
@@ -232,6 +234,13 @@
   :diminish evil-rsi-mode
   :config
   (evil-rsi-mode))
+
+;; evil-numbers
+;; Increment/decrement numbers
+(use-package evil-numbers
+  :config
+  (global-set-key (kbd "C-c +") 'evil-numbers/inc-at-pt)
+  (global-set-key (kbd "C-c -") 'evil-numbers/dec-at-pt))
 
 ;; bind evil-jump-out-args
 (define-key evil-normal-state-map "K" 'evil-jump-out-args)
@@ -548,6 +557,7 @@
 (require 'lang/elm)
 (require 'lang/go)
 (require 'lang/haskell)
+(require 'lang/lean)
 (require 'lang/lua)
 (require 'lang/moonscript)
 (require 'lang/ocaml)
@@ -581,6 +591,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   (quote ())))
+   (quote
+    (evil-numbers yapfify yaml-mode which-key web-mode vue-mode vimish-fold tuareg telephone-line sws-mode swift-mode sass-mode rjsx-mode rainbow-mode racer quelpa-use-package pug-mode prettier-js popup org-plus-contrib moonscript mixed-pitch merlin lua-mode json-mode intero hindent highlight-quoted highlight-operators highlight-numbers highlight-indent-guides highlight-escape-sequences highlight-defined helm-core go-guru go-eldoc git-gutter flycheck-rust flycheck-pos-tip flycheck-color-mode-line exec-path-from-shell evil-visual-mark-mode evil-unimpaired evil-surround evil-snipe evil-rsi evil-mc evil-magit evil-commentary evil-args elm-mode dired-single diminish diff-hl default-text-scale dashboard counsel-projectile company-racer company-lean company-go company-coq company-anaconda coffee-mode aggressive-indent))))
 
 ;;; init.el ends here
