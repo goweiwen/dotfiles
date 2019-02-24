@@ -40,3 +40,5 @@ bind Space:magic-space
 
 EDITOR=nvim
 BROWSER=qutebrowser
+
+export PS1="\W \$ "
