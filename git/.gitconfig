@@ -4,5 +4,21 @@
 
 [color]
 	ui = always
+
 [core]
 	editor = nvim
+
+[alias]
+	b = branch
+	c = commit
+	ca = commit --amend
+	co = checkout
+	d = diff
+	dw = diff --color-words
+	fm = pull --merge
+	fr = pull --rebase
+	l = log --oneline
+	p = push
+	pf = push --force-with-lease
+	pt = push --tags
+	s = status --short
