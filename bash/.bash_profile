@@ -26,11 +26,13 @@ shopt -s globstar 2> /dev/null
 shopt -s histappend 2> /dev/null
 shopt -s nocaseglob 2> /dev/null
 
-HISTSIZE=500000
-HISTFILESIZE=100000
-HISTCONTROL="erasedups:ignoreboth"
-HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history:clear"
-HISTTIMEFORMAT='%F %T '
+export HISTSIZE=500000
+export HISTFILESIZE=100000
+export HISTCONTROL="erasedups:ignoreboth"
+export HISTIGNORE="ls:exit:bg:fg:history:clear"
+export HISTTIMEFORMAT='%F %T '
+
+export PROMPT_COMMAND='history -a'
 
 bind '"\e[A": history-search-backward'
 bind '"\e[B": history-search-forward'
@@ -38,7 +40,20 @@ bind '"\e[C": forward-char'
 bind '"\e[D": backward-char'
 bind Space:magic-space
 
-EDITOR=nvim
-BROWSER=qutebrowser
+export EDITOR=nvim
+export BROWSER=google-chrome-stable
+export PAGER=less
 
-export PS1="\W \$ "
+export PS1="[\e[34m\u\e[39m@\e[35m\h\e[39m] \e[36m\W\e[39m \$ "
+
+if [ -f "/usr/share/doc/mcfly/mcfly.bash" ]; then
+  . /usr/share/doc/mcfly/mcfly.bash
+fi
+
+if [ -f "/usr/share/z/z.sh" ]; then
+  . /usr/share/z/z.sh
+fi
+
+if [ -d "$HOME/.anaconda3/bin" ]; then
+  export PATH="$PATH:$HOME/.anaconda3/bin"
+fi
