@@ -52,7 +52,7 @@
 ;; Edit init.el
 (defun edit-init ()
   (interactive)
-  (switch-to-buffer (find-file-noselect "~/.emacs.d/init.el")))
+  (counsel-file-jump "" "~/.emacs.d/"))
 
 ;; Edit todo.org
 (defun edit-todo ()
