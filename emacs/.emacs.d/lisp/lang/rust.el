@@ -6,6 +6,7 @@
 (use-package racer
   :after rust-mode
   :hook (rust-mode . racer-mode)
+  :hook (racer-mode . eldoc-mode)
   :config
   (add-hook 'rust-mode-hook #'eldoc-mode)
 
@@ -20,5 +21,8 @@
   :after rust-mode
   :hook (flycheck-mode . flycheck-rust-setup)
   :config (add-hook 'rust-mode-hook #'flycheck-mode))
+
+(use-package rust-snippets
+  :after rust-mode)
 
 (provide 'lang/rust)
