@@ -1,6 +1,5 @@
 export GOPATH="$HOME/.go"
 export GOBIN=$GOPATH/bin
-export ANDROID_HOME=/Users/weiwen/Library/Android/sdk
 
 export PATH=$HOME/.local/bin:/usr/local/bin:${PATH}
 export PATH=/usr/local/anaconda3/bin:${PATH}
