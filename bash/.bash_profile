@@ -13,6 +13,10 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+  alias pbcopy='xsel --clipboard --input'
+  alias pbpaste='xsel --clipboard --output'
+fi
 
 bind "set completion-ignore-case on"
 bind "set completion-map-case on"
