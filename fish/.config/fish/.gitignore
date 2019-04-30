@@ -1,0 +1,11 @@
+fish_history
+fish_variables
+fishd.*
+
+/completions/*
+/functions/*
+/conf.d/*
+
+!/functions/fisher.fish
+!/functions/fish_prompt.fish
+!/functions/dot_dot_dot.fish
