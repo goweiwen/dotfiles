@@ -10,13 +10,17 @@ if dein#load_state('~/.config/nvim/dein')
   call dein#add('~/.config/nvim/dein/repos/github.com/Shougo/dein.vim')
   call dein#add('wsdjeg/dein-ui.vim')
 
+  if !has('nvim')
+    call dein#add('roxma/nvim-yarp')
+    call dein#add('roxma/vim-hug-neovim-rpc')
+  endif
 
   "
   " Appearance
   "
 
   " Theme
-  call dein#add('rafi/awesome-vim-colorschemes')
+  " call dein#add('rafi/awesome-vim-colorschemes')
 
   " Modeline
   call dein#add('itchyny/lightline.vim')
@@ -42,42 +46,25 @@ if dein#load_state('~/.config/nvim/dein')
   call dein#add('tpope/vim-rhubarb', { 'on_ft': ['git', 'gitcommit'], 'on_cmd': [ 'Git', 'Gstatus', 'Gwrite', 'Glog', 'Gcommit', 'Gblame', 'Ggrep', 'Gdiff', ] })
   " call dein#add('rhysd/committia.vim', { 'on_ft': ['git', 'gitcommit'] })
 
-  " Sessions
-  call dein#add('tpope/vim-obsession')
-  call dein#add('dhruvasagar/vim-prosession')
-
   " Save edit position
   call dein#add('farmergreg/vim-lastplace')
 
   " tmux
   call dein#add('christoomey/vim-tmux-navigator')
 
-  " Terminal
-  call dein#add('kassio/neoterm')
-
-
   "
   " Files
   "
-
-  " File browsers
-  call dein#add('tpope/vim-vinegar')
 
   " Helm-like
   call dein#add('Shougo/denite.nvim')
   call dein#add('cloudhead/neovim-fuzzy')
 
   " grep
-  call dein#add('jremmen/vim-ripgrep')
+  call dein#add('jremmen/vim-ripgrep', { 'on_cmd': [ 'Rg' ] })
 
   " Find and replace (:Far)
-  call dein#add('brooth/far.vim')
-
-  " Automatically sets working directory
-  call dein#add('airblade/vim-rooter')
-
-  " Open in Finder/Terminal (gof/got)
-  call dein#add('justinmk/vim-gtfo')
+  call dein#add('brooth/far.vim', { 'on_cmd': [ 'Far' ] })
 
   " Path navigator
   call dein#add('justinmk/vim-dirvish')
@@ -94,12 +81,6 @@ if dein#load_state('~/.config/nvim/dein')
   " Multiple cursors (C-n, C-p, C-x, :MultipleCursorsFind)
   call dein#add('terryma/vim-multiple-cursors', { 'on_map' : { 'n' : ['<C-n>', '<C-p>'], 'x' : '<C-n>'}, 'on-cmd': 'MultipleCursorsFind'})
 
-  " Sneaking (maps s/S to 2-char f/t)
-  call dein#add('justinmk/vim-sneak', {'on_map': {'n': ['s', 'S']}})
-
-  " Quick scope
-  call dein#add('unblevable/quick-scope')
-
   " More text objects
   call dein#add('wellle/targets.vim')
   call dein#add('michaeljsmith/vim-indent-object')
@@ -108,17 +89,11 @@ if dein#load_state('~/.config/nvim/dein')
   " Expand region (+/_ in visual mode)
   call dein#add('terryma/vim-expand-region', {'on_map': {'v': ['+', '-']}})
 
-  " Kill-ring
-  call dein#add('bfredl/nvim-miniyank')
-
   " Substitution (:Subvert/thing{1,2}/other{1,2}/)
   call dein#add('tpope/vim-abolish')
 
   " Commenting (gcc)
   call dein#add('tpope/vim-commentary')
-
-  " Auto end block
-  call dein#add('tpope/vim-endwise')
 
   " Shell command wrappers
   call dein#add('tpope/vim-eunuch')
@@ -188,11 +163,11 @@ filetype plugin indent on
 " Theme
 syntax enable
 set background=dark
-highlight StatusLine ctermbg=0
-colorscheme apprentice
-set termguicolors
-let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+" highlight StatusLine ctermbg=0
+" colorscheme apprentice
+" set termguicolors
+" let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+" let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 
 " Set terminal title
 set title
@@ -346,11 +321,6 @@ nmap <Leader>d "_d
 nmap <Leader>D "_D
 nmap <Leader>c "_c
 nmap <Leader>C "_C
-
-" kill-ring
-map p <Plug>(miniyank-autoput)
-map P <Plug>(miniyank-autoPut)
-map <Leader>n <Plug>(miniyank-cycle)
 
 " Switch between buffers
 noremap <Leader>` <C-^>
