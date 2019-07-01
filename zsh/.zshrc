@@ -134,9 +134,9 @@ BASE16_SHELL=$HOME/.config/base16-shell/
 export PATH="$PATH:$HOME/.rvm/bin"
 
 # opam configuration
-test -r /Users/weiwen/.opam/opam-init/init.zsh && . /Users/weiwen/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+# test -r /Users/weiwen/.opam/opam-init/init.zsh && . /Users/weiwen/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 # rust
 source $HOME/.cargo/env
 
-eval $(thefuck --alias)
+# eval $(thefuck --alias)
