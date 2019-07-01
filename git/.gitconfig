@@ -9,16 +9,25 @@
 	editor = nvim
 
 [alias]
+	a = add
 	b = branch
+	bc = checkout -b
 	c = commit
 	ca = commit --amend
 	co = checkout
 	d = diff
 	dw = diff --color-words
+	fc = clone
 	fm = pull --merge
 	fr = pull --rebase
 	l = log --oneline
+	ll = log
 	p = push
 	pf = push --force-with-lease
 	pt = push --tags
+	r = rebase
+	ra = rebase --abort
+	rc = rebase --continue
+	rs = rebase --skip
 	s = status --short
+	ss = status
