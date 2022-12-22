@@ -1,0 +1,46 @@
+[user]
+	email = goweiwen@gmail.com
+	name = Wei Wen Goh
+
+[color]
+	ui = always
+
+[core]
+	editor = nvim
+
+[rebase]
+	autosquash = true
+
+[alias]
+	a = add
+	b = branch
+	bc = checkout -b
+	c = commit
+	ca = commit --amend
+	cac = commit --amend -C HEAD
+	can = commit --amend --no-edit
+	co = checkout
+	d = diff
+	dw = diff --color-words
+	fc = clone
+	fm = pull --merge
+	fr = pull --rebase
+	l = log --oneline
+	ll = log
+	p = push
+	pf = push --force-with-lease
+	pt = push --tags
+	pu = push --set-upstream origin HEAD
+	r = rebase
+	ra = rebase --abort
+	rc = rebase --continue
+	rs = rebase --skip
+	s = status --short
+	ss = status
+	fixup = "!git log -n 50 --pretty=format:'%h %s' --no-merges | fzf | cut -c -7 | xargs -o git commit --fixup"
+
+[commit]
+	gpgSign = true
+
+[tag]
+	forceSignAnnotated = true
