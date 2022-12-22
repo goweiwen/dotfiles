@@ -1,0 +1,17 @@
+@theme "~/.config/rofi/themes/catppuccin-mocha.rasi"
+
+configuration {
+  drun-display-format: "{name}";
+  hover-select: false;
+  location: 0;
+}
+
+listview {
+  lines: 4;
+}
+
+window {
+  width: 640px;
+  x-offset: 0;
+  y-offset: 0;
+}
