@@ -1,0 +1,8 @@
+[target.x86_64-fortanix-unknown-sgx]
+runner = "ftxsgx-runner-cargo"
+
+[build]
+jobs = 4
+
+[net]
+git-fetch-with-cli = true
