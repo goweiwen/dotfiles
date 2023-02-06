@@ -5,10 +5,10 @@ local iconfont = "MesloLGM Nerd Font Mono 14"
 local theme = {}
 theme.dir = os.getenv("HOME") .. "/.config/awesome/themes/catppuccin"
 theme.wallpaper = os.getenv("HOME") .. "/Pictures/Wallpaper/default"
-theme.font = "Inter 10"
-theme.bold_font = "Inter Medium 10"
-theme.useless_gap = dpi(12)
-theme.border_width = dpi(2)
+theme.font = "Terminus 9"
+theme.bold_font = "Terminus Medium 9"
+theme.useless_gap = dpi(4)
+theme.border_width = dpi(1)
 
 theme.flamingo = "#f2cdcd"
 theme.pink = "#f5c2e7"
