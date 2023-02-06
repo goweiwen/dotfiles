@@ -6,9 +6,36 @@
 
 config_version: 2
 settings:
-  content.javascript.enabled:
-    global: false
+  auto_save.session:
+    global: true
+  changelog_after_upgrade:
+    global: never
+  content.prefers_reduced_motion:
+    global: true
+  editor.command:
+    global:
+    - nvim
+    - -f
+    - '{file}'
+    - -c
+    - normal {line}G{column0}l
   fonts.default_family:
     global: Terminus
   fonts.default_size:
     global: 9pt
+  scrolling.smooth:
+    global: true
+  tabs.title.format:
+    global: '{current_title}'
+  url.default_page:
+    global: about:blank
+  url.start_pages:
+    global: about:blank
+  window.hide_decoration:
+    global: false
+  window.title_format:
+    global: '{current_title}'
+  window.transparent:
+    global: true
+  zoom.default:
+    global: 75%
