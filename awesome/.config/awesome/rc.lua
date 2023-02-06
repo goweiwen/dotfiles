@@ -13,6 +13,7 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local lain = require("lain")
+local vicious = require("vicious")
 lain.layout.equalarea = require("equalarea")
 local hotkeys_popup = require("awful.hotkeys_popup")
 -- Enable hotkeys help widget for VIM and other apps
@@ -79,8 +80,8 @@ terminal = "kitty"
 editor = os.getenv("EDITOR") or "neovide"
 editor_cmd = terminal .. " -e vim"
 
-files = "nautilus"
-browser = "firefox"
+files = "kitty -e ranger"
+browser = "qutebrowser"
 locker = "i3lock"
 
 -- Default modkey.
@@ -134,7 +135,7 @@ mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesom
 local mytextclock = wibox.widget.textclock("<b>%a %d %b %H:%M</b>")
 
 -- MPris
-local mympris = awful.widget.watch("playerctl metadata --player=chromium,firefox --format '{{ status }} {{ artist }} - {{ title }}'", 1, function(widget, stdout)
+local mympris = awful.widget.watch("playerctl metadata --player=qutebrowser,chromium,firefox --format '{{ status }} {{ artist }} - {{ title }}'", 1, function(widget, stdout)
   if stdout == "No players found" then
     widget.visible = false
   else
@@ -146,10 +147,10 @@ local mympris = awful.widget.watch("playerctl metadata --player=chromium,firefox
 end)
 mympris.valign = "center"
 mympris:buttons(gears.table.join(
-  awful.button({ }, 1, function () awful.util.spawn("playerctl --player=chromium,firefox play-pause") end),
-  awful.button({ }, 3, function () awful.util.spawn("playerctl --player=chromium,firefox next") end),
-  awful.button({ }, 4, function () awful.util.spawn("playerctl --player=chromium,firefox volume +5") end),
-  awful.button({ }, 5, function () awful.util.spawn("playerctl --player=chromium,firefox volume -5") end)))
+  awful.button({ }, 1, function () awful.util.spawn("playerctl --player=qutebrowser,chromium,firefox play-pause") end),
+  awful.button({ }, 3, function () awful.util.spawn("playerctl --player=qutebrowser,chromium,firefox next") end),
+  awful.button({ }, 4, function () awful.util.spawn("playerctl --player=qutebrowser,chromium,firefox volume +5") end),
+  awful.button({ }, 5, function () awful.util.spawn("playerctl --player=qutebrowser,chromium,firefox volume -5") end)))
 
 -- Volume
 local mypulseaudio = wibox.widget {
@@ -176,7 +177,7 @@ mypulseaudio:update()
 mypulseaudio:buttons(gears.table.join(
   awful.button({ }, 1, function () awful.util.spawn("pamixer -t") mypulseaudio:update() end),
   awful.button({ }, 3, function () awful.util.spawn("pavucontrol") mypulseaudio:update() end),
-  awful.button({ }, 4, function () awful.util.spawn("pamixer -i 5") mypulseaudio:update() end),
+  awful.button({ }, 4, function () awful.util.spawn("pamixer -i 5 --allow-boost") mypulseaudio:update() end),
   awful.button({ }, 5, function () awful.util.spawn("pamixer -d 5") mypulseaudio:update() end)))
 
 -- Keyboard map indicator and switcher
@@ -184,6 +185,12 @@ local mykeyboardlayout = awful.widget.keyboardlayout()
 
 local mysystray = wibox.widget.systray()
 mysystray:set_base_size(20)
+
+local mybattery = wibox.widget {
+  markup = 'Battery',
+  widget = wibox.widget.textbox,
+}
+vicious.register(mybattery, vicious.widgets.bat, " $2%", 61, "BAT0")
 
 local function set_wallpaper(s)
   -- Wallpaper
@@ -312,6 +319,7 @@ awful.screen.connect_for_each_screen(function(s)
         mympris,
         mypulseaudio,
         -- mykeyboardlayout,
+	mybattery,
         mysystray,
         s.mylayoutbox,
       },
@@ -410,25 +418,39 @@ globalkeys = gears.table.join(
       end
     end),
 
+  --[[
   -- libspeedhack
   awful.key({ }, "XF86MonBrightnessUp", function () os.execute("echo 1 > /tmp/speedhack_pipe") end,
     {description = "1x speed", group = "hotkeys"}),
   awful.key({ }, "XF86MonBrightnessDown", function () os.execute("echo 4 > /tmp/speedhack_pipe") end,
     {description = "4x speed", group = "hotkeys"}),
+  ]]--
 
   -- Screen brightness
-  awful.key({ }, "XF86MonBrightnessUp", function () os.execute("xbacklight -inc 10") end,
+  awful.key({ }, "XF86MonBrightnessUp", function () os.execute("light -A 10") end,
     {description = "+10%", group = "hotkeys"}),
-  awful.key({ }, "XF86MonBrightnessDown", function () os.execute("xbacklight -dec 10") end,
+  awful.key({ }, "XF86MonBrightnessDown", function () os.execute("light -U 10") end,
     {description = "-10%", group = "hotkeys"}),
 
   -- Multimedia control
   awful.key({ }, "XF86AudioPlay", function () awful.util.spawn("playerctl play-pause") end),
   awful.key({ }, "XF86AudioNext", function () awful.util.spawn("playerctl next") end),
   awful.key({ }, "XF86AudioPrev", function () awful.util.spawn("playerctl previous") end),
-  awful.key({ }, "XF86AudioRaiseVolume", function () awful.util.spawn("pamixer -i 5") mypulseaudio:update() end),
+  awful.key({ }, "XF86AudioRaiseVolume", function () awful.util.spawn("pamixer -i 5 --allow-boost") mypulseaudio:update() end),
   awful.key({ }, "XF86AudioLowerVolume", function () awful.util.spawn("pamixer -d 5") mypulseaudio:update() end),
   awful.key({ }, "XF86AudioMute", function () awful.util.spawn("pamixer -t") mypulseaudio:update() end),
+
+  -- Bitwarden (rofi-rbw)
+  awful.key({ modkey }, "F1", function() awful.util.spawn("xdotool key --clearmodifiers XF86AudioNext") end),
+  awful.key({ modkey }, "F2", function() awful.util.spawn("xdotool key --clearmodifiers XF86AudioPrev") end),
+  awful.key({ modkey }, "F3", function() awful.util.spawn("xdotool key --clearmodifiers XF86AudioPlay") end),
+  awful.key({ modkey }, "F4", function() awful.util.spawn("rofi-rbw") end),
+  awful.key({ modkey }, "F5", function() awful.util.spawn("rofi-rbw") end),
+  awful.key({ modkey }, "F6", function() awful.util.spawn("xdotool key --clearmodifiers XF86MonBrightnessDown") end),
+  awful.key({ modkey }, "F7", function() awful.util.spawn("xdotool key --clearmodifiers XF86MonBrightnessUp") end),
+  awful.key({ modkey }, "F8", function() awful.util.spawn("xdotool key --clearmodifiers XF86AudioMute") end),
+  awful.key({ modkey }, "F9", function() awful.util.spawn("xdotool key --clearmodifiers XF86AudioLowerVolume") end),
+  awful.key({ modkey }, "F10", function() awful.util.spawn("xdotool key --clearmodifiers XF86AudioRaiseVolume") end),
 
   -- Take a screenshot
   awful.key({ modkey }, "s", function() os.execute("maim -- ~/Pictures/Screenshots/" .. os.date("%Y-%m-%d_%H-%M") .. ".png && pw-play /usr/share/sounds/freedesktop/stereo/camera-shutter.oga") end,
@@ -801,6 +823,7 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 -- awful.spawn.once("easyeffects --gapplication-service")
 awful.spawn.once("picom --experimental-backends")
 -- awful.spawn.with_shell("polybar all")
+awful.spawn.once("nm-applet")
 awful.spawn.once("uim-xim")
 awful.spawn.with_shell("~/.fehbg")
 awful.spawn.with_shell("killall uim-toolbar-gtk3-systray; uim-toolbar-gtk3-systray")

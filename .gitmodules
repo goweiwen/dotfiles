@@ -31,3 +31,6 @@
 	path = qutebrowser/.config/qutebrowser/catppuccin
 	url = https://github.com/catppuccin/qutebrowser.git
 	branch = main
+[submodule "awesome/.config/awesome/vicious"]
+	path = awesome/.config/awesome/vicious
+	url = https://github.com/vicious-widgets/vicious.git
