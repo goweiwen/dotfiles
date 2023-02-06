@@ -27,3 +27,7 @@
 [submodule "qmk/qmk_firmware"]
 	path = qmk/qmk_firmware
 	url = https://github.com/goweiwen/qmk_firmware
+[submodule "qutebrowser/.config/qutebrowser/catppuccin"]
+	path = qutebrowser/.config/qutebrowser/catppuccin
+	url = https://github.com/catppuccin/qutebrowser.git
+	branch = main
