@@ -51,23 +51,23 @@ end
 local tags = {
   {
     name = "  ",
-    layout = awful.layout.suit.floating,
+    layout = lain.layout.termfair,
   },
   {
     name = "  ",
-    layout = lain.layout.centerwork,
+    layout = awful.layout.suit.tile,
   },
   {
     name = "  ",
-    layout = awful.layout.suit.floating,
+    layout = awful.layout.suit.tile,
   },
   {
     name = "  ",
-    layout = lain.layout.termfair.center,
+    layout = awful.layout.suit.tile,
   },
   {
     name = "  ",
-    layout = awful.layout.suit.floating,
+    layout = awful.layout.suit.tile,
   },
 }
 
@@ -96,7 +96,7 @@ awful.util.terminal = terminal
 awful.layout.layouts = {
   lain.layout.equalarea,
   awful.layout.suit.tile,
-  lain.layout.termfair.center,
+  lain.layout.termfair,
   lain.layout.centerwork,
   awful.layout.suit.floating,
   awful.layout.max,
@@ -140,8 +140,8 @@ local mympris = awful.widget.watch("playerctl metadata --player=qutebrowser,chro
     widget.visible = false
   else
     widget.visible = true
-    stdout = stdout:gsub("^Paused", "<span font-size=\"14pt\" rise=\"-2pt\"></span> ")
-    stdout = stdout:gsub("^Playing", "<span font-size=\"14pt\" rise=\"-2pt\"></span> ")
+    stdout = stdout:gsub("^Paused", "<span font-size=\"13pt\" rise=\"-3pt\"> </span> ")
+    stdout = stdout:gsub("^Playing", "<span font-size=\"13pt\" rise=\"-3pt\"> </span> ")
     widget:set_markup_silently(stdout)
   end
 end)
@@ -154,21 +154,21 @@ mympris:buttons(gears.table.join(
 
 -- Volume
 local mypulseaudio = wibox.widget {
-  markup = 'Audio',
+  markup = '100%',
   widget = wibox.widget.textbox,
 }
 function mypulseaudio:update()
   awful.spawn.easy_async("pamixer --get-volume-human", function(stdout)
     if stdout == "muted\n" then
-      self:set_text("ﱝ Muted")
+      self:set_markup_silently("<span font-size=\"13pt\" rise=\"-3pt\">ﱝ Muted")
     else
       local volume = tonumber(stdout:sub(1, -3))
       if volume < 33 then
-        self:set_text(" " .. stdout)
+        self:set_markup_silently("<span font-size=\"13pt\" rise=\"-3pt\"> </span> " .. stdout)
       elseif volume < 66 then
-        self:set_text(" " .. stdout)
+        self:set_markup_silently("<span font-size=\"13pt\" rise=\"-3pt\"> </span> " .. stdout)
       else
-        self:set_text(" " .. stdout)
+        self:set_markup_silently("<span font-size=\"13pt\" rise=\"-3pt\"> </span> " .. stdout)
       end
     end
   end)
@@ -190,7 +190,7 @@ local mybattery = wibox.widget {
   markup = 'Battery',
   widget = wibox.widget.textbox,
 }
-vicious.register(mybattery, vicious.widgets.bat, " $2%", 61, "BAT0")
+vicious.register(mybattery, vicious.widgets.bat, "<span font-size=\"13pt\" rise=\"-3pt\"> </span> $2%", 61, "BAT0")
 
 local function set_wallpaper(s)
   -- Wallpaper
@@ -516,7 +516,7 @@ globalkeys = gears.table.join(
   -- Prompt
   awful.key({ modkey }, "space", function() awful.spawn("rofi -show drun") end,
     {description = "app launcher", group = "launcher"}),
-  awful.key({ modkey, "Shift" }, "q", function() awful.spawn("rofi -show powermenu -modi powermenu:~/.local/bin/rofi-power-menu") end,
+  awful.key({ modkey, "Shift" }, "q", function() awful.spawn("rofi -show powermenu -modi powermenu:rofi-power-menu") end,
     {description = "power menu", group = "launcher"}),
 
   awful.key({ modkey }, "x",

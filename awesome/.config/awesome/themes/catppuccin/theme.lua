@@ -1,12 +1,12 @@
 local dpi = require("beautiful.xresources").apply_dpi
 
-local iconfont = "MesloLGM Nerd Font Mono 14"
+local iconfont = "TerminessTTF Nerd Font 13"
 
 local theme = {}
 theme.dir = os.getenv("HOME") .. "/.config/awesome/themes/catppuccin"
 -- theme.wallpaper = os.getenv("HOME") .. "/Pictures/Wallpaper/default"
-theme.font = "Terminus 9"
-theme.bold_font = "Terminus Medium 9"
+theme.font = "TerminessTTF Nerd Font 9"
+theme.bold_font = "TerminessTTF Nerd Font 9"
 theme.useless_gap = dpi(4)
 theme.border_width = dpi(1)
 
