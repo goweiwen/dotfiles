@@ -5,11 +5,30 @@
 [color]
 	ui = always
 
-[core]
-	editor = nvim
+[init]
+	defaultBranch = main
+
+[commit]
+	verbose = true
 
 [rebase]
 	autosquash = true
+
+[pull]
+	rebase = true
+
+[push]
+	default = current
+
+[merge]
+	conflictstyle = zdiff3
+
+[diff]
+	algorithm = histogram
+
+# reuse recovered resolution
+[rerere]
+	enabled = true
 
 [alias]
 	a = add
