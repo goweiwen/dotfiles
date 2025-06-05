@@ -1,1 +1,8 @@
-font-family = "Iosevka Term"
+auto-update-channel = tip
+window-padding-x = 8
+window-padding-y = 8
+window-padding-color = extend-always
+
+quick-terminal-position = center
+quick-terminal-animation-duration = 0
+keybind = global:cmd+`=toggle_quick_terminal
